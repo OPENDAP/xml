@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Nathan Potter (OSU-COAS) -->
-<xs:schema targetNamespace="http://www.dods.org/ns/DODS" xmlns="http://www.dods.org/ns/DODS" xmlns:dods="http://www.dods.org/ns/DODS" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema targetNamespace="http://xml.opendap.org/ns/DAP2" xmlns="http://xml.opendap.org/ns/DAP2" xmlns:dods="http://xml.opendap.org/ns/DAP2" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<!--
 	
 	-->
-	<xs:element name="Dataset" type="DODS_Dataset"/>
+	<xs:element name="Dataset" type="DAP2_Dataset"/>
 	<xs:element name="Map" type="Array"/>
 	<xs:element name="Attribute" type="DASAttribute"/>
 	<xs:element name="Alias" type="DASAlias"/>
@@ -23,14 +23,12 @@
 	<xs:element name="Sequence" type="Sequence"/>
 	<!-- -->
 	<xs:element name="dodsBLOB" type="BLOB"/>
-	<!--	-->
-	<!--	-->
 	<!--
 	
 	-->
 	<xs:group name="allDodsTypes">
 		<xs:annotation>
-			<xs:documentation>Reusable Content Model for Complex DODS types</xs:documentation>
+			<xs:documentation>Reusable Content Model for Complex DAP2 types</xs:documentation>
 		</xs:annotation>
 		<xs:choice>
 			<xs:element ref="Byte" minOccurs="0" maxOccurs="unbounded"/>
@@ -51,9 +49,9 @@
 	<!--
 	
 	-->
-	<xs:complexType name="DODS_Dataset">
+	<xs:complexType name="DAP2_Dataset">
 		<xs:annotation>
-			<xs:documentation>This is the XML representation of a DODS DDS object.</xs:documentation>
+			<xs:documentation>This is the XML representation of a DAP2 DDS object.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
