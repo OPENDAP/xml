@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Nathan Potter (OSU-COAS) -->
-<xs:schema targetNamespace="http://www.opendap.org/ns/OPeNDAP" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:opendap="http://www.opendap.org/ns/OPeNDAP" xmlns="http://www.opendap.org/ns/OPeNDAP" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema 
+ targetNamespace="http://xml.opendap.org/ns/dap2" 
+ xmlns:xs="http://www.w3.org/2001/XMLSchema"
+ xmlns:dap2="http://xml.opendap.org/ns/dap2" 
+ xmlns="http://xml.opendap.org/ns/dap2" 
+ elementFormDefault="qualified" 
+ attributeFormDefault="unqualified">
 	<!--
 	
 	-->
@@ -23,8 +29,6 @@
 	<xs:element name="Sequence" type="Sequence"/>
 	<!-- -->
 	<xs:element name="dodsBLOB" type="BLOB"/>
-	<!--	-->
-	<!--	-->
 	<!--
 	
 	-->
@@ -80,7 +84,7 @@
 			</xs:sequence>
 		</xs:choice>
 		<xs:attribute name="name" type="xs:string" use="required"/>
-		<xs:attribute name="type" type="opendap:DataType" use="required"/>
+		<xs:attribute name="type" type="dap2:DataType" use="required"/>
 	</xs:complexType>
 	<!--
 	
@@ -141,7 +145,7 @@
 						<xs:element ref="Structure"/>
 						<xs:element ref="Sequence"/>
 					</xs:choice>
-					<xs:element name="dimension" type="opendap:ArrayDimension" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element name="dimension" type="dap2:ArrayDimension" minOccurs="1" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -157,7 +161,7 @@
 	-->
 	<xs:complexType name="Grid">
 		<xs:complexContent>
-			<xs:extension base="opendap:BaseType">
+			<xs:extension base="dap2:BaseType">
 				<xs:sequence>
 					<xs:element ref="Array" minOccurs="1" maxOccurs="1"/>
 					<xs:element ref="Map" minOccurs="1" maxOccurs="unbounded"/>
