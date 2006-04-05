@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Nathan Potter (OSU-COAS) -->
 <xs:schema 
- targetNamespace="http://xml.opendap.org/ns/dap2" 
+ targetNamespace="http://xml.opendap.org/ns/DAP2"
  xmlns:xs="http://www.w3.org/2001/XMLSchema"
- xmlns:dap2="http://xml.opendap.org/ns/dap2" 
- xmlns="http://xml.opendap.org/ns/dap2" 
+ xmlns:dap2="http://xml.opendap.org/ns/DAP2"
+ xmlns="http://xml.opendap.org/ns/DAP2"
  elementFormDefault="qualified" 
  attributeFormDefault="unqualified">
 	<!--
