@@ -63,7 +63,7 @@
 			<xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:group ref="allDodsTypes" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element ref="dodsBLOB" minOccurs="0"/>
+			<xs:element ref="dataBLOB" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 	</xs:complexType>
