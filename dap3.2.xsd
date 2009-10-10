@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DAP 3.2 introduces the OtherXML attribute and DAP version info in the 
+	'dataset' element. Unfortunately, it may not be possible to write a 
+	schema (using version 1.0) that represents the currently implemented
+	syntax of OtherXML DAP Attributes, so I just added 'OtherXML to the set
+	of values for Attribute@type. Will resolve later. jhrg 10/08/09 -->
+
+<xs:schema targetNamespace="http://xml.opendap.org/ns/DAP/3.2#"
+	xmlns:dap3.2="http://xml.opendap.org/ns/DAP/3.2#" 
+	xmlns="http://xml.opendap.org/ns/DAP/3.2#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd" 
+	elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+	<!--
+		
+	-->
+	<xs:element name="Dataset" type="DAP_Dataset"/>
+	<xs:element name="Map" type="Array"/>
+	<xs:element name="Attribute" type="DAP_Attribute"/>
+	<xs:element name="Alias" type="AttributeAlias"/>
+	<xs:element name="Byte" type="BaseType"/>
+	<xs:element name="Int16" type="BaseType"/>
+	<xs:element name="UInt16" type="BaseType"/>
+	<xs:element name="Int32" type="BaseType"/>
+	<xs:element name="UInt32" type="BaseType"/>
+	<xs:element name="Float32" type="BaseType"/>
+	<xs:element name="Float64" type="BaseType"/>
+	<xs:element name="String" type="BaseType"/>
+	<xs:element name="Url" type="BaseType"/>
+	<xs:element name="Array" type="Array"/>
+	<xs:element name="Grid" type="Grid"/>
+	<xs:element name="Structure" type="Structure"/>
+	<xs:element name="Sequence" type="Sequence"/>
+	<xs:element name="blob" type="BLOB"/>
+	<!--
+	
+	-->
+	<xs:group name="VariableTypes">
+		<xs:annotation>
+			<xs:documentation>DAP Varaible Types</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element ref="Byte" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Int16" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="UInt16" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Int32" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="UInt32" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Float32" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Float64" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="String" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Url" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Array" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Grid" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Structure" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Sequence" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:group>
+	<!--
+	
+	-->
+	<xs:complexType name="DAP_Dataset">
+		<xs:annotation>
+			<xs:documentation>This is the XML representation of a DAP DDS object.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="VariableTypes" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="blob" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="dapVersion" type="xs:string" use="required"/>
+	</xs:complexType>
+	<!--
+	
+	-->
+	<xs:complexType name="DAP_Attribute">
+		<xs:annotation>
+			<xs:documentation>DAP Attribute Type</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="value" type="xs:string" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<!--xs:sequence>
+				<xs:any namespace="##any" minOccurs="0" processContents="skip"/>
+			</xs:sequence-->
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="AttributeType" use="required"/>
+	</xs:complexType>
+	<!--
+	
+	 -->
+	<xs:complexType name="AttributeAlias">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="Attribute" type="xs:string" use="required"/>
+	</xs:complexType>
+	<!--
+	
+	 -->
+	<xs:simpleType name="AttributeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Byte"/>
+			<xs:enumeration value="Int16"/>
+			<xs:enumeration value="UInt16"/>
+			<xs:enumeration value="Int32"/>
+			<xs:enumeration value="UInt32"/>
+			<xs:enumeration value="Float32"/>
+			<xs:enumeration value="Float64"/>
+			<xs:enumeration value="String"/>
+			<xs:enumeration value="URL"/>
+			<xs:enumeration value="Container"/>
+			<xs:enumeration value="OtherXML"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--
+		
+	-->
+	<!--xs:simpleType name="OtherXMLAttributeType">
+		<xs:annotation>
+			<xs:documentation> Not used. I've split the attribute types into AttributeType and this
+				type so that it's easy to limit the xs:any wildcard to just attributes that use
+				type="OtherXML". jhrg 10/8/09 </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OtherXML"/>
+		</xs:restriction>
+	</xs:simpleType-->
+	<!--
+		
+	-->
+	<xs:complexType name="BaseType">
+		<xs:annotation>
+			<xs:documentation>DAP Base Type</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+	<!--
+	
+	-->
+	<xs:complexType name="Array">
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:sequence>
+					<xs:choice minOccurs="1" maxOccurs="1">
+						<xs:element ref="Byte"/>
+						<xs:element ref="Int16"/>
+						<xs:element ref="UInt16"/>
+						<xs:element ref="Int32"/>
+						<xs:element ref="UInt32"/>
+						<xs:element ref="Float32"/>
+						<xs:element ref="Float64"/>
+						<xs:element ref="String"/>
+						<xs:element ref="Url"/>
+						<!-- Arrays of Grids and Sequences probably never worked
+							So Dennis and I decided to explicitly remove them 
+							from DAP4. jhrg 10/8/09 -->
+						<!-- xs:element ref="Grid"/ -->
+						<xs:element ref="Structure"/>
+						<!-- xs:element ref="Sequence"/ -->
+					</xs:choice>
+					<xs:element name="dimension" type="ArrayDimension" minOccurs="1"
+						maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--
+	-->
+	<xs:complexType name="ArrayDimension">
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="size" type="xs:integer" use="required"/>
+	</xs:complexType>
+	<!--
+	
+	-->
+	<xs:complexType name="Grid">
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:sequence>
+					<xs:element ref="Array" minOccurs="1" maxOccurs="1"/>
+					<xs:element ref="Map" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--
+
+	-->
+	<xs:complexType name="Structure">
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:group ref="VariableTypes" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--
+
+	-->
+	<xs:complexType name="Sequence">
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:group ref="VariableTypes" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--	
+
+	-->
+	<xs:complexType name="BLOB">
+		<xs:attribute name="href" type="xs:string" use="required"/>
+	</xs:complexType>
+	<!--
+	
+	 -->
+</xs:schema>
