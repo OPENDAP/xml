@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dataset name="dap-3.3-test.1.xml" dapVersion="3.3" xmlns="http://xml.opendap.org/ns/DAP/3.3#"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/3.3# 
+    file:/Users/jimg/xml/dap/dap3.3.xsd">
+    <AnyXML name="info" type="String">
+        <value>This is a test DDX for the DAP 3.3 schema.</value>
+    </AnyXML>
+    
+    <Group>
+
+        <SharedDimension name="Latitude" size="1024"/>
+        <SharedDimension name="Longitude" size="1024"/>
+
+        <Array name="cloud">
+            <Attribute name="long_name" type="String">
+                <value>Cloud Mask</value>
+            </Attribute>
+            <template><Byte/></template>
+            <dimension size="1024"/>
+            <dimension size="1024"/>
+        </Array>
+
+        <Array name="land">
+            <Attribute name="long_name" type="String">
+                <value>Land Mask</value>
+            </Attribute>
+            <template><Byte/></template>
+            <dimension name="Latitude"/>
+            <dimension name="Longitude"/>
+        </Array>
+        
+        <Grid>
+            <Map name="longitude" dim="pt" type="Float32"/>
+            <Map name="latitude" dim="pt" type="Float32"/>
+            <Map name="altitude" dim="pt" type="Float32"/>
+            <Map name="time" dim="span" type="Float32">
+                <Attribute name="units" namespace="CF" type="String"><value>Days since Jan 1, 1970</value></Attribute>
+            </Map>
+            
+            <Array name="r">
+                <Attribute name="long_name" type="String"><value>Radioactivity</value></Attribute>
+                <template><Byte/></template>
+                <Map name="longitude"/>
+                <Map name="latitude"/>
+                <Map name="altitude"/>
+                <Map name="time"/>
+            </Array>
+            
+            <Array name="surface_temp">
+                <template><Float64/></template>
+                <Map name="longitude"/>
+                <Map name="latitude"/>
+                <Map name="time"/>
+            </Array>
+        </Grid>
+
+        <Opaque name="sst_image">
+            <Attribute name="mime-type" type="String">
+                <value>JPEG</value>
+            </Attribute>
+        </Opaque>
+    </Group>
+</Dataset>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dataset name="dap-3.3-test.1.xml" dapVersion="3.3" xmlns="http://xml.opendap.org/ns/DAP/3.3#"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/3.3# 
+    file:/Users/jimg/xml/dap/dap3.3.xsd">
+    <Attribute name="info" type="String">
+        <value>This is a test DDX for the DAP 3.3 schema. </value>
+    </Attribute>
+    <Group>
+        <Attribute name="Group_info" type="String">
+            <value>This top level group is an anonymous group.</value>
+        </Attribute>
+        
+        <SharedDimension name="Latitude" size="1024"/>
+        <SharedDimension name="Longitude" size="1024"/>
+        
+        <Byte name="variable">
+            <Attribute name="speed" type="Int16">
+                <value>10</value>
+            </Attribute>
+        </Byte>
+
+        <Array name="SST">
+            <Attribute name="long_name" type="String">
+                <value>Sea Surface Temperature</value>
+            </Attribute>
+            <template>
+                <Float32/>
+            </template>
+            <dimension name="Latitude"/>
+            <dimension name="Longitude"/>
+        </Array>
+        
+        <Opaque name="image">
+            <Attribute name="mime-type" type="String">
+                <value>JPEG</value>
+            </Attribute>
+        </Opaque>
+    </Group>
+</Dataset>

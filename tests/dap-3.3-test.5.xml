@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dataset name="dap-3.3-test.1.xml" dapVersion="3.3" xmlns="http://xml.opendap.org/ns/DAP/3.3#"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/3.3# 
+    file:/Users/jimg/xml/dap/dap3.3.xsd">
+    <AnyXML name="info" type="String">
+        <value>This is a test DDX for the DAP 3.3 schema.</value>
+    </AnyXML>
+    <Group>
+
+        <Grid name="SST">
+            <Map name="longitude" size="1024" type="Float32"/>
+            <Map name="latitude" size="1024" type="Float32"/>
+            
+            <Array name="SST">
+                <template>
+                    <Byte/>
+                </template>
+                <Map name="longitude"/>
+                <Map name="latitude"/>
+            </Array>
+        </Grid>
+        
+    </Group>
+    
+    <Group name="Masks">
+        
+        <Grid name="Land">
+            <Map name="longitude" size="1024" type="Float32"/>
+            <Map name="latitude" size="1024" type="Float32"/>
+            
+            <Array name="Land">
+                <template>
+                    <Byte/>
+                </template>
+                <Map name="longitude"/>
+                <Map name="latitude"/>
+            </Array>
+        </Grid>
+        
+    </Group>
+    
+</Dataset>

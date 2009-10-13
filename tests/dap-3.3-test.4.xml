@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dataset name="dap-3.3-test.1.xml" dapVersion="3.3" xmlns="http://xml.opendap.org/ns/DAP/3.3#"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/3.3# 
+    file:/Users/jimg/xml/dap/dap3.3.xsd">
+    <AnyXML name="info" type="String">
+        <value>This is a test DDX for the DAP 3.3 schema.</value>
+    </AnyXML>
+    <Group>
+
+        <SharedDimension name="x" size="4096"/>
+        <SharedDimension name="y" size="4096"/>
+
+        <Grid name="SST_Swath">
+            <!-- We could list multiple dimensions in a space-separated list
+                 but purists will gag. Also, making these parse as separate 
+                 XML thingies (?) will likely benefit our RDF/OWL project. -->
+            <Map name="longitude" type="Float32">
+                <dimension name="x"/>
+                <dimension name="y"/>
+            </Map>
+            <Map name="latitude" type="Float32">
+                <dimension name="x"/>
+                <dimension name="y"/>
+            </Map>
+
+            <!-- This Grid has two Maps, each of which are two-dimenional
+                 Arrays. It can be used to store satellite 'swath' data. -->
+            <Array name="SST">
+                <template>
+                    <Byte/>
+                </template>
+                <Map name="longitude"/>
+                <Map name="latitude"/>
+            </Array>
+        </Grid>
+
+    </Group>
+</Dataset>

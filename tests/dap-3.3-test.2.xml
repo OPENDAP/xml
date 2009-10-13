@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dataset name="dap-3.3-test.1.xml" dapVersion="3.3" xmlns="http://xml.opendap.org/ns/DAP/3.3#"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/3.3# 
+    file:/Users/jimg/xml/dap/dap3.3.xsd">
+    <AnyXML name="info" type="String">
+        <value>This is a test DDX for the DAP 3.3 schema.</value>
+    </AnyXML>
+    <Group>
+        <Attribute name="Group_info" type="String">
+            <value>This top level group is an anonymous group.</value>
+        </Attribute>
+        <Alias name="master_info" Attribute="/info"/>
+        <AnyXML name="WCS">
+            <SpatialRaster>
+                24.5, 45.6, -80.9, -90.7
+            </SpatialRaster>
+        </AnyXML>
+
+        <SharedDimension name="Latitude" size="1024"/>
+        <SharedDimension name="Longitude" size="1024"/>
+        
+        <Byte name="variable">
+            <Attribute name="speed" type="Int16">
+                <value>10</value>
+            </Attribute>
+        </Byte>
+
+        <Grid name="SST">
+            <Map name="lon" dim="Longitude" type="Float32"/>
+            <Map name="lat" dim="Latitude" type="Float32"/>
+            
+            <Array name="SST">
+                <template><Byte/></template>
+                <Map name="lon"/>
+                <Map name="lat"/>
+            </Array>
+        </Grid>
+       
+        <Opaque name="sst_image">
+            <Attribute name="mime-type" type="String">
+                <value>JPEG</value>
+            </Attribute>
+        </Opaque>
+    </Group>
+</Dataset>
