@@ -27,13 +27,13 @@
         </Byte>
 
         <Grid name="SST">
-            <Map name="lon" dim="Longitude" type="Float32"/>
-            <Map name="lat" dim="Latitude" type="Float32"/>
+            <Map name="lon" ref="Longitude" type="Float32"/>
+            <Map name="lat" ref="Latitude" type="Float32"/>
             
             <Array name="SST">
                 <template><Byte/></template>
-                <Map name="lon"/>
-                <Map name="lat"/>
+                <dimension name="lon"/>
+                <dimension name="lat"/>
             </Array>
         </Grid>
        

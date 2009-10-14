@@ -31,27 +31,27 @@
         </Array>
         
         <Grid>
-            <Map name="longitude" dim="pt" type="Float32"/>
-            <Map name="latitude" dim="pt" type="Float32"/>
-            <Map name="altitude" dim="pt" type="Float32"/>
-            <Map name="time" dim="span" type="Float32">
+            <Map name="longitude" ref="pt" type="Float32"/>
+            <Map name="latitude" ref="pt" type="Float32"/>
+            <Map name="altitude" ref="pt" type="Float32"/>
+            <Map name="time" ref="span" type="Float32">
                 <Attribute name="units" namespace="CF" type="String"><value>Days since Jan 1, 1970</value></Attribute>
             </Map>
             
             <Array name="r">
                 <Attribute name="long_name" type="String"><value>Radioactivity</value></Attribute>
                 <template><Byte/></template>
-                <Map name="longitude"/>
-                <Map name="latitude"/>
-                <Map name="altitude"/>
-                <Map name="time"/>
+                <dimension name="longitude"/>
+                <dimension name="latitude"/>
+                <dimension name="altitude"/>
+                <dimension name="time"/>
             </Array>
             
             <Array name="surface_temp">
                 <template><Float64/></template>
-                <Map name="longitude"/>
-                <Map name="latitude"/>
-                <Map name="time"/>
+                <dimension name="longitude"/>
+                <dimension name="latitude"/>
+                <dimension name="time"/>
             </Array>
         </Grid>
 

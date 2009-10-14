@@ -27,8 +27,8 @@
             <template>
                 <Float32/>
             </template>
-            <dimension name="Latitude"/>
-            <dimension name="Longitude"/>
+            <dimension ref="Latitude"/>
+            <dimension ref="Longitude"/>
         </Array>
         
         <Opaque name="image">

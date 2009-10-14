@@ -16,12 +16,12 @@
                  but purists will gag. Also, making these parse as separate 
                  XML thingies (?) will likely benefit our RDF/OWL project. -->
             <Map name="longitude" type="Float32">
-                <dimension name="x"/>
-                <dimension name="y"/>
+                <dimension ref="x"/>
+                <dimension ref="y"/>
             </Map>
             <Map name="latitude" type="Float32">
-                <dimension name="x"/>
-                <dimension name="y"/>
+                <dimension ref="x"/>
+                <dimension ref="y"/>
             </Map>
 
             <!-- This Grid has two Maps, each of which are two-dimenional
@@ -30,8 +30,8 @@
                 <template>
                     <Byte/>
                 </template>
-                <Map name="longitude"/>
-                <Map name="latitude"/>
+                <dimension name="longitude"/>
+                <dimension name="latitude"/>
             </Array>
         </Grid>
 

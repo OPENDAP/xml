@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- DAP 3.3 introduces SharedDimension, Group, Opaque, 64-bit integers and
-	UnsignedByte. In addition: The syntax for Array has been changed so that
-	it's easier for processing software to figure out the type of an array; 
-	Grids have been generalized so that there can be any number of 'Array'
-	parts (and the Maps may be multi-dimensional; and OtherXML has been renamed
-	AnyXML and made its own element (it's no longer a type of 'Attribute'). 
-	
-	The change to otherXML was made to simplify writing the schema since it
-	appears schema 1.0 cannot reprsent a syntax where the type of an element 
-	is a function of the value of one of its attributes.
-	jhrg 10/13/09 -->
 
 <xs:schema targetNamespace="http://xml.opendap.org/ns/DAP/3.3#"
 	xmlns:dap3.3="http://xml.opendap.org/ns/DAP/3.3#" xmlns="http://xml.opendap.org/ns/DAP/3.3#"
@@ -23,6 +12,14 @@
 			<xs:documentation>
 				The root element. A 'Dataset' is root element for both DAP4
 				metadata (syntax and semantic) and data responses.
+				
+				DAP 3.3 introduces SharedDimension, Group, Opaque, 64-bit integers and
+				UnsignedByte. In addition: The syntax for Array has been changed so that
+				it's easier for processing software to figure out the type of an array; 
+				Grids have been generalized so that there can be any number of 'Array'
+				parts (and the Maps may be multi-dimensional); and OtherXML has been renamed
+				AnyXML and made its own element (it's no longer a type of 'Attribute'). 
+
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
