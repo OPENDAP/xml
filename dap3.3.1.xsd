@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DAP 3.3 introduces SharedDimension, Group, Opaque, 64-bit integers and
+	UnsignedByte. In addition: The syntax for Array has been changed so that
+	it's easier for processing software to figure out the type of an array; 
+	Grids have been generalized so that there can be any number of 'Array'
+	parts (and the Maps may be multi-dimensional; and OtherXML has been renamed
+	AnyXML and made its own element (it's no longer a type of 'Attribute'). 
+	
+	The change to otherXML was made to simplify writing the schema since it
+	appears schema 1.0 cannot reprsent a syntax where the type of an element 
+	is a function of the value of one of its attributes.
+	jhrg 10/13/09 -->
+
+<xs:schema targetNamespace="http://xml.opendap.org/ns/DAP/3.3#"
+	xmlns:dap3.3="http://xml.opendap.org/ns/DAP/3.3#" xmlns="http://xml.opendap.org/ns/DAP/3.3#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:element name="Dataset" type="Dataset">
+		<xs:annotation>
+			<xs:documentation>
+				The root element. A 'Dataset' is root element for both DAP4
+				metadata (syntax and semantic) and data responses.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+
+	<xs:complexType name="Dataset">
+		<xs:annotation>
+			<xs:documentation>
+				This is the XML representation of a data source in DAP 4.
+				
+				name: The name of the data source; often a string used to
+					uniquely reference the data source wrt a particular
+					server
+				dapVersion: The protocol version that corresponds to this
+					document.
+				
+				( Attribute* Alias* AnyXML* Group+ blob? )
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="Metadata"/>
+			<xs:element name="Group" type="Group" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="blob" type="blob" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="dapVersion" type="xs:string" use="required"/>
+	</xs:complexType>
+	
+	
+	<xs:group name="Metadata">
+		<xs:annotation>
+			<xs:documentation>
+				These elements are used in several places to hold the 
+				'semantic' and/or 'use' metadata for the dataset, its groups 
+				and variables.
+				
+				( Attribute* Alias* AnyXML* )
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Attribute" type="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Alias" type="Alias" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="AnyXML" type="AnyXML" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:group>
+	
+	
+	<xs:complexType name="Attribute">
+		<xs:annotation>
+			<xs:documentation>
+				DAP uses attributes as a way to encode information that data
+				providers has bundled with data sources. This element is 
+				recursive. Each Attribute element defines a lexical scope.
+				
+				name: The name of the attribute; must be unique within the 
+					scope.
+				type: The type of the attribute. Attributes are limited to 
+					simple types, vectors of simple types and 'Containers' 
+					which are essentially structure types. 
+				namespace: Use this to indicate that the given attribute
+					means the same thing as the matching item in the given
+					namespace. This optional attribute is here to help preserve
+					information that a data server might know to be true that
+					a client application could not assume with certainty.
+				
+				( value+ | Attribute* Alias* AnyXML* )
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="value" type="xs:string" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:group ref="Metadata"/>
+			</xs:sequence>
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="AttributeType" use="required"/>
+		<xs:attribute name="namespace" type="xs:string" use="optional"/>
+	</xs:complexType>
+	
+	
+	<xs:simpleType name="AttributeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Byte"/>
+			<xs:enumeration value="SignedByte"/>
+			<xs:enumeration value="Int16"/>
+			<xs:enumeration value="UInt16"/>
+			<xs:enumeration value="Int32"/>
+			<xs:enumeration value="UInt32"/>
+			<xs:enumeration value="Int64"/>
+			<xs:enumeration value="UInt64"/>
+			<xs:enumeration value="Float32"/>
+			<xs:enumeration value="Float64"/>
+			<xs:enumeration value="String"/>
+			<xs:enumeration value="URL"/>
+			<xs:enumeration value="Container"/>
+			<!--xs:enumeration value="OtherXML"/ Replaced by AnyXML. -->
+		</xs:restriction>
+	</xs:simpleType>
+	
+	
+	<xs:complexType name="Alias">
+		<xs:annotation>
+			<xs:documentation>
+				This provides a way to indicate that an attribute in this data
+				source is also known by a different name. I think the 
+				Attribute@namespace attribute might actually do a better job
+				of this.
+				
+				NB: Should this be using xpath?
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="Attribute" type="xs:string" use="required"/>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="AnyXML">
+		<xs:annotation>
+			<xs:documentation>
+				Use this to embed arbitrary XML in a DDX. This functions like
+				an Attribute and appears in the same places as an Attribute,
+				but its contents are ignored by DAP software. Other software
+				might find the information useful. The XML elements must
+				satisfy the requirements for 'lax' processing under schema 1.0.
+				In practice, that means just about anything.
+				
+				name: A name to associate with this chunk of XML
+				*: This element can contain any other attributes that conform 
+					to the schema 1.0 definition of 'lax' processing
+					
+				( <xs:any/>+ ) 
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:any namespace="##any" minOccurs="1" processContents="lax"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:anyAttribute processContents="lax" namespace="##any"/>
+	</xs:complexType>
+	
+		
+	<xs:complexType name="Group">
+		<xs:annotation>
+			<xs:documentation>
+				A Group is a lexical scoping tool used to replicate HDF5 and 
+				netCDF4 Groups. Each Group defines a lexical scope. Each 
+				dataset has at least one Group; if only one is present, it may
+				be anonymous. In this case, by convention, it's name
+				attribute should be 'anonymous', the default value.
+				
+				name: The name of the Group
+				
+				( Attribute* Alias* AnyXML* SharedDimension* 
+					( Byte | ... | Opaque )+ )
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="Metadata"/>
+			<xs:element name="SharedDimension" type="SharedDimension" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="VariableTypes" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" default="anonymous"/>
+	</xs:complexType>
+
+	
+	<xs:complexType name="SharedDimension">
+		<xs:annotation>
+			<xs:documentation>
+				This defines a dimension (a name and size) that may be shared 
+				between Grids and/or Arrays.
+				
+				name: The name of the dimension
+				size: The size of the dimension
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="size" type="xs:integer" use="required"/>
+	</xs:complexType>
+	
+	
+	<xs:group name="VariableTypes">
+		<xs:annotation>
+			<xs:documentation>
+				DAP Variable Types
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="Byte" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="SignedByte" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Int16" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="UInt16" type="BaseType"  minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Int32" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="UInt32" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Int64" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="UInt64" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Float32" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Float64" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="String" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Url" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Array" type="Array" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Grid" type="Grid" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Structure" type="Structure" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Sequence" type="Sequence" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Opaque" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:group>
+
+	<xs:complexType name="BaseType">
+		<xs:annotation>
+			<xs:documentation>
+				Each variable in DAP4 is represented as a name and a collection
+				of metadata (Attributes, ...). The type of the variable is 
+				given in the element name (e.g., <Byte name="x"/>)
+				
+				name: The name of the variable
+				
+				( Attribute* Alias* AnyXML* )
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="Metadata"/>	
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+
+
+	<xs:complexType name="Array">
+		<xs:annotation>
+			<xs:documentation>
+				
+				name: The name of the variable
+				
+				( Attribute* Alias* AnyXML* template dimension+)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:sequence>
+					<xs:element name="template">
+						<xs:complexType>
+							<xs:group ref="ArrayTypes"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="dimension" type="ArrayDimension" minOccurs="1"
+							maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:group name="ArrayTypes">
+		<xs:annotation>
+			<xs:documentation>
+				DAP Variable Types that can be used to make an Array. DAP4 does
+				not allow arrays of Grids or Sequences. All other types are 
+				supported.
+				
+				( Byte | ... | Url | Structure | Opaque )
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="Byte" type="BaseType"/>
+			<xs:element name="SignedByte" type="BaseType"/>
+			<xs:element name="Int16" type="BaseType"/>
+			<xs:element name="UInt16" type="BaseType"/>
+			<xs:element name="Int32" type="BaseType"/>
+			<xs:element name="UInt32" type="BaseType"/>
+			<xs:element name="Int64" type="BaseType"/>
+			<xs:element name="UInt64" type="BaseType"/>
+			<xs:element name="Float32" type="BaseType"/>
+			<xs:element name="Float64" type="BaseType"/>
+			<xs:element name="String" type="BaseType"/>
+			<xs:element name="Url" type="BaseType"/>
+			<xs:element name="Structure" type="Structure"/>
+			<xs:element name="Opaque" type="BaseType"/>
+		</xs:choice>
+	</xs:group>
+
+
+	<xs:complexType name="ArrayDimension">
+		<xs:annotation>
+			<xs:documentation>
+				name: The name of the dimension
+				size: The size of the dimension
+				ref: A reference to a SharedDimension definition
+				
+				Note: either name and size must be present or only ref must 
+				be present
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="size" type="xs:integer"/>
+		<xs:attribute name="ref" type="xs:string"/>
+	</xs:complexType>
+
+
+	<xs:complexType name="Grid">
+		<xs:annotation>
+			<xs:documentation>
+				A Grid is a type that relates one or more Maps (aka coordinate
+				variables) to the dimensions of one or more Array variables. It
+				is often the case that Maps correspond to independent variables
+				like Latitude or sample number and Arrays represent dependent
+				variables.
+				
+				name: The name of the variable
+				
+				( Attribute* Alias* AnyXML* Map+ Array+ )
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:sequence>
+					<!-- Subtle change here: In DAP 3.2 and earlier, maxOccurs
+						for the Array element was 1, now it's 'unbounded' and
+						Maps have moved to teh top of the Grid. Not sure that 
+						change is important, but it's a wash because the 
+						content has changed -->
+					<xs:element name="Map" type="Map" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element name="Array" type="Array" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="Map">
+		<xs:annotation>
+			<xs:documentation>
+				name: optional name for this Map; if not given the map's name
+				is the name of the SharedDimension, which must be given
+				ref: optional reference to a SharedDimension definition
+				type: required type of the map; type limited to Byte, ..., URL
+				
+				( Attribute* Alias* AnyXML* dimension* )
+				
+				Note: If there are no dimension elements, ref must be given
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="Metadata"/>
+			<xs:element name="dimension" type="ArrayDimension" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="ref" type="xs:string"/>
+		<xs:attribute name="type" type="MapType" use="required"/>
+	</xs:complexType>
+	
+	
+	<xs:simpleType name="MapType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Byte"/>
+			<xs:enumeration value="SignedByte"/>
+			<xs:enumeration value="Int16"/>
+			<xs:enumeration value="UInt16"/>
+			<xs:enumeration value="Int32"/>
+			<xs:enumeration value="UInt32"/>
+			<xs:enumeration value="Int64"/>
+			<xs:enumeration value="UInt64"/>
+			<xs:enumeration value="Float32"/>
+			<xs:enumeration value="Float64"/>
+			<xs:enumeration value="String"/>
+			<xs:enumeration value="URL"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:complexType name="Structure">
+		<xs:annotation>
+			<xs:documentation>
+				A Structure; a simple aggregation of variables. Unlike a Group,
+				it's possible to from an Array of Structures.
+				
+				name: The name of the variable
+				
+				( Attribute* Alias* AnyXML* ( Byte | ... | Opaque )+ )
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:group ref="VariableTypes" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:complexType name="Sequence">
+		<xs:annotation>
+			<xs:documentation>
+				A Sequence is a type that holds tabular data where each row
+				of the table represents a relation, as in a relational database.
+				Sequences can nest, but Arrays of Sequences are not supported.
+				
+				name: The name of the variable
+				
+				( Attribute* Alias* AnyXML* ( Byte | ... | Opaque )+ )
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:group ref="VariableTypes" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="blob">
+		<xs:annotation>
+			<xs:documentation>
+				The 'blob' element is used to point to an associated data 
+				document. When DAP is used to access metadata only for a data
+				source, no blob element will be present. However, when a
+				request for data is made, the Dataset element holds a
+				description of the data values and the blob points to a place
+				where those values will be found. 
+				
+				In DAP 3.3+ the blob element refers to binary 
+				(application/octet-stream) part within a multi-part MIME
+				document. 
+				
+				NB: In future versions of DAP, multiple blob elements might
+				be used to reference the data for several variables. In
+				addition, the href attribute might be used to refer to data
+				held anywhere on the network, not just within the MPM DAP
+				data response document (aka DataDDX).
+				
+				href: Refers to the multi-part MIME document part that holds
+					the data values, encoded using XDR.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="href" type="xs:string" use="required"/>
+	</xs:complexType>
+
+
+</xs:schema>
