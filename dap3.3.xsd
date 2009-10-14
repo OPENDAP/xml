@@ -11,7 +11,8 @@
 	is a function of the value of one of its attributes.
 	jhrg 10/13/09 -->
 
-<xs:schema targetNamespace="http://xml.opendap.org/ns/DAP/3.3#"
+<xs:schema
+	targetNamespace="http://xml.opendap.org/ns/DAP/3.3#"
 	xmlns:dap3.3="http://xml.opendap.org/ns/DAP/3.3#" xmlns="http://xml.opendap.org/ns/DAP/3.3#"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
