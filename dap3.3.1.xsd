@@ -37,7 +37,7 @@
 				dapVersion: The protocol version that corresponds to this
 					document.
 				
-				( Attribute* Alias* AnyXML* Group+ blob? )
+				( Attribute*, Alias*, AnyXML*, Group+, blob? )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -57,7 +57,7 @@
 				'semantic' and/or 'use' metadata for the dataset, its groups 
 				and variables.
 				
-				( Attribute* Alias* AnyXML* )
+				( Attribute*, Alias*, AnyXML* )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -86,7 +86,7 @@
 					information that a data server might know to be true that
 					a client application could not assume with certainty.
 				
-				( value+ | Attribute* Alias* AnyXML* )
+				( value+ | ( Attribute*, Alias*, AnyXML* ) )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:choice>
@@ -102,8 +102,9 @@
 		<xs:attribute name="namespace" type="xs:string" use="optional"/>
 	</xs:complexType>
 	
+	<!-- These types have been declared to minimize name duplication -->
 	
-	<xs:simpleType name="AttributeType">
+	<xs:simpleType name="ScalarTypeNames">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Byte"/>
 			<xs:enumeration value="SignedByte"/>
@@ -116,13 +117,20 @@
 			<xs:enumeration value="Float32"/>
 			<xs:enumeration value="Float64"/>
 			<xs:enumeration value="String"/>
-			<xs:enumeration value="URL"/>
+			<xs:enumeration value="Url"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="Container">
+		<xs:restriction base="xs:string">
 			<xs:enumeration value="Container"/>
-			<!--xs:enumeration value="OtherXML"/ Replaced by AnyXML. -->
 		</xs:restriction>
 	</xs:simpleType>
 	
-	
+	<xs:simpleType name="AttributeType">
+		<xs:union memberTypes="ScalarTypeNames Container"/>
+	</xs:simpleType>
+
 	<xs:complexType name="Alias">
 		<xs:annotation>
 			<xs:documentation>
@@ -175,7 +183,7 @@
 				
 				name: The name of the Group
 				
-				( Attribute* Alias* AnyXML* SharedDimension* 
+				( Attribute*, Alias*, AnyXML*, SharedDimension*, 
 					( Byte | ... | Opaque )+ )
 			</xs:documentation>
 		</xs:annotation>
@@ -202,85 +210,12 @@
 		<xs:attribute name="size" type="xs:integer" use="required"/>
 	</xs:complexType>
 	
+	<!-- These groups have been defined to minimize name duplication -->
 	
-	<xs:group name="VariableTypes">
+	<xs:group name="ScalarTypes">
 		<xs:annotation>
 			<xs:documentation>
 				DAP Variable Types
-			</xs:documentation>
-		</xs:annotation>
-		<xs:choice>
-			<xs:element name="Byte" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="SignedByte" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Int16" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="UInt16" type="BaseType"  minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Int32" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="UInt32" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Int64" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="UInt64" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Float32" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Float64" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="String" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Url" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Array" type="Array" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Grid" type="Grid" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Structure" type="Structure" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Sequence" type="Sequence" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Opaque" type="BaseType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:choice>
-	</xs:group>
-
-	<xs:complexType name="BaseType">
-		<xs:annotation>
-			<xs:documentation>
-				Each variable in DAP4 is represented as a name and a collection
-				of metadata (Attributes, ...). The type of the variable is 
-				given in the element name (e.g., <Byte name="x"/>)
-				
-				name: The name of the variable
-				
-				( Attribute* Alias* AnyXML* )
-			</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:group ref="Metadata"/>	
-		</xs:sequence>
-		<xs:attribute name="name" type="xs:string"/>
-	</xs:complexType>
-
-
-	<xs:complexType name="Array">
-		<xs:annotation>
-			<xs:documentation>
-				
-				name: The name of the variable
-				
-				( Attribute* Alias* AnyXML* template dimension+)
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="BaseType">
-				<xs:sequence>
-					<xs:element name="template">
-						<xs:complexType>
-							<xs:group ref="ArrayTypes"/>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="dimension" type="ArrayDimension" minOccurs="1"
-							maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:group name="ArrayTypes">
-		<xs:annotation>
-			<xs:documentation>
-				DAP Variable Types that can be used to make an Array. DAP4 does
-				not allow arrays of Grids or Sequences. All other types are 
-				supported.
-				
-				( Byte | ... | Url | Structure | Opaque )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:choice>
@@ -296,10 +231,67 @@
 			<xs:element name="Float64" type="BaseType"/>
 			<xs:element name="String" type="BaseType"/>
 			<xs:element name="Url" type="BaseType"/>
+		</xs:choice>
+	</xs:group>
+			
+	<xs:group name="ArrayTypes">
+		<xs:choice>
+			<xs:group ref="ScalarTypes"/>
 			<xs:element name="Structure" type="Structure"/>
 			<xs:element name="Opaque" type="BaseType"/>
 		</xs:choice>
 	</xs:group>
+
+	<xs:group name="VariableTypes">
+		<xs:choice>
+			<xs:group ref="ArrayTypes"/>
+			<xs:element name="Array" type="Array" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Grid" type="Grid" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Sequence" type="Sequence" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:group>
+
+
+	<xs:complexType name="BaseType">
+		<xs:annotation>
+			<xs:documentation>
+				Each variable in DAP4 is represented as a name and a collection
+				of metadata (Attributes, ...). The type of the variable is 
+				given in the element name (e.g., <Byte name="x"/>)
+				
+				name: The name of the variable
+				
+				( Attribute*, Alias*, AnyXML* )
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="Metadata"/>	
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+
+
+	<xs:complexType name="Array">
+		<xs:annotation>
+			<xs:documentation>
+				name: The name of the variable
+				
+				( Attribute*, Alias*, AnyXML*, template, dimension+)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:sequence>
+					<xs:element name="template">
+						<xs:complexType>
+							<xs:group ref="ArrayTypes"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="dimension" type="ArrayDimension" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
 
 	<xs:complexType name="ArrayDimension">
@@ -330,7 +322,7 @@
 				
 				name: The name of the variable
 				
-				( Attribute* Alias* AnyXML* Map+ Array+ )
+				( Attribute*, Alias*, AnyXML*, Map+, Array+ )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -355,9 +347,9 @@
 				name: optional name for this Map; if not given the map's name
 				is the name of the SharedDimension, which must be given
 				ref: optional reference to a SharedDimension definition
-				type: required type of the map; type limited to Byte, ..., URL
+				type: required type of the map; type limited to Byte, ..., Url
 				
-				( Attribute* Alias* AnyXML* dimension* )
+				( Attribute*, Alias*, AnyXML*, dimension* )
 				
 				Note: If there are no dimension elements, ref must be given
 			</xs:documentation>
@@ -368,28 +360,10 @@
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string"/>
 		<xs:attribute name="ref" type="xs:string"/>
-		<xs:attribute name="type" type="MapType" use="required"/>
+		<xs:attribute name="type" type="ScalarTypeNames" use="required"/>
 	</xs:complexType>
 	
 	
-	<xs:simpleType name="MapType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Byte"/>
-			<xs:enumeration value="SignedByte"/>
-			<xs:enumeration value="Int16"/>
-			<xs:enumeration value="UInt16"/>
-			<xs:enumeration value="Int32"/>
-			<xs:enumeration value="UInt32"/>
-			<xs:enumeration value="Int64"/>
-			<xs:enumeration value="UInt64"/>
-			<xs:enumeration value="Float32"/>
-			<xs:enumeration value="Float64"/>
-			<xs:enumeration value="String"/>
-			<xs:enumeration value="URL"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-
 	<xs:complexType name="Structure">
 		<xs:annotation>
 			<xs:documentation>
@@ -398,7 +372,7 @@
 				
 				name: The name of the variable
 				
-				( Attribute* Alias* AnyXML* ( Byte | ... | Opaque )+ )
+				( Attribute*, Alias*, AnyXML*, ( Byte | ... | Opaque )+ )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -418,7 +392,7 @@
 				
 				name: The name of the variable
 				
-				( Attribute* Alias* AnyXML* ( Byte | ... | Opaque )+ )
+				( Attribute*, Alias*, AnyXML*, ( Byte | ... | Opaque )+ )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -452,7 +426,7 @@
 					the data values, encoded using XDR.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:attribute name="href" type="xs:string" use="required"/>
+		<xs:attribute name="href" type="xs:anyURI" use="required"/>
 	</xs:complexType>
 
 
