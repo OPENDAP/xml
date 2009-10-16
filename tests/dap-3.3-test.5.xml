@@ -3,8 +3,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xml.opendap.org/ns/DAP/3.3# 
     file:/Users/jimg/xml/dap/dap3.3.1.xsd">
-    <AnyXML name="info" type="String">
-        <value>This is a test DDX for the DAP 3.3 schema.</value>
+    <AnyXML name="info" unique="Huh">
+        <comment>This is a test DDX for the DAP 3.3 schema.</comment>
     </AnyXML>
     <Group>
 

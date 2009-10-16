@@ -12,6 +12,9 @@
         <SharedDimension name="Latitude" size="1024"/>
         <SharedDimension name="Longitude" size="1024"/>
 
+        <SharedDimension name="pt" size="4096"/>
+        <SharedDimension name="span" size="128"/>
+                
         <Array name="cloud">
             <Attribute name="long_name" type="String">
                 <value>Cloud Mask</value>
