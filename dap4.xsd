@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?xml-stylesheet href="http://www.w3.org/2008/09/xsd.xsl" type="text/xsl"?>
 <xs:schema targetNamespace="http://xml.opendap.org/ns/DAP/4.0#"
 	xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
 	xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
@@ -11,9 +11,10 @@
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
 
-	<!-- Note that these schemas are local; the XML one can be found at the
-		namespace URL while there is no official schema for xlink. jhrg
-		2/7/12 -->
+	<!-- Note that these schemas are local; the XML one can be found at 
+		http://www.w3.org/2001/xml.xsd. While there is no official schema for 
+		xlink a 'non-normative' one is provided in the appendix of
+		http://www.w3.org/TR/xlink11/. jhrg 2/7/12 -->
 	
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace"
 		schemaLocation="xml.xsd"/>
@@ -24,7 +25,16 @@
 	<xs:element name="Dataset" type="DatasetT">
 		<xs:annotation>
 			<xs:documentation>
-				The root element. A 'Dataset' is root element for DAP4
+				<div>
+					<h1>About the DAP4 metadata response document</h1>
+					
+					<div class="bodytext">
+						The Dataset element holds the syntactic and semantic 
+						metadata associated with a resource accessible using
+						DAP4
+					</div>
+				</div>
+				
 				metadata (syntax and semantic) responses.
 				
 				Element names: Element names that start with capital letters
@@ -470,24 +480,40 @@
 				description of the data values and the blob points to a place
 				where those values will be found. 
 				
-				In DAP 3.3+ the Blob element refers to binary 
+				In DAP4 the Blob element refers to binary 
 				(application/octet-stream) part within a multi-part MIME
-				document. 
+				document or it refers to a separate document, possibly not
+				imediately available. The latter case is included to support
+				asynchronous responses (i.e., responses that cannot be returned
+				quickly). See http://www.w3.org/TR/xlink11/.
 				
-				NB: In future versions of DAP, multiple Blob elements might
-				be used to reference the data for several variables. In
-				addition, the href attribute might be used to refer to data
-				held anywhere on the network, not just within the MPM DAP
-				data response document (aka DataDDX).
-				
-				href: Refers to the multi-part MIME document part that holds
-					the data values, encoded using XDR.
+				xlink:href: Refers to the multi-part MIME document part that 
+					holds the data values, encoded using XDR or to a separate 
+					document. In the first case, the IRI must begin with 'cid:'
+					(see the owsManifest schema for an example of this use; 
+					http://schemas.opengis.net/ows/2.0/owsManifest.xsd). In the 
+					latter case, the IRI must refer to a remote resourse, and
+					will likely start 'http:'.
+				xlink:type: Always 'simple'
+				xlink:role: If present the only values DAP4 supports are 
+					'asynchronousResponse' and 'synchronousResponse'.
+					<!-- TODO: Better names than async... and sync... ? -->
+				available: Contains an ISO 8601 string that indicates when the
+					client can expect for the remote resource to be 
+					dereferencable without error. The special value 'now' is
+					also allowed.
+				until: Contains an ISO 8601 string that indicates when the 
+					client can expect the remote resource to be removed by the
+					server. The special value 'forever' is also allowed.
+					
 			</xs:documentation>
 		</xs:annotation>
-		<!-- TODO Finish this elements attributes -->
-		<xs:attribute ref="xlink:label" use="required"/>
-		<xs:attribute ref="xlink:href"/>
-		<xs:attribute name="href" type="xs:anyURI" use="required"/>
+
+		<xs:attribute ref="xlink:type" use="optional" default="simple"/>
+		<xs:attribute ref="xlink:href" use="required"/>
+		<xs:attribute ref="xlink:role" use="optional"/>
+		<xs:attribute name="available" use="optional"/>
+		<xs:attribute name="until" use="optional"/>
 	</xs:complexType>
 
 
