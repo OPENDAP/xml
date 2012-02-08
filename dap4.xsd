@@ -2,52 +2,25 @@
 
 <xs:schema targetNamespace="http://xml.opendap.org/ns/DAP/4.0#"
 	xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
-	xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#" 
+	xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd"
-	xmlns:xml="http://www.w3.org/XML/1998/namespace" xml:schemaLocation="http://www.w3.org/XML/1998/namespace"
 	elementFormDefault="qualified" 
 	attributeFormDefault="unqualified">
 
-<!--
-		
-		Included because we need to use attribtues in other namespaces like 
-		xlink (for the blob maybe) and xml:base (for Dataset definitely).
-		
-Is there a way to create an XSD that allows an attribute from a different
-namespace, but only if it's qualified? An example of an XML file that would be
-valid according to the schema is
-
-<d:document dx:size="a5"
-    xmlns:d="http://example.com/documents"
-    xmlns:dx="http://example.com/document-extensions"/>
-    
-The schema should enforce the size attribute to be qualified and that is the
-part that I can't get to work.
-
-In your opening schema tag of your schema, not your instance document, use the 
-attirbuteFormDefault="qualified" to ensure that all attributes are qualified to 
-a namespace. In your schema you will have to import, not include, where the 
-attribute in question is defined and then assign a namespace prefix to the 
-document location you are importing.
-
-Now you will have defined a namespace prefix to another definition that is 
-known to your schema. You can now use elements of that other definition in 
-your instance document prefixed with the namespace prefix you defined in your 
-schema. This works best if the other definition document is also a schema.
-
-link|improve this answer
-answered Aug 23 '09 at 5:08
-austin cheney
-
-Thanks, I managed to solve it by importing the document-extensions schema 
-from the document schema and then referencing an attribute group. I didn't use
-the attributeFormDefault="qualified", since I wanted to be able to mix 
-unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
-		
--->
+	<!-- Note that these schemas are local; the XML one can be found at the
+		namespace URL while there is no official schema for xlink. jhrg
+		2/7/12 -->
 	
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace"
+		schemaLocation="xml.xsd"/>
+	
+	<xs:import namespace="http://www.w3.org/1999/xlink"
+		schemaLocation="xlink.xsd"/>
+		
 	<xs:element name="Dataset" type="DatasetT">
 		<xs:annotation>
 			<xs:documentation>
@@ -66,7 +39,7 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 				it's easier for processing software to figure out the type of an array; 
 				Grids have been generalized so that there can be any number of 'Array'
 				parts (and the Maps may be multi-dimensional); and OtherXML has been renamed
-				AnyXML and made its own element (it's no longer a type of 'Attribute'). 
+				OtherXML and made its own element (it's no longer a type of 'Attribute'). 
 
 			</xs:documentation>
 		</xs:annotation>
@@ -87,25 +60,21 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 				Note that the 'blob' element is only present when this is used
 				as the prefix for the Data response.
 				
-				( AnyXML*, Attribute*, Group+, blob? )
+				( OtherXML*, Attribute*, Group+, blob? )
 			</xs:documentation>
 		</xs:annotation>
+
 		<xs:sequence>
 			<xs:group ref="Metadata"/>
-			<xs:element name="Group" type="Group" minOccurs="1" maxOccurs="unbounded"/>
-			<xs:element name="blob" type="Blob" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Group" type="GroupT" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="blob" type="BlobT" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
+		
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="dapVersion" type="xs:string" use="required"/>
-		<xs:attribute name="base" type="xs:string" use="required" form="unqualified">
-			<xs:annotation>
-				<xs:documentation>
-					This is 
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-	</xs:complexType>
+		<xs:attribute ref="xml:base" use="required"/>
 
+	</xs:complexType>
 
 	<xs:group name="Metadata">
 		<xs:annotation>
@@ -114,17 +83,16 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 				'semantic' and/or 'use' metadata for the dataset, its groups 
 				and variables.
 				
-				( AnyXML*, Attribute* )
+				( OtherXML*, Attribute* )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="OtherXML" type="OtherXMLT" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Attribute" type="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="OtherXML" type="OtherXmlT" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Attribute" type="AttributeT" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:group>
 
-
-	<xs:complexType name="Attribute">
+	<xs:complexType name="AttributeT">
 		<xs:annotation>
 			<xs:documentation>
 				DAP uses attributes as a way to encode information that data
@@ -142,7 +110,7 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 					information that a data server might know to be true that
 					a client application could not assume with certainty.
 				
-				( Value+ | ( Attribute*, Alias*, AnyXML* ) )
+				( Value+ | ( OtherXML*, Attribute* ) )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:choice>
@@ -155,7 +123,7 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 		</xs:choice>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<!-- TODO: Extend to more DAP types? -->
-		<xs:attribute name="type" type="AttributeType" use="required"/>
+		<xs:attribute name="type" type="AttributeTypeT" use="required"/>
 		<xs:attribute name="namespace" type="xs:string" use="optional">
 			<xs:annotation>
 				<xs:documentation>
@@ -167,13 +135,14 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 
 	<!-- These types have been declared to minimize name duplication -->
 
-	<xs:simpleType name="ScalarTypeNames">
+	<xs:simpleType name="CardinalTypeNamesT">
 		<xs:annotation>
 			<xs:documentation>
 				Changes from DAP2 to DAP4: The Byte type is now signed and
 				unsigned bytes are now represented by the 'UByte' data type.
 				The types Int64 and UInt64 represent signed and unsigned 64-bit
 				integers. String uses UTF-8 in DAP4.
+				Enumerations are now in the mix.
 			</xs:documentation>
 		</xs:annotation>
 		
@@ -190,20 +159,51 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 			<xs:enumeration value="Float64"/>
 			<xs:enumeration value="String"/>
 			<xs:enumeration value="Url"/>
+			<xs:enumeration value="Enum"/>
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="Container">
+	<xs:simpleType name="OpaqueT">
+		<xs:annotation>
+			<xs:documentation>
+				This is essentially a BLOB type. Like a String, it is a type 
+				with varying size and it can be used in Structures, Arrays and
+				Sequences. It cannot, howerver, be part of a Grid.
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Opaque"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="ContainerT">
+		<xs:annotation>
+			<xs:documentation>
+				The Container type is used to hold structure (or 'Container')
+				attributes. These correspond to the netCDF4/HDF5 compound type
+				for attributes.
+			</xs:documentation>
+		</xs:annotation>
+		
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Container"/>
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="AttributeType">
-		<xs:union memberTypes="ScalarTypeNames Container"/>
+	<xs:simpleType name="AttributeTypeT">
+		<xs:annotation>
+			<xs:documentation>
+				Hack: Here Attribute types are apparently defined as scalars
+				or Containers. However, they are actually scalars, vectors or
+				containers.
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:union memberTypes="CardinalTypeNamesT ContainerT"/>
 	</xs:simpleType>
 
-	<xs:complexType name="OtherXMLT">
+	<xs:complexType name="OtherXmlT">
 		<xs:annotation>
 			<xs:documentation>
 				Use this to embed arbitrary XML in a DDX. This functions like
@@ -221,14 +221,14 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:any namespace="##any" minOccurs="1" processContents="lax"/>
+			<xs:any namespace="##other" minOccurs="1" maxOccurs="unbounded" processContents="lax"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string"/>
-		<xs:anyAttribute processContents="lax" namespace="##any"/>
+		<xs:anyAttribute processContents="lax" namespace="##other"/>
 	</xs:complexType>
 
 
-	<xs:complexType name="Group">
+	<xs:complexType name="GroupT">
 		<xs:annotation>
 			<xs:documentation>
 				A Group is a lexical scoping tool used to replicate HDF5 and 
@@ -239,20 +239,20 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 				
 				name: The name of the Group
 				
-				( AnyXML*, Attribute*, Dimension*, 
-					( Byte | ... | Opaque )+ )
+				( OtherXML*, Attribute*, Dimension*, 
+					ScalarType+ )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:group ref="Metadata"/>
-			<xs:element name="Dimension" type="Dimension" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Dimension" type="DimensionT" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:group ref="VariableTypes" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" default="anonymous"/>
 	</xs:complexType>
 
 
-	<xs:complexType name="Dimension">
+	<xs:complexType name="DimensionT">
 		<xs:annotation>
 			<xs:documentation>
 				This defines a dimension (a name and size) that may be shared 
@@ -268,10 +268,10 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 
 	<!-- These groups have been defined to minimize name duplication -->
 
-	<xs:group name="ScalarTypes">
+	<xs:group name="CardinalTypes">
 		<xs:annotation>
 			<xs:documentation>
-				DAP Variable Types
+				DAP cardinal data types
 			</xs:documentation>
 		</xs:annotation>
 		<xs:choice>
@@ -287,23 +287,20 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 			<xs:element name="Float64" type="BaseType"/>
 			<xs:element name="String" type="BaseType"/>
 			<xs:element name="Url" type="BaseType"/>
-		</xs:choice>
-	</xs:group>
-
-	<xs:group name="ArrayTypes">
-		<xs:choice>
-			<xs:group ref="ScalarTypes"/>
-			<xs:element name="Structure" type="Structure"/>
-			<xs:element name="Opaque" type="BaseType"/>
+			<xs:element name="Enum" type="BaseType"/>
 		</xs:choice>
 	</xs:group>
 
 	<xs:group name="VariableTypes">
 		<xs:choice>
-			<xs:group ref="ArrayTypes"/>
-			<xs:element name="Array" type="Array" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Grid" type="Grid" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Sequence" type="Sequence" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="CardinalTypes"/>
+			
+			<xs:element name="Opaque" type="BaseType"/>
+			
+			<xs:element name="Structure" type="StructureT"/>
+			<xs:element name="Array" type="ArrayT" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Grid" type="GridT" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Sequence" type="SequenceT" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:choice>
 	</xs:group>
 
@@ -317,7 +314,7 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 				
 				name: The name of the variable
 				
-				( AnyXML*, Attribute*)
+				( OtherXML*, Attribute*)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -326,31 +323,7 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 		<xs:attribute name="name" type="xs:string"/>
 	</xs:complexType>
 
-
-	<xs:complexType name="Array">
-		<xs:annotation>
-			<xs:documentation>
-				name: The name of the variable
-				
-				( AnyXML*, Attribute*, ElementType, Dimension+)
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="BaseType">
-				<xs:sequence>
-					<xs:element name="ElementType">
-						<xs:complexType>
-							<xs:group ref="ArrayTypes"/>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="dim" type="ArrayDimension" minOccurs="1" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-
-	<xs:complexType name="ArrayDimension">
+	<xs:complexType name="ArrayDimensionT">
 		<xs:annotation>
 			<xs:documentation>
 				name: The name of the dimension
@@ -361,13 +334,47 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 				be present
 			</xs:documentation>
 		</xs:annotation>
+		
 		<xs:attribute name="name" type="xs:string"/>
 		<xs:attribute name="size" type="xs:integer"/>
 		<xs:attribute name="ref" type="xs:string"/>
+		
 	</xs:complexType>
 
+	<xs:complexType name="ArrayT">
+		<xs:annotation>
+			<xs:documentation>
+				name: The name of the variable.
+				
+				NB: DAP4 allows for arrays of every type except: Grid or
+				Sequence. Since the 'Array' element may list N dimensions (using
+				the 'dim' child elements), the syntax does not allow 'Array'
+				elements to be children of 'Array'.
+				
+				( OtherXML*, Attribute*, type, dim+)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:sequence>
+					<xs:element name="type">
+						<xs:complexType>
+							<xs:choice>
+								<xs:group ref="CardinalTypes"/>
+								
+								<xs:element name="Opaque" type="BaseType"/>
+								
+								<xs:element name="Structure" type="StructureT"/>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="dim" type="ArrayDimensionT" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
-	<xs:complexType name="Grid">
+	<xs:complexType name="GridT">
 		<xs:annotation>
 			<xs:documentation>
 				A Grid is a type that relates one or more Maps (aka coordinate
@@ -378,49 +385,44 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 				
 				name: The name of the variable
 				
-				( AnyXML*, Attribute*, Map+, Array+ )
+				( OtherXML*, Attribute*, Array+, Map+)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BaseType">
 				<xs:sequence>
 					<!-- Subtle change here: In DAP 3.2 and earlier, maxOccurs
-						for the Array element was 1, now it's 'unbounded' and
-						Maps have moved to teh top of the Grid. Not sure that 
-						change is important, but it's a wash because the 
-						content has changed -->
-					<xs:element name="Map" type="Map" minOccurs="1" maxOccurs="unbounded"/>
-					<xs:element name="Array" type="Array" minOccurs="1" maxOccurs="unbounded"/>
+						for the Array element was 1, now it's 'unbounded' -->
+					<xs:element name="Array" type="ArrayT" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element name="Map" type="MapT" minOccurs="1" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
 
-	<xs:complexType name="Map">
+	<xs:complexType name="MapT">
 		<xs:annotation>
 			<xs:documentation>
-				name: optional name for this Map; if not given the map's name
-				is the name of the SharedDimension, which must be given
-				ref: optional reference to a SharedDimension definition
-				type: required type of the map; type limited to Byte, ..., Url
+				name: name for this Map
 				
-				( AnyXML*, Attribute*, Dimension* )
+				NB: Note the limitation on the type of a Map, which excludes
+				Maps that are Opaques, Structures, Sequences or Grids.
 				
-				Note: If there are no dimension elements, ref must be given
+				( OtherXML*, Attribute*, dim* )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:group ref="Metadata"/>
-			<xs:element name="Dimension" type="ArrayDimension" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="dim" type="ArrayDimensionT" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="name" type="xs:string"/>
-		<xs:attribute name="ref" type="xs:string"/>
-		<xs:attribute name="type" type="ScalarTypeNames" use="required"/>
+				
+		<xs:attribute name="type" type="CardinalTypeNamesT" use="required"/>
+		
 	</xs:complexType>
 
 
-	<xs:complexType name="Structure">
+	<xs:complexType name="StructureT">
 		<xs:annotation>
 			<xs:documentation>
 				A Structure; a simple aggregation of variables. Unlike a Group,
@@ -428,7 +430,7 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 				
 				name: The name of the variable
 				
-				( AnyXML*, Attribute*, ( Byte | ... | Opaque )+ )
+				( OtherXML*, Attribute*, ( Byte | ... | Grid )+ )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -439,7 +441,7 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 	</xs:complexType>
 
 
-	<xs:complexType name="Sequence">
+	<xs:complexType name="SequenceT">
 		<xs:annotation>
 			<xs:documentation>
 				A Sequence is a type that holds tabular data where each row
@@ -448,7 +450,7 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 				
 				name: The name of the variable
 				
-				( AnyXML*, Attribute*, ( Byte | ... | Opaque )+ )
+				( OtherXML*, Attribute*, ( Byte | ... | Grid )+ )
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -458,14 +460,14 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="Blob">
+	<xs:complexType name="BlobT">
 		<xs:annotation>
 			<xs:documentation>
 				The 'Blob' element is used to point to an associated data 
 				document. When DAP is used to access metadata only for a data
-				source, no Blob element will be present. However, when a
+				source, no 'blob' element will be present. However, when a
 				request for data is made, the Dataset element holds a
-				description of the data values and the Blob points to a place
+				description of the data values and the blob points to a place
 				where those values will be found. 
 				
 				In DAP 3.3+ the Blob element refers to binary 
@@ -482,6 +484,9 @@ unqualified attributes with qualified ones. – levi_h Aug 23 '09 at 12:36
 					the data values, encoded using XDR.
 			</xs:documentation>
 		</xs:annotation>
+		<!-- TODO Finish this elements attributes -->
+		<xs:attribute ref="xlink:label" use="required"/>
+		<xs:attribute ref="xlink:href"/>
 		<xs:attribute name="href" type="xs:anyURI" use="required"/>
 	</xs:complexType>
 
