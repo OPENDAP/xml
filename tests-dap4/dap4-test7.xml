@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<Dataset name="test1" dapVersion="4.0" xml:base="file:/Users/jimg/src/shrew/xml/dap/tests-dap4/dap-4-test1.xml"
+    xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
+    xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd"
+    xmlns:snafu="http:/snafu">
+        
+    <Group>
+        <Group name="toor">
+            <Byte name="b"/>
+            <UByte name="ub"/>
+            <Int16 name="i16"/>
+            <UInt16 name="ui16"/>
+            <Int32 name="i32"/>
+            <UInt32 name="ui32"/>
+            <Int64 name="i64"/>
+            <UInt64 name="ui64"/>
+            <Float32 name="f32"/>
+            <Float64 name="f64"/>
+            <String name="s"/>
+            <Url name="u"/>
+        </Group>
+
+        <Dimension name="latitude" size="1024"/>
+
+        <Enumeration name="elements">
+            <elt name="Hydrogen" value="1"/>
+            <elt name="Helium" value="2"/>
+        </Enumeration>
+        
+        <Byte name="b"/> 
+        
+        <Enum name="e" type="elements"/>
+    </Group>
+    
+
+</Dataset>

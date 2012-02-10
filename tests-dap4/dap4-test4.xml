@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<Dataset name="test1" dapVersion="4.0" xml:base="file:/Users/jimg/src/shrew/xml/dap/tests-dap4/dap-4-test1.xml"
+    xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
+    xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd"
+    xmlns:snafu="http:/snafu">
+    
+    <Attribute name="test" type="Container">
+        <OtherXML>
+            <bar:foo xmlns:bar="http://bar" name="name"/>
+            <snafu:foo name="name"/>
+        </OtherXML>
+        
+        <Attribute name="test" type="Byte">
+            <value>255</value>
+        </Attribute>
+        
+    </Attribute>
+    
+    <Attribute name="test" type="Container">
+        
+        <Attribute name="test" type="Byte">
+            <value>255</value>
+        </Attribute>
+        
+    </Attribute>
+
+    <Attribute name="test" type="Container"> </Attribute>
+    
+    <Group name="root">
+        <Byte name="b"/>
+    </Group>
+</Dataset>
