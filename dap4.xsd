@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="http://www.w3.org/2008/09/xsd.xsl" type="text/xsl"?>
+<!-- <?xml-stylesheet href="http://www.w3.org/2008/09/xsd.xsl" type="text/xsl"?> -->
 <xs:schema targetNamespace="http://xml.opendap.org/ns/DAP/4.0#"
 	xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
 	xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
@@ -9,7 +9,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd"
 	elementFormDefault="qualified" 
-	attributeFormDefault="unqualified">
+	attributeFormDefault="unqualified"
+	xml:lang="en">
 
 	<!-- Note that these schemas are local; the XML one can be found at 
 		http://www.w3.org/2001/xml.xsd. While there is no official schema for 
@@ -25,16 +26,6 @@
 	<xs:element name="Dataset" type="DatasetT">
 		<xs:annotation>
 			<xs:documentation>
-				<div>
-					<h1>About the DAP4 metadata response document</h1>
-					
-					<div class="bodytext">
-						The Dataset element holds the syntactic and semantic 
-						metadata associated with a resource accessible using
-						DAP4
-					</div>
-				</div>
-				
 				metadata (syntax and semantic) responses.
 				
 				Element names: Element names that start with capital letters
@@ -227,7 +218,7 @@
 				*: This element can contain any other attributes that conform 
 					to the schema 1.0 definition of 'lax' processing
 					
-				( <xs:any/>+ ) 
+				( xs:other+ ) 
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -320,7 +311,7 @@
 			<xs:documentation>
 				Each variable in DAP4 is represented as a name and a collection
 				of metadata (Attributes, ...). The type of the variable is 
-				given in the element name (e.g., <Byte name="x"/>)
+				given in the element name (e.g., &lt;Byte name="x"/>)
 				
 				name: The name of the variable
 				
@@ -470,6 +461,14 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<xs:attributeGroup name="asyncResponse">
+		<xs:attribute ref="xlink:type" use="optional" default="simple"/>
+		<xs:attribute ref="xlink:href" use="required"/>
+		<xs:attribute ref="xlink:role" use="optional"/>
+		<xs:attribute name="available" use="optional"/>
+		<xs:attribute name="until" use="optional"/>	
+	</xs:attributeGroup>
+	
 	<xs:complexType name="BlobT">
 		<xs:annotation>
 			<xs:documentation>
@@ -497,7 +496,7 @@
 				xlink:type: Always 'simple'
 				xlink:role: If present the only values DAP4 supports are 
 					'asynchronousResponse' and 'synchronousResponse'.
-					<!-- TODO: Better names than async... and sync... ? -->
+				<!-- TODO: Better names than async... and sync... ? -->
 				available: Contains an ISO 8601 string that indicates when the
 					client can expect for the remote resource to be 
 					dereferencable without error. The special value 'now' is
@@ -508,12 +507,11 @@
 					
 			</xs:documentation>
 		</xs:annotation>
-
 		<xs:attribute ref="xlink:type" use="optional" default="simple"/>
 		<xs:attribute ref="xlink:href" use="required"/>
 		<xs:attribute ref="xlink:role" use="optional"/>
-		<xs:attribute name="available" use="optional"/>
-		<xs:attribute name="until" use="optional"/>
+		<xs:attribute name="available" use="optional" type="xs:dateTime"/>
+		<xs:attribute name="until" use="optional" type="xs:dateTime"/>
 	</xs:complexType>
 
 
