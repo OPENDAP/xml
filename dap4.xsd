@@ -375,7 +375,7 @@
 				be present
 			</xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:attribute name="name" type="xs:string"/>
 		<xs:attribute name="size" type="xs:integer"/>
 		<xs:attribute name="ref" type="xs:string"/>
@@ -395,6 +395,26 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<xs:complexType name="dimensionsT">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="dim" type="ArrayDimensionT" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:choice>  
+	</xs:complexType>
+	
+	<xs:complexType name="arrayTypeT">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:group ref="ArrayVariableTypes" minOccurs="1" maxOccurs="1"/>
+		</xs:choice>  
+	</xs:complexType>
+	
 	<xs:complexType name="ArrayT">
 		<xs:annotation>
 			<xs:documentation>
@@ -410,14 +430,15 @@
 				be located is limited to an enclosing Group (but it is not
 				limited to the immediate parent Group).
 				
-				( OtherXML*, Attribute*, type, dim+)
+				( OtherXML*, Attribute*, type, dimensions)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BaseType">
 				<xs:sequence>
-					<xs:group ref="ArrayVariableTypes" minOccurs="1" maxOccurs="unbounded"/>
-					<xs:element name="dim" type="ArrayDimensionT" minOccurs="1" maxOccurs="unbounded"/>
+					<!-- <xs:group ref="ArrayVariableTypes" minOccurs="1" maxOccurs="1"/> -->
+					<xs:element name="type" type="arrayTypeT" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="dimensions" type="dimensionsT" minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -458,24 +479,40 @@
 	<xs:complexType name="MapT">
 		<xs:annotation>
 			<xs:documentation>
-				name: name for this Map
+				name: Name for this Map. Maps are associated with Array
+				dimentions by name, so this is a required attribute.
+				type: The type of a Map is limited to the Cardinal types.
 				
 				NB: Note the limitation on the type of a Map, which excludes
 				Maps that are Opaques, Structures, Sequences or Grids.
 				
-				( OtherXML*, Attribute*, dim* )
+				( OtherXML*, Attribute*, dimensions )
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence>
-			<xs:group ref="Metadata"/>
-			<xs:element name="dim" type="ArrayDimensionT" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:sequence>
+					<xs:element name="dimensions" type="dimensionsT" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
 				
-		<xs:attribute name="type" type="CardinalT" use="required"/>
-		
+				<xs:attribute name="type" type="CardinalT" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 
-
+	<xs:complexType name="allTypeT">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:group ref="AllVariableTypes" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:extension>  
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
 	<xs:complexType name="StructureT">
 		<xs:annotation>
 			<xs:documentation>
@@ -487,13 +524,16 @@
 				( OtherXML*, Attribute*, ( Byte | ... | Grid )+ )
 			</xs:documentation>
 		</xs:annotation>
+
 		<xs:complexContent>
 			<xs:extension base="BaseType">
-				<xs:group ref="AllVariableTypes" minOccurs="1" maxOccurs="unbounded"/>
-			</xs:extension>
+				<xs:sequence>
+					<xs:element name="type" type="allTypeT" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				
+			</xs:extension>  
 		</xs:complexContent>
 	</xs:complexType>
-
 
 	<xs:complexType name="SequenceT">
 		<xs:annotation>
@@ -509,8 +549,10 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BaseType">
-				<xs:group ref="AllVariableTypes" minOccurs="1" maxOccurs="unbounded"/>
-			</xs:extension>
+				<xs:sequence>
+					<xs:element name="type" type="allTypeT" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>  
 		</xs:complexContent>
 	</xs:complexType>
 

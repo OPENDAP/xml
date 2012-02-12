@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<Dataset name="test1" dapVersion="4.0"
+    xml:base="file:/Users/jimg/src/shrew/xml/dap/tests-dap4/dap-4-test1.xml"
+    xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd"
+    xmlns:snafu="http:/snafu">
+
+    <Group>
+        <Dimension name="latitude" size="1024"/>
+        <Dimension name="longitude" size="1024"/>
+
+        <Enumeration name="mask_values">
+            <elt name="clear" value="1"/>
+            <elt name="cloud" value="2"/>
+        </Enumeration>
+
+        <Structure name="A name from an HDF4 file!">
+            <Attribute name="long_name" type="String">
+                <value>Sea Surface Temperature</value>
+            </Attribute>
+            <type> 
+                <Byte name="b"/>
+                <UByte name="ub"/>
+                <Array name="vector">
+                    <Attribute name="long_name" type="String"><value>A vector of values</value></Attribute>
+                    <type>
+                        <Float64/>
+                    </type>
+                    <dimensions>
+                        <dim size="256"/>
+                    </dimensions>
+                </Array>
+                <String name="s"><Attribute name="long_name" type="String"><value>The long name for the string</value></Attribute></String>
+            </type>
+        </Structure>
+
+    </Group>
+
+</Dataset>

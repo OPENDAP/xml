@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<Dataset name="test1" dapVersion="4.0" xml:base="file:/Users/jimg/src/shrew/xml/dap/tests-dap4/dap-4-test1.xml"
+    xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
+    xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd"
+    xmlns:snafu="http:/snafu">
+        
+    <Group>
+        <Dimension name="latitude" size="1024"/>
+        <Dimension name="longitude" size="1024"/>
+        
+        <Enumeration name="mask_values">
+            <elt name="clear" value="1"/>
+            <elt name="cloud" value="2"/>
+        </Enumeration>
+        
+        <Grid name="SST">
+            <Array name="SST">
+                <Attribute name="long_name" type="String">
+                    <value>Sea Surface Temperature</value>
+                </Attribute>
+                <type>
+                    <Byte/>
+                </type>
+                <dimensions>
+                    <dim ref="latitude"/>
+                    <dim ref="longitude"/>
+                </dimensions>
+            </Array>
+            
+            <Array name="mask">
+                <Attribute name="long_name" type="String">
+                    <value>Cloud mask</value>
+                </Attribute>
+                <type>
+                    <Enum type="mask_values"/>
+                </type>
+                <dimensions>
+                    <dim ref="latitude"/>
+                    <dim ref="longitude"/>
+                </dimensions>
+            </Array>
+            
+            <Map name="latitude" type="Float32">
+                <Attribute name="maybe" type="UByte"><value>255</value></Attribute>
+                <dimensions>
+                    <dim ref="latitude"/>
+                </dimensions>
+            </Map>
+            
+            <Map name="longitude" type="Float32">
+                <dimensions>
+                    <dim ref="longitude"/>
+                </dimensions>
+            </Map>
+        </Grid>
+        
+    </Group>
+
+</Dataset>
