@@ -19,7 +19,7 @@
                 <UByte name="ub"/>
                 <Array name="vector">
                     <Attribute name="long_name" type="String">
-                        <value>A vector of values</value>
+                        <value>A long name for this vector of floating point values</value>
                     </Attribute>
                     <type>
                         <Float64/>
