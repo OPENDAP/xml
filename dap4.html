@@ -41,6 +41,7 @@
          <ul class="bodytext">
             <li><a href="#imp_1">Import <code>http://www.w3.org/XML/1998/namespace</code></a></li>
             <li><a href="#imp_2">Import <code>http://www.w3.org/1999/xlink</code></a></li>
+            <li><a href="#imp_3">Import <code>http://purl.org/dc/elements/1.1/</code></a></li>
             <li><a href="#elem_Dataset">Element <em>Dataset</em></a></li>
             <li><a href="#type_DatasetT">Complex type <em>DatasetT</em></a></li>
             <li><a href="#grp_Metadata">Model group <em>Metadata</em></a></li>
@@ -87,26 +88,38 @@
       	schemaLocation="xml.xsd"/&gt;</pre></div>
          </div>
       </div>
-      
+      	
       	
       <div id="imp_2">
          <h3><a name="imp_2">Import <code>http://www.w3.org/1999/xlink</code></a></h3>
          <div class="bodytext">
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-
 	&lt;xs:import
       	namespace="http://www.w3.org/1999/xlink"
       	schemaLocation="xlink.xsd"/&gt;</pre></div>
          </div>
       </div>
+      	
+      	
+      <div id="imp_3">
+         <h3><a name="imp_3">Import <code>http://purl.org/dc/elements/1.1/</code></a></h3>
+         <div class="bodytext">
+            <div>
+               <h4>Formal declaration in XSD source form</h4><pre>
+	&lt;xs:import
+      	namespace="http://purl.org/dc/elements/1.1/"
+      	schemaLocation="dc.xsd"/&gt;</pre></div>
+         </div>
+      </div>
+      	
       
       	
       <div id="elem_Dataset">
          <h3><a name="elem_Dataset">Element <em>Dataset</em></a></h3>
          <div class="bodytext">
             <div>
-               <div xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+               <div xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                   					
                   <h1>About the Dataset document</h1>
                   					
@@ -117,11 +130,12 @@
                         							type and value(s) along with a hierarchical collection of 'attributes'
                         							that themselves are made up of name-tye-value(s) tuples. The variables
                         							are organized in a hierarchy.
-                     </p> 
-                     <p>The Dataset document is a text/xml
-                        							representatin of those variables and their organiation within the
-                        							dataset.
-                     </p> 
+                     </p>
+                     						
+                     <p>The Dataset document is a text/xml representatin of those variables and
+                        							their organiation within the dataset.
+                     </p>
+                     						
                      <h4>A note about XML element names:</h4>
                      						
                      <p>Element names that start with capital letters correspond to parts of the
@@ -158,28 +172,39 @@
          <h3><a name="type_DatasetT">Complex type <em>DatasetT</em></a></h3>
          <div class="bodytext">
             <div>
-               <div xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+               <div xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                   					
                   <h3>Dataset</h3>
                   					
-                  <p> This is the XML representation of a data source in DAP 4. </p>
+                  <p> This is the XML representation of a data source in DAP 4.</p>
                   					
-                  <h4>name</h4>
-                  					
-                  <p> The name of the data source; often a string used to uniquely reference the
-                     						data source wrt a particular server 
+                  <p>Note that the 'blob' element is only present when this is used as the prefix
+                     						for the Data response.
                   </p>
                   					
-                  <h4>dapVersion</h4>
+                  <p>Grammar: ( OtherXML*, Attribute*, Group+, blob? )</p>
                   					
-                  <p>The protocol version that corresponds to this document.</p>
+                  <p>Element attributes:</p>
                   					
-                  <h4>xml:base</h4>
-                  					
-                  <p>The URL the references the DAP4 service endoint used to access this
-                     						dataset.
-                  </p> Note that the 'blob' element is only present when this is used
-                  					as the prefix for the Data response. ( OtherXML*, Attribute*, Group+, blob? )
+                  <dl>
+                     						
+                     <dt>name</dt>
+                     						
+                     <dd>The name of the data source; often a string used to uniquely reference
+                        							the data source wrt a particular server
+                     </dd>
+                     						
+                     <dt>dapVersion</dt>
+                     						
+                     <dd>The protocol version that corresponds to this document.</dd>
+                     						
+                     <dt>xml:base</dt>
+                     						
+                     <dd>The URL the references the DAP4 service endoint used to access this
+                        							dataset.
+                     </dd>
+                     					
+                  </dl>
                   				
                </div>
             </div>
@@ -589,6 +614,8 @@
 			&lt;xs:element name="Float64" type="<a href="#type_BaseType">BaseType</a>"/&gt;
 			&lt;xs:element name="String" type="<a href="#type_BaseType">BaseType</a>"/&gt;
 			&lt;xs:element name="Url" type="<a href="#type_BaseType">BaseType</a>"/&gt;
+			&lt;xs:element name="Enum" type="<a href="#type_EnumT">EnumT</a>"/&gt;
+			&lt;xs:element name="Opaque" type="<a href="#type_OpaqueT">OpaqueT</a>"/&gt;
 		&lt;/xs:choice&gt;
 	&lt;/xs:group&gt;</pre></div>
          </div>
@@ -605,8 +632,6 @@
 		&lt;xs:choice&gt;
 			&lt;xs:group ref="<a href="#grp_CardinalTypes">CardinalTypes</a>"/&gt;
 
-			&lt;xs:element name="Enum" type="<a href="#type_EnumT">EnumT</a>"/&gt;
-			&lt;xs:element name="Opaque" type="<a href="#type_OpaqueT">OpaqueT</a>"/&gt;
 			&lt;xs:element name="Structure" type="<a href="#type_StructureT">StructureT</a>"/&gt;
 		&lt;/xs:choice&gt;
 	&lt;/xs:group&gt;</pre></div>
@@ -622,10 +647,8 @@
 
 	&lt;xs:group name="AllVariableTypes"&gt;
 		&lt;xs:choice&gt;
-			&lt;xs:group ref="<a href="#grp_CardinalTypes">CardinalTypes</a>"/&gt;
-			&lt;xs:element name="Enum" type="<a href="#type_EnumT">EnumT</a>"/&gt;
-			&lt;xs:element name="Opaque" type="<a href="#type_OpaqueT">OpaqueT</a>"/&gt;
-			&lt;xs:element name="Structure" type="<a href="#type_StructureT">StructureT</a>"/&gt;
+			&lt;xs:group ref="<a href="#grp_ArrayVariableTypes">ArrayVariableTypes</a>"/&gt;
+
 			&lt;xs:element
       			name="Array"
       			type="<a href="#type_ArrayT">ArrayT</a>"
@@ -966,48 +989,88 @@
          <h3><a name="type_BlobT">Complex type <em>BlobT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>&nbsp;The 'Blob' element is used to point to an associated data document.
-               <br>				When DAP is used to access metadata only for a data source, no 'blob' element will
-               <br>				be present. However, when a request for data is made, the Dataset element holds a
-               <br>				description of the data values and the blob points to a place where those values
-               <br>				will be found. In DAP4 the Blob element refers to binary (application/octet-stream)
-               <br>				part within a multi-part MIME document or it refers to a separate document, possibly
-               <br>				not imediately available. The latter case is included to support asynchronous
-               <br>				responses (i.e., responses that cannot be returned quickly). See
-               <br>				http://www.w3.org/TR/xlink11/. xlink:href: Refers to the multi-part MIME document
-               <br>				part that holds the data values, encoded using XDR or to a separate document. In the
-               <br>				first case, the IRI must begin with 'cid:' (see the owsManifest schema for an
-               <br>				example of this use; http://schemas.opengis.net/ows/2.0/owsManifest.xsd). In the
-               <br>				latter case, the IRI must refer to a remote resourse, and will likely start 'http:'.
-               <br>				xlink:type: Always 'simple' xlink:role: If present the only values DAP4 supports are
-               <br>				'asynchronousResponse' and 'synchronousResponse'.
-               <br>				 available: Contains an ISO
-               <br>				8601 string that indicates when the client can expect for the remote resource to be
-               <br>				dereferencable without error. The special value 'now' is also allowed. until:
-               <br>				Contains an ISO 8601 string that indicates when the client can expect the remote
-               <br>				resource to be removed by the server. The special value 'forever' is also allowed.
-               <br>			
+               <div xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" class="bodytext">
+                  					
+                  <p>The 'Blob' element is used to point to an associated data document. When DAP
+                     						is used to access metadata only for a data source, no 'blob' element will be
+                     						present. However, when a request for data is made, the Dataset element holds
+                     						a description of the data values and the blob points to a place where those
+                     						values will be found. In DAP4 the Blob element refers to binary
+                     						(application/octet-stream) part within a multi-part MIME document or it
+                     						refers to a separate document, possibly not imediately available. The latter
+                     						case is included to support asynchronous responses (i.e., responses that
+                     						cannot be returned quickly). See http://www.w3.org/TR/xlink11/.
+                  </p> 
+                  <h4>The
+                     						dc:date child element
+                  </h4>
+                  					
+                  <p>If present, the 
+                     <dc:date></dc:date> element indicates the time or time range when the
+                     						information will be available. This is only sensible (i.e., valid) when the
+                     						response is asynchronous (i.e.,
+                     						xlink:role="http://xml.opendap.org/dap/DAP4#asynchronous"). Dublin core
+                     						defines both a date and a date range. In the case of a date, this element
+                     						indicates when the information will likely be available; when its value is a
+                     						range, it denotes the when it will likely be present and when it wil go
+                     						away.
+                  </p> 
+                  					
+                  <p>Examples of the 
+                     <dc:date></dc:date> element: 
+                     						
+                     <ul>
+                        							
+                        <li><code>&lt;dc:date&gt;1994-11-05T13:15:30Z&lt;/dc:date&gt;</code></li>
+                        							
+                        <li><code>&lt;dc:date&gt;1994-11-05T13:15:30Z/1994-11-06T00:00:00Z&lt;/dc:date&gt;</code></li>
+                        						
+                     </ul>
+                     					
+                  </p> 
+                  <p>Element attributes:</p>
+                  					
+                  <dl>
+                     						
+                     <dt>xlink:href:</dt>
+                     						
+                     <dd>Refers to the multi-part MIME document part that holds the data values,
+                        							encoded using XDR or to a separate document. In the first case, the IRI
+                        							must begin with 'cid:' (see the owsManifest schema for an example of
+                        							this use; http://schemas.opengis.net/ows/2.0/owsManifest.xsd). In the
+                        							latter case, the IRI must refer to a remote resourse, and will likely
+                        							start 'http:'.
+                     </dd> 
+                     <dt>xlink:type:</dt>
+                     						
+                     <dd>Always 'simple'.</dd> 
+                     <dt>xlink:role:</dt>
+                     						
+                     <dd>If present the only values DAP4 supports are 'asynchronousResponse' and
+                        							'synchronousResponse'.
+                     </dd>
+                     						
+                     <!-- TODO: Better names than async... and sync... ? -->
+                     					
+                  </dl>
+                  				
+               </div>
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
 
 	&lt;xs:complexType name="BlobT"&gt;
 		
+		&lt;xs:choice&gt;
+			&lt;xs:element ref="<span class="external-link diff-ns">dc:date</span>"/&gt;
+		&lt;/xs:choice&gt;
+
 		&lt;xs:attribute
       		ref="<span class="external-link diff-ns">xlink:type</span>"
       		use="optional"
       		default="simple"/&gt;
 		&lt;xs:attribute ref="<span class="external-link diff-ns">xlink:href</span>" use="required"/&gt;
 		&lt;xs:attribute ref="<span class="external-link diff-ns">xlink:role</span>" use="optional"/&gt;
-		
-		&lt;xs:attribute
-      		name="available"
-      		use="optional"
-      		type="<span class="external-link diff-ns">xs:dateTime</span>"/&gt;
-		&lt;xs:attribute
-      		name="until"
-      		use="optional"
-      		type="<span class="external-link diff-ns">xs:dateTime</span>"/&gt;
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
       </div>
