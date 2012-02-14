@@ -14,9 +14,9 @@
 		http://www.w3.org/TR/xlink11/. jhrg 2/7/12 -->
 
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
-
+	
 	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlink.xsd"/>
-
+		
 	<xs:element name="Dataset" type="DatasetT">
 		<xs:annotation>
 			<xs:documentation>
@@ -271,6 +271,8 @@
 			<xs:element name="Float64" type="BaseType"/>
 			<xs:element name="String" type="BaseType"/>
 			<xs:element name="Url" type="BaseType"/>
+			<xs:element name="Enum" type="EnumT"/>
+			<xs:element name="Opaque" type="OpaqueT"/>
 		</xs:choice>
 	</xs:group>
 
@@ -278,18 +280,14 @@
 		<xs:choice>
 			<xs:group ref="CardinalTypes"/>
 
-			<xs:element name="Enum" type="EnumT"/>
-			<xs:element name="Opaque" type="OpaqueT"/>
 			<xs:element name="Structure" type="StructureT"/>
 		</xs:choice>
 	</xs:group>
 
 	<xs:group name="AllVariableTypes">
 		<xs:choice>
-			<xs:group ref="CardinalTypes"/>
-			<xs:element name="Enum" type="EnumT"/>
-			<xs:element name="Opaque" type="OpaqueT"/>
-			<xs:element name="Structure" type="StructureT"/>
+			<xs:group ref="ArrayVariableTypes"/>
+
 			<xs:element name="Array" type="ArrayT" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Grid" type="GridT" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Sequence" type="SequenceT" minOccurs="0" maxOccurs="unbounded"/>
