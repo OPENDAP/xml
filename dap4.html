@@ -126,9 +126,9 @@
                   <div class="bodytext">
                      						
                      <p>In DAP2 and DAP4, a dataset is defined as a collection of variables, each
-                        							of whcih is completely described by a tuple that consists of a name,
+                        							of which is completely described by a tuple that consists of a name,
                         							type and value(s) along with a hierarchical collection of 'attributes'
-                        							that themselves are made up of name-tye-value(s) tuples. The variables
+                        							that themselves are made up of name-type-value(s) tuples. The variables
                         							are organized in a hierarchy.
                      </p>
                      						
@@ -149,8 +149,8 @@
                         							UnsignedByte. In addition: The syntax for Array has been changed so that
                         							it's easier for processing software to figure out the type of an array;
                         							Grids have been generalized so that there can be any number of 'Array'
-                        							parts (and the Maps may be multi-dimensional); and OtherXML has been
-                        							renamed OtherXML and made its own element (it's no longer a type of
+                        							parts (and the Maps may be multi-dimensional); and the Attribute type 
+                        							OtherXML has been made its own element (it's no longer a type of
                         							'Attribute'). 
                      </p>
                      					
@@ -677,6 +677,12 @@
                <h4>Notes</h4>&nbsp;Each variable in DAP4 is represented as a name and a collection of
                <br>				metadata (Attributes, ...). The type of the variable is given in the element name
                <br>				(e.g., &lt;Byte name="x"/&gt;) name: The name of the variable ( OtherXML*, Attribute*)
+               <br>				
+               <br>				The attribute 'id' represents the locally (as in within the dataset) unique 
+               <br>				identifier of the variable. This is usually period separated concatanation of the
+               <br>				values of the name attributes of the enclosing variables, starting with the outermost 
+               <br>				and ending with the name of the variable instance.
+               <br>				
                <br>			
             </div>
             <div>
@@ -688,6 +694,10 @@
 			&lt;xs:group ref="<a href="#grp_Metadata">Metadata</a>"/&gt;
 		&lt;/xs:sequence&gt;
 		&lt;xs:attribute name="name" type="<span class="external-link diff-ns">xs:string</span>"/&gt;
+	    &lt;xs:attribute
+      	    name="id"
+      	    type="<span class="external-link diff-ns">xs:string</span>"
+      	    form="qualified"/&gt;
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
       </div>
@@ -1061,9 +1071,9 @@
 
 	&lt;xs:complexType name="BlobT"&gt;
 		
-		&lt;xs:choice&gt;
-			&lt;xs:element ref="<span class="external-link diff-ns">dc:date</span>"/&gt;
-		&lt;/xs:choice&gt;
+		&lt;xs:all&gt;
+			&lt;xs:element ref="<span class="external-link diff-ns">dc:date</span>" minOccurs="0"/&gt;
+		&lt;/xs:all&gt;
 
 		&lt;xs:attribute
       		ref="<span class="external-link diff-ns">xlink:type</span>"

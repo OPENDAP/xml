@@ -27,9 +27,9 @@
 					<h1>About the Dataset document</h1>
 					<div class="bodytext">
 						<p>In DAP2 and DAP4, a dataset is defined as a collection of variables, each
-							of whcih is completely described by a tuple that consists of a name,
+							of which is completely described by a tuple that consists of a name,
 							type and value(s) along with a hierarchical collection of 'attributes'
-							that themselves are made up of name-tye-value(s) tuples. The variables
+							that themselves are made up of name-type-value(s) tuples. The variables
 							are organized in a hierarchy.</p>
 						<p>The Dataset document is a text/xml representatin of those variables and
 							their organiation within the dataset.</p>
@@ -42,8 +42,8 @@
 							UnsignedByte. In addition: The syntax for Array has been changed so that
 							it's easier for processing software to figure out the type of an array;
 							Grids have been generalized so that there can be any number of 'Array'
-							parts (and the Maps may be multi-dimensional); and OtherXML has been
-							renamed OtherXML and made its own element (it's no longer a type of
+							parts (and the Maps may be multi-dimensional); and the Attribute type 
+							OtherXML has been made its own element (it's no longer a type of
 							'Attribute'). </p>
 					</div>
 				</div>
@@ -308,12 +308,19 @@
 			<xs:documentation> Each variable in DAP4 is represented as a name and a collection of
 				metadata (Attributes, ...). The type of the variable is given in the element name
 				(e.g., &lt;Byte name="x"/>) name: The name of the variable ( OtherXML*, Attribute*)
+				
+				The attribute 'id' represents the locally (as in within the dataset) unique 
+				identifier of the variable. This is usually period separated concatanation of the
+				values of the name attributes of the enclosing variables, starting with the outermost 
+				and ending with the name of the variable instance.
+				
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:group ref="Metadata"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string"/>
+	    <xs:attribute name="id" type="xs:string" form="qualified"/>
 	</xs:complexType>
 
 	<xs:complexType name="ArrayDimensionT">
