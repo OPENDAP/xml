@@ -8,36 +8,19 @@
     xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd">
         
     <Group>
-        <Dimension name="latitude" size="1024"/>
-        <Dimension name="longitude" size="1024"/>
-        
-        <Enumeration name="mask_values">
-            <elt name="clear" value="1"/>
-            <elt name="cloud" value="2"/>
-        </Enumeration>
+        <Dimension name="x" size="1024"/>
+        <Dimension name="y" size="1024"/>
         
         <Grid name="SST">
-            <Array name="SST">
+            <Array name="MSST">
                 <Attribute name="long_name" type="String">
-                    <value>Sea Surface Temperature</value>
+                    <value>Model Sea Surface Temperature</value>
                 </Attribute>
                 <type>
                     <Byte/>
                 </type>
                 <dimensions>
-                    <dim ref="latitude"/>
-                    <dim ref="longitude"/>
-                </dimensions>
-            </Array>
-            
-            <Array name="mask">
-                <Attribute name="long_name" type="String">
-                    <value>Cloud mask</value>
-                </Attribute>
-                <type>
-                    <Enum type="mask_values"/>
-                </type>
-                <dimensions>
+                    <dim name="run_number" size="7"/>
                     <dim ref="latitude"/>
                     <dim ref="longitude"/>
                 </dimensions>
@@ -46,17 +29,17 @@
             <Map name="latitude" type="Float32">
                 <Attribute name="maybe" type="UByte"><value>255</value></Attribute>
                 <dimensions>
-                    <dim ref="latitude"/>
+                    <dim ref="x"/>
+                    <dim ref="y"/>
                 </dimensions>
             </Map>
             
             <Map name="longitude" type="Float32">
                 <dimensions>
-                    <dim ref="longitude"/>
+                    <dim ref="x"/>
+                    <dim ref="y"/>
                 </dimensions>
             </Map>
         </Grid>
-        
     </Group>
-
 </Dataset>

@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="http://www.w3.org/2008/09/xsd.xsl" type="text/xsl"?>
 <xs:schema targetNamespace="http://xml.opendap.org/ns/DAP/4.0#"
-	xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
-	xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
-	xmlns:xml="http://www.w3.org/XML/1998/namespace" 
-	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd"
-	elementFormDefault="qualified" 
-	attributeFormDefault="unqualified"
-	xml:lang="en">
+	elementFormDefault="qualified" attributeFormDefault="unqualified" xml:lang="en">
 
 	<!-- Note that these schemas are local; the XML one can be found at 
 		http://www.w3.org/2001/xml.xsd. While there is no official schema for 
 		xlink a 'non-normative' one is provided in the appendix of
 		http://www.w3.org/TR/xlink11/. jhrg 2/7/12 -->
-	
-	<xs:import namespace="http://www.w3.org/XML/1998/namespace"
-		schemaLocation="xml.xsd"/>
-	
-	<xs:import namespace="http://www.w3.org/1999/xlink"
-		schemaLocation="xlink.xsd"/>
-		
+
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+
+	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlink.xsd"/>
+
 	<xs:element name="Dataset" type="DatasetT">
 		<xs:annotation>
 			<xs:documentation>
-				metadata (syntax and semantic) responses.
-				
-				Element names: Element names that start with capital letters
-				correspond to parts of the DAP4 data model while those that
-				start with lowercase letters are used for document structure
-				and syntax.
-				
-				TODO
-				
-				DAP 4.0 introduces SharedDimension, Group, Opaque, 64-bit integers and
-				UnsignedByte. In addition: The syntax for Array has been changed so that
-				it's easier for processing software to figure out the type of an array; 
-				Grids have been generalized so that there can be any number of 'Array'
-				parts (and the Maps may be multi-dimensional); and OtherXML has been renamed
-				OtherXML and made its own element (it's no longer a type of 'Attribute'). 
-
+				<div>
+					<h1>About the Dataset document</h1>
+					<div class="bodytext">
+						<p>In DAP2 and DAP4, a dataset is defined as a collection of variables, each
+							of whcih is completely described by a tuple that consists of a name,
+							type and value(s) along with a hierarchical collection of 'attributes'
+							that themselves are made up of name-tye-value(s) tuples. The variables
+							are organized in a hierarchy.</p> <p>The Dataset document is a text/xml
+							representatin of those variables and their organiation within the
+							dataset.</p> <h4>A note about XML element names:</h4>
+						<p>Element names that start with capital letters correspond to parts of the
+							DAP4 data model while those that start with lowercase letters are used
+							for document structure and syntax. </p>
+						<h4>About changes in going from DAP2 to DAP4</h4>
+						<p>DAP 4.0 introduces SharedDimension, Group, Opaque, 64-bit integers and
+							UnsignedByte. In addition: The syntax for Array has been changed so that
+							it's easier for processing software to figure out the type of an array;
+							Grids have been generalized so that there can be any number of 'Array'
+							parts (and the Maps may be multi-dimensional); and OtherXML has been
+							renamed OtherXML and made its own element (it's no longer a type of
+							'Attribute'). </p>
+					</div>
+				</div>
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -49,18 +50,19 @@
 	<xs:complexType name="DatasetT">
 		<xs:annotation>
 			<xs:documentation>
-				This is the XML representation of a data source in DAP 4.
-				
-				name: The name of the data source; often a string used to
-					uniquely reference the data source wrt a particular
-					server
-				dapVersion: The protocol version that corresponds to this
-					document.
-				
-				Note that the 'blob' element is only present when this is used
-				as the prefix for the Data response.
-				
-				( OtherXML*, Attribute*, Group+, blob? )
+				<div>
+					<h3>Dataset</h3>
+					<p> This is the XML representation of a data source in DAP 4. </p>
+					<h4>name</h4>
+					<p> The name of the data source; often a string used to uniquely reference the
+						data source wrt a particular server </p>
+					<h4>dapVersion</h4>
+					<p>The protocol version that corresponds to this document.</p>
+					<h4>xml:base</h4>
+					<p>The URL the references the DAP4 service endoint used to access this
+						dataset.</p> Note that the 'blob' element is only present when this is used
+					as the prefix for the Data response. ( OtherXML*, Attribute*, Group+, blob? )
+				</div>
 			</xs:documentation>
 		</xs:annotation>
 
@@ -69,7 +71,7 @@
 			<xs:element name="Group" type="GroupT" minOccurs="1" maxOccurs="unbounded"/>
 			<xs:element name="blob" type="BlobT" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
-		
+
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="dapVersion" type="xs:string" use="required"/>
 		<xs:attribute ref="xml:base" use="required"/>
@@ -77,13 +79,9 @@
 
 	<xs:group name="Metadata">
 		<xs:annotation>
-			<xs:documentation>
-				These elements are used in several places to hold the 
-				'semantic' and/or 'use' metadata for the dataset, its groups 
-				and variables.
-				
-				( OtherXML*, Attribute* )
-			</xs:documentation>
+			<xs:documentation> These elements are used in several places to hold the 'semantic'
+				and/or 'use' metadata for the dataset, its groups and variables. ( OtherXML*,
+				Attribute* ) </xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="OtherXML" type="OtherXmlT" minOccurs="0" maxOccurs="unbounded"/>
@@ -93,26 +91,18 @@
 
 	<xs:complexType name="AttributeT">
 		<xs:annotation>
-			<xs:documentation>
-				DAP uses attributes as a way to encode information that data
-				providers has bundled with data sources. This element is 
-				recursive. Each Attribute element defines a lexical scope.
-				
-				name: The name of the attribute; must be unique within the 
-					scope.
-				type: The type of the attribute. Attributes are limited to 
-					simple types, vectors of simple types and 'Containers' 
-					which are essentially structure types. 
-				namespace: Use this to indicate that the given attribute
-					means the same thing as the matching item in the given
-					namespace. This optional attribute is here to help preserve
-					information that a data server might know to be true that
-					a client application could not assume with certainty.
-				
-				( value+ | ( OtherXML*, Attribute* ) )
+			<xs:documentation> DAP uses attributes as a way to encode information that data
+				providers has bundled with data sources. This element is recursive. Each Attribute
+				element defines a lexical scope. name: The name of the attribute; must be unique
+				within the scope. type: The type of the attribute. Attributes are limited to simple
+				types, vectors of simple types and 'Containers' which are essentially structure
+				types. namespace: Use this to indicate that the given attribute means the same thing
+				as the matching item in the given namespace. This optional attribute is here to help
+				preserve information that a data server might know to be true that a client
+				application could not assume with certainty. ( value+ | ( OtherXML*, Attribute* ) )
 			</xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:choice>
 			<xs:sequence>
 				<xs:element name="value" type="xs:string" maxOccurs="unbounded"/>
@@ -121,15 +111,13 @@
 				<xs:group ref="Metadata"/>
 			</xs:sequence>
 		</xs:choice>
-		
+
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<!-- TODO: Extend to more DAP types? -->
 		<xs:attribute name="type" type="AttributeTypeT" use="required"/>
 		<xs:attribute name="namespace" type="xs:string" use="optional">
 			<xs:annotation>
-				<xs:documentation>
-					The 'namespace' attribute.
-				</xs:documentation>
+				<xs:documentation> The 'namespace' attribute. </xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
@@ -138,13 +126,10 @@
 
 	<xs:simpleType name="CardinalT">
 		<xs:annotation>
-			<xs:documentation>
-				Changes from DAP2 to DAP4: The Byte type is now signed and
-				unsigned bytes are now represented by the 'UByte' data type.
-				The types Int64 and UInt64 represent signed and unsigned 64-bit
-				integers. String uses UTF-8 in DAP4.
-				Enumerations are now in the mix.
-			</xs:documentation>
+			<xs:documentation> Changes from DAP2 to DAP4: The Byte type is now signed and unsigned
+				bytes are now represented by the 'UByte' data type. The types Int64 and UInt64
+				represent signed and unsigned 64-bit integers. String uses UTF-8 in DAP4.
+				Enumerations are now in the mix. </xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Byte"/>
@@ -165,27 +150,23 @@
 
 	<xs:simpleType name="OpaqueT">
 		<xs:annotation>
-			<xs:documentation>
-				This is essentially a BLOB type. Like a String, it is a type 
-				with varying size and it can be used in Structures, Arrays and
-				Sequences. It cannot, howerver, be part of a Grid.
-			</xs:documentation>
+			<xs:documentation> This is essentially a BLOB type. Like a String, it is a type with
+				varying size and it can be used in Structures, Arrays and Sequences. It cannot,
+				howerver, be part of a Grid. </xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Opaque"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
+
 	<xs:simpleType name="ContainerT">
 		<xs:annotation>
-			<xs:documentation>
-				The Container type is used to hold structure (or 'Container')
-				attributes. These correspond to the netCDF4/HDF5 compound type
-				for attributes.
+			<xs:documentation> The Container type is used to hold structure (or 'Container')
+				attributes. These correspond to the netCDF4/HDF5 compound type for attributes.
 			</xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Container"/>
 		</xs:restriction>
@@ -193,37 +174,26 @@
 
 	<xs:simpleType name="AttributeTypeT">
 		<xs:annotation>
-			<xs:documentation>
-				Hack: Here Attribute types are apparently defined as scalars
-				or Containers. However, they are actually scalars, vectors or
-				containers.
+			<xs:documentation> Hack: Here Attribute types are apparently defined as scalars or
+				Containers. However, they are actually scalars, vectors or containers.
 			</xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:union memberTypes="CardinalT ContainerT"/>
 	</xs:simpleType>
 
 	<xs:complexType name="OtherXmlT">
 		<xs:annotation>
-			<xs:documentation>
-				Use this to embed arbitrary XML in a DDX. This functions like
-				an Attribute and appears in the same places as an Attribute,
-				but its contents are ignored by DAP software. Other software
-				might find the information useful. The XML elements must
-				satisfy the requirements for 'lax' processing under schema 1.0.
-				In practice, that means just about anything.
-				
-				Using ##other versus ##any means that the enclosed XML MUST
-				declare its namespace(s) and each element must be in a ns other
-				than dap4's. Of course, the namespace(s) used by the XML might
-				be declared elsewhere in the doc.
-				
-				name: A name to associate with this chunk of XML
-				*: This element can contain any other attributes that conform 
-					to the schema 1.0 definition of 'lax' processing
-					
-				( xs:any+ ) 
-			</xs:documentation>
+			<xs:documentation> Use this to embed arbitrary XML in a DDX. This functions like an
+				Attribute and appears in the same places as an Attribute, but its contents are
+				ignored by DAP software. Other software might find the information useful. The XML
+				elements must satisfy the requirements for 'lax' processing under schema 1.0. In
+				practice, that means just about anything. Using ##other versus ##any means that the
+				enclosed XML MUST declare its namespace(s) and each element must be in a ns other
+				than dap4's. Of course, the namespace(s) used by the XML might be declared elsewhere
+				in the doc. name: A name to associate with this chunk of XML *: This element can
+				contain any other attributes that conform to the schema 1.0 definition of 'lax'
+				processing ( xs:any+ ) </xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:any namespace="##other" minOccurs="1" maxOccurs="unbounded" processContents="lax"/>
@@ -234,17 +204,11 @@
 
 	<xs:complexType name="GroupT">
 		<xs:annotation>
-			<xs:documentation>
-				A Group is a lexical scoping tool used to replicate HDF5 and 
-				netCDF4 Groups. Each Group defines a lexical scope. Each 
-				dataset has at least one Group; if only one is present, it may
-				be anonymous. In this case, by convention, it's name
-				attribute should be 'anonymous', the default value.
-				
-				name: The name of the Group
-				
-				( OtherXML*, Attribute*, Dimension*, ScalarType+ )
-			</xs:documentation>
+			<xs:documentation> A Group is a lexical scoping tool used to replicate HDF5 and netCDF4
+				Groups. Each Group defines a lexical scope. Each dataset has at least one Group; if
+				only one is present, it may be anonymous. In this case, by convention, it's name
+				attribute should be 'anonymous', the default value. name: The name of the Group (
+				OtherXML*, Attribute*, Dimension*, ScalarType+ ) </xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:group ref="Metadata"/>
@@ -258,53 +222,41 @@
 
 	<xs:complexType name="DimensionT">
 		<xs:annotation>
-			<xs:documentation>
-				This defines a dimension (a name and size) that may be shared 
-				between Grids and/or Arrays.
-				
-				name: The name of the dimension
-				size: The size of the dimension
+			<xs:documentation> This defines a dimension (a name and size) that may be shared between
+				Grids and/or Arrays. name: The name of the dimension size: The size of the dimension
 			</xs:documentation>
 		</xs:annotation>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="size" type="xs:integer" use="required"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="EnumerationElementT">
 		<xs:annotation>
-			<xs:documentation>
-				One name-value pair for an enumeration. Values must be integers
-				and the values must be strings.
-			</xs:documentation>
+			<xs:documentation> One name-value pair for an enumeration. Values must be integers and
+				the values must be strings. </xs:documentation>
 		</xs:annotation>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="value" type="xs:string" use="required"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="EnumerationT">
 		<xs:annotation>
-			<xs:documentation>
-				This defines an enumeration.
-				
-				name: The name of the dimension
-				type: The size of the dimension
-			</xs:documentation>
+			<xs:documentation> This defines an enumeration. name: The name of the dimension type:
+				The size of the dimension </xs:documentation>
 		</xs:annotation>
 
 		<xs:choice>
 			<xs:element name="elt" type="EnumerationElementT" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:choice>
-				
-		<xs:attribute name="name" type="xs:string" use="required"/>		
+
+		<xs:attribute name="name" type="xs:string" use="required"/>
 	</xs:complexType>
-	
+
 	<!-- These groups have been defined to minimize name duplication -->
 
 	<xs:group name="CardinalTypes">
 		<xs:annotation>
-			<xs:documentation>
-				DAP cardinal data types
-			</xs:documentation>
+			<xs:documentation> DAP cardinal data types </xs:documentation>
 		</xs:annotation>
 		<xs:choice>
 			<xs:element name="Byte" type="BaseType"/>
@@ -325,11 +277,11 @@
 	<xs:group name="ArrayVariableTypes">
 		<xs:choice>
 			<xs:group ref="CardinalTypes"/>
-			
+
 			<xs:element name="Enum" type="EnumT"/>
 			<xs:element name="Opaque" type="OpaqueT"/>
 			<xs:element name="Structure" type="StructureT"/>
-		</xs:choice>		
+		</xs:choice>
 	</xs:group>
 
 	<xs:group name="AllVariableTypes">
@@ -346,14 +298,9 @@
 
 	<xs:complexType name="BaseType">
 		<xs:annotation>
-			<xs:documentation>
-				Each variable in DAP4 is represented as a name and a collection
-				of metadata (Attributes, ...). The type of the variable is 
-				given in the element name (e.g., &lt;Byte name="x"/>)
-				
-				name: The name of the variable
-				
-				( OtherXML*, Attribute*)
+			<xs:documentation> Each variable in DAP4 is represented as a name and a collection of
+				metadata (Attributes, ...). The type of the variable is given in the element name
+				(e.g., &lt;Byte name="x"/>) name: The name of the variable ( OtherXML*, Attribute*)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -364,14 +311,9 @@
 
 	<xs:complexType name="ArrayDimensionT">
 		<xs:annotation>
-			<xs:documentation>
-				name: The name of the dimension
-				size: The size of the dimension
-				ref: A reference to a Dimension definition
-				
-				Note: either name and size must be present or only ref must 
-				be present
-			</xs:documentation>
+			<xs:documentation> name: The name of the dimension size: The size of the dimension ref:
+				A reference to a Dimension definition Note: either name and size must be present or
+				only ref must be present </xs:documentation>
 		</xs:annotation>
 
 		<xs:attribute name="name" type="xs:string"/>
@@ -381,9 +323,7 @@
 
 	<xs:complexType name="EnumT">
 		<xs:annotation>
-			<xs:documentation>
-				
-			</xs:documentation>
+			<xs:documentation> </xs:documentation>
 		</xs:annotation>
 
 		<xs:complexContent>
@@ -392,44 +332,34 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="dimensionsT">
 		<xs:annotation>
-			<xs:documentation>
-			</xs:documentation>
+			<xs:documentation> </xs:documentation>
 		</xs:annotation>
 		<xs:choice>
 			<xs:element name="dim" type="ArrayDimensionT" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:choice>  
+		</xs:choice>
 	</xs:complexType>
-	
+
 	<xs:complexType name="arrayTypeT">
 		<xs:annotation>
-			<xs:documentation>
-			</xs:documentation>
+			<xs:documentation> </xs:documentation>
 		</xs:annotation>
 		<xs:choice>
 			<xs:group ref="ArrayVariableTypes" minOccurs="1" maxOccurs="1"/>
-		</xs:choice>  
+		</xs:choice>
 	</xs:complexType>
-	
+
 	<xs:complexType name="ArrayT">
 		<xs:annotation>
-			<xs:documentation>
-				name: The name of the variable.
-				
-				NB: DAP4 allows for arrays of every type except: Grid or
-				Sequence. Since the 'Array' element may list N dimensions (using
-				the 'dim' child elements), the syntax does not allow 'Array'
-				elements to be children of 'Array'.
-				
-				Like Grids, Array dimensions may use name and size or a 
-				reference to a Dimension. The scope in which the Dimension can 
-				be located is limited to an enclosing Group (but it is not
-				limited to the immediate parent Group).
-				
-				( OtherXML*, Attribute*, type, dimensions)
-			</xs:documentation>
+			<xs:documentation> name: The name of the variable. NB: DAP4 allows for arrays of every
+				type except: Grid or Sequence. Since the 'Array' element may list N dimensions
+				(using the 'dim' child elements), the syntax does not allow 'Array' elements to be
+				children of 'Array'. Like Grids, Array dimensions may use name and size or a
+				reference to a Dimension. The scope in which the Dimension can be located is limited
+				to an enclosing Group (but it is not limited to the immediate parent Group). (
+				OtherXML*, Attribute*, type, dimensions) </xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BaseType">
@@ -444,21 +374,13 @@
 
 	<xs:complexType name="GridT">
 		<xs:annotation>
-			<xs:documentation>
-				A Grid is a type that relates one or more Maps (aka coordinate
-				variables) to the dimensions of one or more Array variables. It
-				is often the case that Maps correspond to independent variables
-				like Latitude or sample number and Arrays represent dependent
-				variables.
-				
-				Note that Map elements either specify a name and size or 
-				reference a Dimension. The scope in which the Dimension can be
-				located is limited to an enclosing Group (but it is not limited
-				to the immediate parent Group).
-				
-				name: The name of the variable
-				
-				( OtherXML*, Attribute*, Array+, Map+)
+			<xs:documentation> A Grid is a type that relates one or more Maps (aka coordinate
+				variables) to the dimensions of one or more Array variables. It is often the case
+				that Maps correspond to independent variables like Latitude or sample number and
+				Arrays represent dependent variables. Note that Map elements either specify a name
+				and size or reference a Dimension. The scope in which the Dimension can be located
+				is limited to an enclosing Group (but it is not limited to the immediate parent
+				Group). name: The name of the variable ( OtherXML*, Attribute*, Array+, Map+)
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -475,23 +397,18 @@
 
 	<xs:complexType name="MapT">
 		<xs:annotation>
-			<xs:documentation>
-				name: Name for this Map. Maps are associated with Array
-				dimentions by name, so this is a required attribute.
-				type: The type of a Map is limited to the Cardinal types.
-				
-				NB: Note the limitation on the type of a Map, which excludes
-				Maps that are Opaques, Structures, Sequences or Grids.
-				
-				( OtherXML*, Attribute*, dimensions )
-			</xs:documentation>
+			<xs:documentation> name: Name for this Map. Maps are associated with Array dimentions by
+				name, so this is a required attribute. type: The type of a Map is limited to the
+				Cardinal types. NB: Note the limitation on the type of a Map, which excludes Maps
+				that are Opaques, Structures, Sequences or Grids. ( OtherXML*, Attribute*,
+				dimensions ) </xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BaseType">
 				<xs:sequence>
 					<xs:element name="dimensions" type="dimensionsT" minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
-				
+
 				<xs:attribute name="type" type="CardinalT" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
@@ -499,26 +416,20 @@
 
 	<xs:complexType name="allTypeT">
 		<xs:annotation>
-			<xs:documentation>
-			</xs:documentation>
+			<xs:documentation> </xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BaseType">
 				<xs:group ref="AllVariableTypes" minOccurs="1" maxOccurs="unbounded"/>
-			</xs:extension>  
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="StructureT">
 		<xs:annotation>
-			<xs:documentation>
-				A Structure; a simple aggregation of variables. Unlike a Group,
-				it's possible to from an Array of Structures.
-				
-				name: The name of the variable
-				
-				( OtherXML*, Attribute*, ( Byte | ... | Grid )+ )
-			</xs:documentation>
+			<xs:documentation> A Structure; a simple aggregation of variables. Unlike a Group, it's
+				possible to from an Array of Structures. name: The name of the variable ( OtherXML*,
+				Attribute*, ( Byte | ... | Grid )+ ) </xs:documentation>
 		</xs:annotation>
 
 		<xs:complexContent>
@@ -526,68 +437,49 @@
 				<xs:sequence>
 					<xs:element name="type" type="allTypeT" minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
-				
-			</xs:extension>  
+
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
 	<xs:complexType name="SequenceT">
 		<xs:annotation>
-			<xs:documentation>
-				A Sequence is a type that holds tabular data where each row
-				of the table represents a relation, as in a relational database.
-				Sequences can nest, but Arrays of Sequences are not supported.
-				
-				name: The name of the variable
-				
-				( OtherXML*, Attribute*, ( Byte | ... | Grid )+ )
-			</xs:documentation>
+			<xs:documentation> A Sequence is a type that holds tabular data where each row of the
+				table represents a relation, as in a relational database. Sequences can nest, but
+				Arrays of Sequences are not supported. name: The name of the variable ( OtherXML*,
+				Attribute*, ( Byte | ... | Grid )+ ) </xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BaseType">
 				<xs:sequence>
 					<xs:element name="type" type="allTypeT" minOccurs="1" maxOccurs="1"/>
 				</xs:sequence>
-			</xs:extension>  
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
 	<xs:complexType name="BlobT">
 		<xs:annotation>
-			<xs:documentation>
-				The 'Blob' element is used to point to an associated data 
-				document. When DAP is used to access metadata only for a data
-				source, no 'blob' element will be present. However, when a
-				request for data is made, the Dataset element holds a
-				description of the data values and the blob points to a place
-				where those values will be found. 
-				
-				In DAP4 the Blob element refers to binary 
-				(application/octet-stream) part within a multi-part MIME
-				document or it refers to a separate document, possibly not
-				imediately available. The latter case is included to support
-				asynchronous responses (i.e., responses that cannot be returned
-				quickly). See http://www.w3.org/TR/xlink11/.
-				
-				xlink:href: Refers to the multi-part MIME document part that 
-					holds the data values, encoded using XDR or to a separate 
-					document. In the first case, the IRI must begin with 'cid:'
-					(see the owsManifest schema for an example of this use; 
-					http://schemas.opengis.net/ows/2.0/owsManifest.xsd). In the 
-					latter case, the IRI must refer to a remote resourse, and
-					will likely start 'http:'.
-				xlink:type: Always 'simple'
-				xlink:role: If present the only values DAP4 supports are 
-					'asynchronousResponse' and 'synchronousResponse'.
-				<!-- TODO: Better names than async... and sync... ? -->
-				available: Contains an ISO 8601 string that indicates when the
-					client can expect for the remote resource to be 
-					dereferencable without error. The special value 'now' is
-					also allowed.
-				until: Contains an ISO 8601 string that indicates when the 
-					client can expect the remote resource to be removed by the
-					server. The special value 'forever' is also allowed.
-					
+			<xs:documentation> The 'Blob' element is used to point to an associated data document.
+				When DAP is used to access metadata only for a data source, no 'blob' element will
+				be present. However, when a request for data is made, the Dataset element holds a
+				description of the data values and the blob points to a place where those values
+				will be found. In DAP4 the Blob element refers to binary (application/octet-stream)
+				part within a multi-part MIME document or it refers to a separate document, possibly
+				not imediately available. The latter case is included to support asynchronous
+				responses (i.e., responses that cannot be returned quickly). See
+				http://www.w3.org/TR/xlink11/. xlink:href: Refers to the multi-part MIME document
+				part that holds the data values, encoded using XDR or to a separate document. In the
+				first case, the IRI must begin with 'cid:' (see the owsManifest schema for an
+				example of this use; http://schemas.opengis.net/ows/2.0/owsManifest.xsd). In the
+				latter case, the IRI must refer to a remote resourse, and will likely start 'http:'.
+				xlink:type: Always 'simple' xlink:role: If present the only values DAP4 supports are
+				'asynchronousResponse' and 'synchronousResponse'.
+				<!-- TODO: Better names than async... and sync... ? --> available: Contains an ISO
+				8601 string that indicates when the client can expect for the remote resource to be
+				dereferencable without error. The special value 'now' is also allowed. until:
+				Contains an ISO 8601 string that indicates when the client can expect the remote
+				resource to be removed by the server. The special value 'forever' is also allowed.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:attribute ref="xlink:type" use="optional" default="simple"/>

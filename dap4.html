@@ -74,90 +74,117 @@
       </div>
       
       	
-      	
+      
       	
       <div id="imp_1">
          <h3><a name="imp_1">Import <code>http://www.w3.org/XML/1998/namespace</code></a></h3>
          <div class="bodytext">
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-	
+
 	&lt;xs:import
       	namespace="http://www.w3.org/XML/1998/namespace"
       	schemaLocation="xml.xsd"/&gt;</pre></div>
          </div>
       </div>
-      	
+      
       	
       <div id="imp_2">
          <h3><a name="imp_2">Import <code>http://www.w3.org/1999/xlink</code></a></h3>
          <div class="bodytext">
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-	
+
 	&lt;xs:import
       	namespace="http://www.w3.org/1999/xlink"
       	schemaLocation="xlink.xsd"/&gt;</pre></div>
          </div>
       </div>
-      		
+      
       	
       <div id="elem_Dataset">
          <h3><a name="elem_Dataset">Element <em>Dataset</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				metadata (syntax and semantic) responses.
-               <br>				
-               <br>				Element names: Element names that start with capital letters
-               <br>				correspond to parts of the DAP4 data model while those that
-               <br>				start with lowercase letters are used for document structure
-               <br>				and syntax.
-               <br>				
-               <br>				TODO
-               <br>				
-               <br>				DAP 4.0 introduces SharedDimension, Group, Opaque, 64-bit integers and
-               <br>				UnsignedByte. In addition: The syntax for Array has been changed so that
-               <br>				it's easier for processing software to figure out the type of an array; 
-               <br>				Grids have been generalized so that there can be any number of 'Array'
-               <br>				parts (and the Maps may be multi-dimensional); and OtherXML has been renamed
-               <br>				OtherXML and made its own element (it's no longer a type of 'Attribute'). 
-               <br>
-               <br>			
+               <div xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                  					
+                  <h1>About the Dataset document</h1>
+                  					
+                  <div class="bodytext">
+                     						
+                     <p>In DAP2 and DAP4, a dataset is defined as a collection of variables, each
+                        							of whcih is completely described by a tuple that consists of a name,
+                        							type and value(s) along with a hierarchical collection of 'attributes'
+                        							that themselves are made up of name-tye-value(s) tuples. The variables
+                        							are organized in a hierarchy.
+                     </p> 
+                     <p>The Dataset document is a text/xml
+                        							representatin of those variables and their organiation within the
+                        							dataset.
+                     </p> 
+                     <h4>A note about XML element names:</h4>
+                     						
+                     <p>Element names that start with capital letters correspond to parts of the
+                        							DAP4 data model while those that start with lowercase letters are used
+                        							for document structure and syntax. 
+                     </p>
+                     						
+                     <h4>About changes in going from DAP2 to DAP4</h4>
+                     						
+                     <p>DAP 4.0 introduces SharedDimension, Group, Opaque, 64-bit integers and
+                        							UnsignedByte. In addition: The syntax for Array has been changed so that
+                        							it's easier for processing software to figure out the type of an array;
+                        							Grids have been generalized so that there can be any number of 'Array'
+                        							parts (and the Maps may be multi-dimensional); and OtherXML has been
+                        							renamed OtherXML and made its own element (it's no longer a type of
+                        							'Attribute'). 
+                     </p>
+                     					
+                  </div>
+                  				
+               </div>
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-		
+
 	&lt;xs:element name="Dataset" type="<a href="#type_DatasetT">DatasetT</a>"&gt;
 		
 	&lt;/xs:element&gt;</pre></div>
          </div>
       </div>
       
-      
       	
       <div id="type_DatasetT">
          <h3><a name="type_DatasetT">Complex type <em>DatasetT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				This is the XML representation of a data source in DAP 4.
-               <br>				
-               <br>				name: The name of the data source; often a string used to
-               <br>					uniquely reference the data source wrt a particular
-               <br>					server
-               <br>				dapVersion: The protocol version that corresponds to this
-               <br>					document.
-               <br>				
-               <br>				Note that the 'blob' element is only present when this is used
-               <br>				as the prefix for the Data response.
-               <br>				
-               <br>				( OtherXML*, Attribute*, Group+, blob? )
-               <br>			
+               <div xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                  					
+                  <h3>Dataset</h3>
+                  					
+                  <p> This is the XML representation of a data source in DAP 4. </p>
+                  					
+                  <h4>name</h4>
+                  					
+                  <p> The name of the data source; often a string used to uniquely reference the
+                     						data source wrt a particular server 
+                  </p>
+                  					
+                  <h4>dapVersion</h4>
+                  					
+                  <p>The protocol version that corresponds to this document.</p>
+                  					
+                  <h4>xml:base</h4>
+                  					
+                  <p>The URL the references the DAP4 service endoint used to access this
+                     						dataset.
+                  </p> Note that the 'blob' element is only present when this is used
+                  					as the prefix for the Data response. ( OtherXML*, Attribute*, Group+, blob? )
+                  				
+               </div>
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-
 
 	&lt;xs:complexType name="DatasetT"&gt;
 		
@@ -175,7 +202,7 @@
       			minOccurs="0"
       			maxOccurs="1"/&gt;
 		&lt;/xs:sequence&gt;
-		
+
 		&lt;xs:attribute
       		name="name"
       		type="<span class="external-link diff-ns">xs:string</span>"
@@ -185,7 +212,6 @@
       		type="<span class="external-link diff-ns">xs:string</span>"
       		use="required"/&gt;
 		&lt;xs:attribute ref="<span class="external-link diff-ns">xml:base</span>" use="required"/&gt;
-
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
       </div>
@@ -195,13 +221,9 @@
          <h3><a name="grp_Metadata">Model group <em>Metadata</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				These elements are used in several places to hold the 
-               <br>				'semantic' and/or 'use' metadata for the dataset, its groups 
-               <br>				and variables.
-               <br>				
-               <br>				( OtherXML*, Attribute* )
-               <br>			
+               <h4>Notes</h4>&nbsp;These elements are used in several places to hold the 'semantic'
+               <br>				and/or 'use' metadata for the dataset, its groups and variables. ( OtherXML*,
+               <br>				Attribute* ) 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
@@ -229,23 +251,15 @@
          <h3><a name="type_AttributeT">Complex type <em>AttributeT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				DAP uses attributes as a way to encode information that data
-               <br>				providers has bundled with data sources. This element is 
-               <br>				recursive. Each Attribute element defines a lexical scope.
-               <br>				
-               <br>				name: The name of the attribute; must be unique within the 
-               <br>					scope.
-               <br>				type: The type of the attribute. Attributes are limited to 
-               <br>					simple types, vectors of simple types and 'Containers' 
-               <br>					which are essentially structure types. 
-               <br>				namespace: Use this to indicate that the given attribute
-               <br>					means the same thing as the matching item in the given
-               <br>					namespace. This optional attribute is here to help preserve
-               <br>					information that a data server might know to be true that
-               <br>					a client application could not assume with certainty.
-               <br>				
-               <br>				( value+ | ( OtherXML*, Attribute* ) )
+               <h4>Notes</h4>&nbsp;DAP uses attributes as a way to encode information that data
+               <br>				providers has bundled with data sources. This element is recursive. Each Attribute
+               <br>				element defines a lexical scope. name: The name of the attribute; must be unique
+               <br>				within the scope. type: The type of the attribute. Attributes are limited to simple
+               <br>				types, vectors of simple types and 'Containers' which are essentially structure
+               <br>				types. namespace: Use this to indicate that the given attribute means the same thing
+               <br>				as the matching item in the given namespace. This optional attribute is here to help
+               <br>				preserve information that a data server might know to be true that a client
+               <br>				application could not assume with certainty. ( value+ | ( OtherXML*, Attribute* ) )
                <br>			
             </div>
             <div>
@@ -253,6 +267,7 @@
 
 	&lt;xs:complexType name="AttributeT"&gt;
 		
+
 		&lt;xs:choice&gt;
 			&lt;xs:sequence&gt;
 				&lt;xs:element
@@ -264,6 +279,7 @@
 				&lt;xs:group ref="<a href="#grp_Metadata">Metadata</a>"/&gt;
 			&lt;/xs:sequence&gt;
 		&lt;/xs:choice&gt;
+
 		&lt;xs:attribute
       		name="name"
       		type="<span class="external-link diff-ns">xs:string</span>"
@@ -290,13 +306,10 @@
          <h3><a name="type_CardinalT">Simple type <em>CardinalT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				Changes from DAP2 to DAP4: The Byte type is now signed and
-               <br>				unsigned bytes are now represented by the 'UByte' data type.
-               <br>				The types Int64 and UInt64 represent signed and unsigned 64-bit
-               <br>				integers. String uses UTF-8 in DAP4.
-               <br>				Enumerations are now in the mix.
-               <br>			
+               <h4>Notes</h4>&nbsp;Changes from DAP2 to DAP4: The Byte type is now signed and unsigned
+               <br>				bytes are now represented by the 'UByte' data type. The types Int64 and UInt64
+               <br>				represent signed and unsigned 64-bit integers. String uses UTF-8 in DAP4.
+               <br>				Enumerations are now in the mix. 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
@@ -327,42 +340,38 @@
          <h3><a name="type_OpaqueT">Simple type <em>OpaqueT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				This is essentially a BLOB type. Like a String, it is a type 
-               <br>				with varying size and it can be used in Structures, Arrays and
-               <br>				Sequences. It cannot, howerver, be part of a Grid.
-               <br>			
+               <h4>Notes</h4>&nbsp;This is essentially a BLOB type. Like a String, it is a type with
+               <br>				varying size and it can be used in Structures, Arrays and Sequences. It cannot,
+               <br>				howerver, be part of a Grid. 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
 
 	&lt;xs:simpleType name="OpaqueT"&gt;
 		
-		
+
 		&lt;xs:restriction base="<span class="external-link diff-ns">xs:string</span>"&gt;
 			&lt;xs:enumeration value="Opaque"/&gt;
 		&lt;/xs:restriction&gt;
 	&lt;/xs:simpleType&gt;</pre></div>
          </div>
       </div>
-      	
+      
       	
       <div id="type_ContainerT">
          <h3><a name="type_ContainerT">Simple type <em>ContainerT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				The Container type is used to hold structure (or 'Container')
-               <br>				attributes. These correspond to the netCDF4/HDF5 compound type
-               <br>				for attributes.
+               <h4>Notes</h4>&nbsp;The Container type is used to hold structure (or 'Container')
+               <br>				attributes. These correspond to the netCDF4/HDF5 compound type for attributes.
                <br>			
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-	
+
 	&lt;xs:simpleType name="ContainerT"&gt;
 		
-		
+
 		&lt;xs:restriction base="<span class="external-link diff-ns">xs:string</span>"&gt;
 			&lt;xs:enumeration value="Container"/&gt;
 		&lt;/xs:restriction&gt;
@@ -375,10 +384,8 @@
          <h3><a name="type_AttributeTypeT">Simple type <em>AttributeTypeT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				Hack: Here Attribute types are apparently defined as scalars
-               <br>				or Containers. However, they are actually scalars, vectors or
-               <br>				containers.
+               <h4>Notes</h4>&nbsp;Hack: Here Attribute types are apparently defined as scalars or
+               <br>				Containers. However, they are actually scalars, vectors or containers.
                <br>			
             </div>
             <div>
@@ -386,7 +393,7 @@
 
 	&lt;xs:simpleType name="AttributeTypeT"&gt;
 		
-		
+
 		&lt;xs:union memberTypes="<a href="#type_CardinalT">CardinalT</a> <a href="#type_ContainerT">ContainerT</a>"/&gt;
 	&lt;/xs:simpleType&gt;</pre></div>
          </div>
@@ -397,25 +404,16 @@
          <h3><a name="type_OtherXmlT">Complex type <em>OtherXmlT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				Use this to embed arbitrary XML in a DDX. This functions like
-               <br>				an Attribute and appears in the same places as an Attribute,
-               <br>				but its contents are ignored by DAP software. Other software
-               <br>				might find the information useful. The XML elements must
-               <br>				satisfy the requirements for 'lax' processing under schema 1.0.
-               <br>				In practice, that means just about anything.
-               <br>				
-               <br>				Using ##other versus ##any means that the enclosed XML MUST
-               <br>				declare its namespace(s) and each element must be in a ns other
-               <br>				than dap4's. Of course, the namespace(s) used by the XML might
-               <br>				be declared elsewhere in the doc.
-               <br>				
-               <br>				name: A name to associate with this chunk of XML
-               <br>				*: This element can contain any other attributes that conform 
-               <br>					to the schema 1.0 definition of 'lax' processing
-               <br>					
-               <br>				( xs:any+ ) 
-               <br>			
+               <h4>Notes</h4>&nbsp;Use this to embed arbitrary XML in a DDX. This functions like an
+               <br>				Attribute and appears in the same places as an Attribute, but its contents are
+               <br>				ignored by DAP software. Other software might find the information useful. The XML
+               <br>				elements must satisfy the requirements for 'lax' processing under schema 1.0. In
+               <br>				practice, that means just about anything. Using ##other versus ##any means that the
+               <br>				enclosed XML MUST declare its namespace(s) and each element must be in a ns other
+               <br>				than dap4's. Of course, the namespace(s) used by the XML might be declared elsewhere
+               <br>				in the doc. name: A name to associate with this chunk of XML *: This element can
+               <br>				contain any other attributes that conform to the schema 1.0 definition of 'lax'
+               <br>				processing ( xs:any+ ) 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
@@ -437,27 +435,19 @@
          </div>
       </div>
       
-      
       	
       <div id="type_GroupT">
          <h3><a name="type_GroupT">Complex type <em>GroupT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				A Group is a lexical scoping tool used to replicate HDF5 and 
-               <br>				netCDF4 Groups. Each Group defines a lexical scope. Each 
-               <br>				dataset has at least one Group; if only one is present, it may
-               <br>				be anonymous. In this case, by convention, it's name
-               <br>				attribute should be 'anonymous', the default value.
-               <br>				
-               <br>				name: The name of the Group
-               <br>				
-               <br>				( OtherXML*, Attribute*, Dimension*, ScalarType+ )
-               <br>			
+               <h4>Notes</h4>&nbsp;A Group is a lexical scoping tool used to replicate HDF5 and netCDF4
+               <br>				Groups. Each Group defines a lexical scope. Each dataset has at least one Group; if
+               <br>				only one is present, it may be anonymous. In this case, by convention, it's name
+               <br>				attribute should be 'anonymous', the default value. name: The name of the Group (
+               <br>				OtherXML*, Attribute*, Dimension*, ScalarType+ ) 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-
 
 	&lt;xs:complexType name="GroupT"&gt;
 		
@@ -491,23 +481,17 @@
          </div>
       </div>
       
-      
       	
       <div id="type_DimensionT">
          <h3><a name="type_DimensionT">Complex type <em>DimensionT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				This defines a dimension (a name and size) that may be shared 
-               <br>				between Grids and/or Arrays.
-               <br>				
-               <br>				name: The name of the dimension
-               <br>				size: The size of the dimension
+               <h4>Notes</h4>&nbsp;This defines a dimension (a name and size) that may be shared between
+               <br>				Grids and/or Arrays. name: The name of the dimension size: The size of the dimension
                <br>			
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-
 
 	&lt;xs:complexType name="DimensionT"&gt;
 		
@@ -522,20 +506,18 @@
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
       </div>
-      	
+      
       	
       <div id="type_EnumerationElementT">
          <h3><a name="type_EnumerationElementT">Complex type <em>EnumerationElementT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				One name-value pair for an enumeration. Values must be integers
-               <br>				and the values must be strings.
-               <br>			
+               <h4>Notes</h4>&nbsp;One name-value pair for an enumeration. Values must be integers and
+               <br>				the values must be strings. 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-	
+
 	&lt;xs:complexType name="EnumerationElementT"&gt;
 		
 		&lt;xs:attribute
@@ -549,22 +531,18 @@
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
       </div>
-      	
+      
       	
       <div id="type_EnumerationT">
          <h3><a name="type_EnumerationT">Complex type <em>EnumerationT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				This defines an enumeration.
-               <br>				
-               <br>				name: The name of the dimension
-               <br>				type: The size of the dimension
-               <br>			
+               <h4>Notes</h4>&nbsp;This defines an enumeration. name: The name of the dimension type:
+               <br>				The size of the dimension 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-	
+
 	&lt;xs:complexType name="EnumerationT"&gt;
 		
 
@@ -575,15 +553,15 @@
       			minOccurs="1"
       			maxOccurs="unbounded"/&gt;
 		&lt;/xs:choice&gt;
-				
+
 		&lt;xs:attribute
       		name="name"
       		type="<span class="external-link diff-ns">xs:string</span>"
-      		use="required"/&gt;		
+      		use="required"/&gt;
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
       </div>
-      	
+      
       	
       
       	
@@ -591,9 +569,7 @@
          <h3><a name="grp_CardinalTypes">Model group <em>CardinalTypes</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				DAP cardinal data types
-               <br>			
+               <h4>Notes</h4>&nbsp;DAP cardinal data types 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
@@ -628,11 +604,11 @@
 	&lt;xs:group name="ArrayVariableTypes"&gt;
 		&lt;xs:choice&gt;
 			&lt;xs:group ref="<a href="#grp_CardinalTypes">CardinalTypes</a>"/&gt;
-			
+
 			&lt;xs:element name="Enum" type="<a href="#type_EnumT">EnumT</a>"/&gt;
 			&lt;xs:element name="Opaque" type="<a href="#type_OpaqueT">OpaqueT</a>"/&gt;
 			&lt;xs:element name="Structure" type="<a href="#type_StructureT">StructureT</a>"/&gt;
-		&lt;/xs:choice&gt;		
+		&lt;/xs:choice&gt;
 	&lt;/xs:group&gt;</pre></div>
          </div>
       </div>
@@ -675,14 +651,9 @@
          <h3><a name="type_BaseType">Complex type <em>BaseType</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				Each variable in DAP4 is represented as a name and a collection
-               <br>				of metadata (Attributes, ...). The type of the variable is 
-               <br>				given in the element name (e.g., &lt;Byte name="x"/&gt;)
-               <br>				
-               <br>				name: The name of the variable
-               <br>				
-               <br>				( OtherXML*, Attribute*)
+               <h4>Notes</h4>&nbsp;Each variable in DAP4 is represented as a name and a collection of
+               <br>				metadata (Attributes, ...). The type of the variable is given in the element name
+               <br>				(e.g., &lt;Byte name="x"/&gt;) name: The name of the variable ( OtherXML*, Attribute*)
                <br>			
             </div>
             <div>
@@ -703,14 +674,9 @@
          <h3><a name="type_ArrayDimensionT">Complex type <em>ArrayDimensionT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				name: The name of the dimension
-               <br>				size: The size of the dimension
-               <br>				ref: A reference to a Dimension definition
-               <br>				
-               <br>				Note: either name and size must be present or only ref must 
-               <br>				be present
-               <br>			
+               <h4>Notes</h4>&nbsp;name: The name of the dimension size: The size of the dimension ref:
+               <br>				A reference to a Dimension definition Note: either name and size must be present or
+               <br>				only ref must be present 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
@@ -730,9 +696,7 @@
          <h3><a name="type_EnumT">Complex type <em>EnumT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				
-               <br>			
+               <h4>Notes</h4>&nbsp;
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
@@ -751,18 +715,17 @@
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
       </div>
-      	
+      
       	
       <div id="type_dimensionsT">
          <h3><a name="type_dimensionsT">Complex type <em>dimensionsT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>			
+               <h4>Notes</h4>&nbsp;
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-	
+
 	&lt;xs:complexType name="dimensionsT"&gt;
 		
 		&lt;xs:choice&gt;
@@ -771,22 +734,21 @@
       			type="<a href="#type_ArrayDimensionT">ArrayDimensionT</a>"
       			minOccurs="1"
       			maxOccurs="unbounded"/&gt;
-		&lt;/xs:choice&gt;  
+		&lt;/xs:choice&gt;
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
       </div>
-      	
+      
       	
       <div id="type_arrayTypeT">
          <h3><a name="type_arrayTypeT">Complex type <em>arrayTypeT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>			
+               <h4>Notes</h4>&nbsp;
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-	
+
 	&lt;xs:complexType name="arrayTypeT"&gt;
 		
 		&lt;xs:choice&gt;
@@ -794,35 +756,27 @@
       			ref="<a href="#grp_ArrayVariableTypes">ArrayVariableTypes</a>"
       			minOccurs="1"
       			maxOccurs="1"/&gt;
-		&lt;/xs:choice&gt;  
+		&lt;/xs:choice&gt;
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
       </div>
-      	
+      
       	
       <div id="type_ArrayT">
          <h3><a name="type_ArrayT">Complex type <em>ArrayT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				name: The name of the variable.
-               <br>				
-               <br>				NB: DAP4 allows for arrays of every type except: Grid or
-               <br>				Sequence. Since the 'Array' element may list N dimensions (using
-               <br>				the 'dim' child elements), the syntax does not allow 'Array'
-               <br>				elements to be children of 'Array'.
-               <br>				
-               <br>				Like Grids, Array dimensions may use name and size or a 
-               <br>				reference to a Dimension. The scope in which the Dimension can 
-               <br>				be located is limited to an enclosing Group (but it is not
-               <br>				limited to the immediate parent Group).
-               <br>				
-               <br>				( OtherXML*, Attribute*, type, dimensions)
-               <br>			
+               <h4>Notes</h4>&nbsp;name: The name of the variable. NB: DAP4 allows for arrays of every
+               <br>				type except: Grid or Sequence. Since the 'Array' element may list N dimensions
+               <br>				(using the 'dim' child elements), the syntax does not allow 'Array' elements to be
+               <br>				children of 'Array'. Like Grids, Array dimensions may use name and size or a
+               <br>				reference to a Dimension. The scope in which the Dimension can be located is limited
+               <br>				to an enclosing Group (but it is not limited to the immediate parent Group). (
+               <br>				OtherXML*, Attribute*, type, dimensions) 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-	
+
 	&lt;xs:complexType name="ArrayT"&gt;
 		
 		&lt;xs:complexContent&gt;
@@ -851,21 +805,13 @@
          <h3><a name="type_GridT">Complex type <em>GridT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				A Grid is a type that relates one or more Maps (aka coordinate
-               <br>				variables) to the dimensions of one or more Array variables. It
-               <br>				is often the case that Maps correspond to independent variables
-               <br>				like Latitude or sample number and Arrays represent dependent
-               <br>				variables.
-               <br>				
-               <br>				Note that Map elements either specify a name and size or 
-               <br>				reference a Dimension. The scope in which the Dimension can be
-               <br>				located is limited to an enclosing Group (but it is not limited
-               <br>				to the immediate parent Group).
-               <br>				
-               <br>				name: The name of the variable
-               <br>				
-               <br>				( OtherXML*, Attribute*, Array+, Map+)
+               <h4>Notes</h4>&nbsp;A Grid is a type that relates one or more Maps (aka coordinate
+               <br>				variables) to the dimensions of one or more Array variables. It is often the case
+               <br>				that Maps correspond to independent variables like Latitude or sample number and
+               <br>				Arrays represent dependent variables. Note that Map elements either specify a name
+               <br>				and size or reference a Dimension. The scope in which the Dimension can be located
+               <br>				is limited to an enclosing Group (but it is not limited to the immediate parent
+               <br>				Group). name: The name of the variable ( OtherXML*, Attribute*, Array+, Map+)
                <br>			
             </div>
             <div>
@@ -894,26 +840,19 @@
          </div>
       </div>
       
-      
       	
       <div id="type_MapT">
          <h3><a name="type_MapT">Complex type <em>MapT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				name: Name for this Map. Maps are associated with Array
-               <br>				dimentions by name, so this is a required attribute.
-               <br>				type: The type of a Map is limited to the Cardinal types.
-               <br>				
-               <br>				NB: Note the limitation on the type of a Map, which excludes
-               <br>				Maps that are Opaques, Structures, Sequences or Grids.
-               <br>				
-               <br>				( OtherXML*, Attribute*, dimensions )
-               <br>			
+               <h4>Notes</h4>&nbsp;name: Name for this Map. Maps are associated with Array dimentions by
+               <br>				name, so this is a required attribute. type: The type of a Map is limited to the
+               <br>				Cardinal types. NB: Note the limitation on the type of a Map, which excludes Maps
+               <br>				that are Opaques, Structures, Sequences or Grids. ( OtherXML*, Attribute*,
+               <br>				dimensions ) 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-
 
 	&lt;xs:complexType name="MapT"&gt;
 		
@@ -926,7 +865,7 @@
       					minOccurs="1"
       					maxOccurs="1"/&gt;
 				&lt;/xs:sequence&gt;
-				
+
 				&lt;xs:attribute
       				name="type"
       				type="<a href="#type_CardinalT">CardinalT</a>"
@@ -942,8 +881,7 @@
          <h3><a name="type_allTypeT">Complex type <em>allTypeT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>			
+               <h4>Notes</h4>&nbsp;
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
@@ -956,31 +894,24 @@
       				ref="<a href="#grp_AllVariableTypes">AllVariableTypes</a>"
       				minOccurs="1"
       				maxOccurs="unbounded"/&gt;
-			&lt;/xs:extension&gt;  
+			&lt;/xs:extension&gt;
 		&lt;/xs:complexContent&gt;
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
       </div>
-      	
-      	
+      
       	
       <div id="type_StructureT">
          <h3><a name="type_StructureT">Complex type <em>StructureT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				A Structure; a simple aggregation of variables. Unlike a Group,
-               <br>				it's possible to from an Array of Structures.
-               <br>				
-               <br>				name: The name of the variable
-               <br>				
-               <br>				( OtherXML*, Attribute*, ( Byte | ... | Grid )+ )
-               <br>			
+               <h4>Notes</h4>&nbsp;A Structure; a simple aggregation of variables. Unlike a Group, it's
+               <br>				possible to from an Array of Structures. name: The name of the variable ( OtherXML*,
+               <br>				Attribute*, ( Byte | ... | Grid )+ ) 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
-	
-	
+
 	&lt;xs:complexType name="StructureT"&gt;
 		
 
@@ -993,8 +924,8 @@
       					minOccurs="1"
       					maxOccurs="1"/&gt;
 				&lt;/xs:sequence&gt;
-				
-			&lt;/xs:extension&gt;  
+
+			&lt;/xs:extension&gt;
 		&lt;/xs:complexContent&gt;
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
@@ -1005,15 +936,10 @@
          <h3><a name="type_SequenceT">Complex type <em>SequenceT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				A Sequence is a type that holds tabular data where each row
-               <br>				of the table represents a relation, as in a relational database.
-               <br>				Sequences can nest, but Arrays of Sequences are not supported.
-               <br>				
-               <br>				name: The name of the variable
-               <br>				
-               <br>				( OtherXML*, Attribute*, ( Byte | ... | Grid )+ )
-               <br>			
+               <h4>Notes</h4>&nbsp;A Sequence is a type that holds tabular data where each row of the
+               <br>				table represents a relation, as in a relational database. Sequences can nest, but
+               <br>				Arrays of Sequences are not supported. name: The name of the variable ( OtherXML*,
+               <br>				Attribute*, ( Byte | ... | Grid )+ ) 
             </div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
@@ -1029,7 +955,7 @@
       					minOccurs="1"
       					maxOccurs="1"/&gt;
 				&lt;/xs:sequence&gt;
-			&lt;/xs:extension&gt;  
+			&lt;/xs:extension&gt;
 		&lt;/xs:complexContent&gt;
 	&lt;/xs:complexType&gt;</pre></div>
          </div>
@@ -1040,40 +966,26 @@
          <h3><a name="type_BlobT">Complex type <em>BlobT</em></a></h3>
          <div class="bodytext">
             <div>
-               <h4>Notes</h4>
-               <br>				The 'Blob' element is used to point to an associated data 
-               <br>				document. When DAP is used to access metadata only for a data
-               <br>				source, no 'blob' element will be present. However, when a
-               <br>				request for data is made, the Dataset element holds a
-               <br>				description of the data values and the blob points to a place
-               <br>				where those values will be found. 
-               <br>				
-               <br>				In DAP4 the Blob element refers to binary 
-               <br>				(application/octet-stream) part within a multi-part MIME
-               <br>				document or it refers to a separate document, possibly not
-               <br>				imediately available. The latter case is included to support
-               <br>				asynchronous responses (i.e., responses that cannot be returned
-               <br>				quickly). See http://www.w3.org/TR/xlink11/.
-               <br>				
-               <br>				xlink:href: Refers to the multi-part MIME document part that 
-               <br>					holds the data values, encoded using XDR or to a separate 
-               <br>					document. In the first case, the IRI must begin with 'cid:'
-               <br>					(see the owsManifest schema for an example of this use; 
-               <br>					http://schemas.opengis.net/ows/2.0/owsManifest.xsd). In the 
-               <br>					latter case, the IRI must refer to a remote resourse, and
-               <br>					will likely start 'http:'.
-               <br>				xlink:type: Always 'simple'
-               <br>				xlink:role: If present the only values DAP4 supports are 
-               <br>					'asynchronousResponse' and 'synchronousResponse'.
-               <br>				
-               <br>				available: Contains an ISO 8601 string that indicates when the
-               <br>					client can expect for the remote resource to be 
-               <br>					dereferencable without error. The special value 'now' is
-               <br>					also allowed.
-               <br>				until: Contains an ISO 8601 string that indicates when the 
-               <br>					client can expect the remote resource to be removed by the
-               <br>					server. The special value 'forever' is also allowed.
-               <br>					
+               <h4>Notes</h4>&nbsp;The 'Blob' element is used to point to an associated data document.
+               <br>				When DAP is used to access metadata only for a data source, no 'blob' element will
+               <br>				be present. However, when a request for data is made, the Dataset element holds a
+               <br>				description of the data values and the blob points to a place where those values
+               <br>				will be found. In DAP4 the Blob element refers to binary (application/octet-stream)
+               <br>				part within a multi-part MIME document or it refers to a separate document, possibly
+               <br>				not imediately available. The latter case is included to support asynchronous
+               <br>				responses (i.e., responses that cannot be returned quickly). See
+               <br>				http://www.w3.org/TR/xlink11/. xlink:href: Refers to the multi-part MIME document
+               <br>				part that holds the data values, encoded using XDR or to a separate document. In the
+               <br>				first case, the IRI must begin with 'cid:' (see the owsManifest schema for an
+               <br>				example of this use; http://schemas.opengis.net/ows/2.0/owsManifest.xsd). In the
+               <br>				latter case, the IRI must refer to a remote resourse, and will likely start 'http:'.
+               <br>				xlink:type: Always 'simple' xlink:role: If present the only values DAP4 supports are
+               <br>				'asynchronousResponse' and 'synchronousResponse'.
+               <br>				 available: Contains an ISO
+               <br>				8601 string that indicates when the client can expect for the remote resource to be
+               <br>				dereferencable without error. The special value 'now' is also allowed. until:
+               <br>				Contains an ISO 8601 string that indicates when the client can expect the remote
+               <br>				resource to be removed by the server. The special value 'forever' is also allowed.
                <br>			
             </div>
             <div>

@@ -8,8 +8,8 @@
     xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd">
         
     <Group>
-        <Dimension name="latitude" size="1024"/>
-        <Dimension name="longitude" size="1024"/>
+        <Dimension name="x" size="1024"/>
+        <Dimension name="y" size="1024"/>
         
         <Enumeration name="mask_values">
             <elt name="clear" value="1"/>
@@ -46,13 +46,15 @@
             <Map name="latitude" type="Float32">
                 <Attribute name="maybe" type="UByte"><value>255</value></Attribute>
                 <dimensions>
-                    <dim ref="latitude"/>
+                    <dim ref="x"/>
+                    <dim ref="y"/>
                 </dimensions>
             </Map>
             
             <Map name="longitude" type="Float32">
                 <dimensions>
-                    <dim ref="longitude"/>
+                    <dim ref="x"/>
+                    <dim ref="y"/>
                 </dimensions>
             </Map>
         </Grid>
