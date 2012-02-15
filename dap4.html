@@ -675,21 +675,30 @@
          <div class="bodytext">
             <div>
                <h4>Notes</h4>&nbsp;Each variable in DAP4 is represented as a name and a collection of
-               <br>				metadata (Attributes, ...). The type of the variable is given in the element name
-               <br>				(e.g., &lt;Byte name="x"/&gt;) name: The name of the variable ( OtherXML*, Attribute*)
-               <br>				
-               <br>				The attribute 'id' represents the locally (as in within the dataset) unique 
-               <br>				identifier of the variable. This is usually period separated concatanation of the
-               <br>				values of the name attributes of the enclosing variables, starting with the outermost 
-               <br>				and ending with the name of the variable instance.
-               <br>				
-               <br>			
-            </div>
+               <br>	            metadata (Attributes, ...). The type of the variable is given in the element name
+               <br>	            (e.g., &lt;Byte name="x"/&gt;) name: The name of the variable ( OtherXML*, Attribute*)
+               <br>	            
+               <br>	            The attribute 'id' represents the locally (as in within the dataset) unique 
+               <br>	            identifier of the variable. This is usually period separated concatanation of the
+               <br>	            values of the name attributes of the enclosing variables, starting with the outermost 
+               <br>	            and ending with the name of the variable instance.
+               <br>	            
+               <br>	            
+               <br>	        <font xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" color="red">
+                                      Is it the case that we want dap:id to be used when clients are selecting data? If so then
+                                      I think the server would have to be able to accept these id's as part of the projection/selection
+                                      Or - is it the case that we want to continue to use the "name" as the data selector - even though
+                                      the use of name is indeterminate w.r.t many datasets and we KNOW that the current dap implementations
+                  
+                                      return the first variable associated with a matching 'name' value.
+                                      
+                                      It may be that we want to change server behavior to accept only full variable names.               
+                                  </font></div>
             <div>
                <h4>Formal declaration in XSD source form</h4><pre>
 
 	&lt;xs:complexType name="BaseType"&gt;
-		
+	    
 		&lt;xs:sequence&gt;
 			&lt;xs:group ref="<a href="#grp_Metadata">Metadata</a>"/&gt;
 		&lt;/xs:sequence&gt;
