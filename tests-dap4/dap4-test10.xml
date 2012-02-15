@@ -4,7 +4,7 @@
     xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
     xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd">
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  ../dap4.xsd">
 
     <Group>
         <Dimension name="latitude" size="1024"/>
