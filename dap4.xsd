@@ -42,7 +42,7 @@
 							UnsignedByte. In addition: The syntax for Array has been changed so that
 							it's easier for processing software to figure out the type of an array;
 							Grids have been generalized so that there can be any number of 'Array'
-							parts (and the Maps may be multi-dimensional); and the Attribute type 
+							parts (and the Maps may be multi-dimensional); and the Attribute type
 							OtherXML has been made its own element (it's no longer a type of
 							'Attribute'). </p>
 					</div>
@@ -51,6 +51,18 @@
 		</xs:annotation>
 	</xs:element>
 
+	<xs:group name="MetadataGroup">
+		<xs:annotation>
+			<xs:documentation> These elements are used in several places to hold the 'semantic'
+				and/or 'use' metadata for the dataset, its groups and variables. ( OtherXML*,
+				Attribute* ) </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="OtherXML" type="OtherXmlType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Attribute" type="AttributeType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:group>
+	
 	<xs:complexType name="DatasetType">
 		<xs:annotation>
 			<xs:documentation>
@@ -86,35 +98,24 @@
 		<xs:attribute ref="xml:base" use="required"/>
 	</xs:complexType>
 
-	<xs:group name="MetadataGroup">
-		<xs:annotation>
-			<xs:documentation> These elements are used in several places to hold the 'semantic'
-				and/or 'use' metadata for the dataset, its groups and variables. ( OtherXML*,
-				Attribute* ) </xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="OtherXML" type="OtherXmlType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Attribute" type="AttributeType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:group>
-
 	<xs:complexType name="AttributeType">
 		<xs:annotation>
 			<xs:documentation> DAP uses attributes as a way to encode information that data
-				providers has bundled with data sources. This element is recursive. Each Attribute
-				element defines a lexical scope. name: The name of the attribute; must be unique
-				within the scope. type: The type of the attribute. Attributes are limited to simple
-				types, vectors of simple types and 'Containers' which are essentially structure
-				types. namespace: Use this to indicate that the given attribute means the same thing
-				as the matching item in the given namespace. This optional attribute is here to help
-				preserve information that a data server might know to be true that a client
-				application could not assume with certainty. ( value+ | ( OtherXML*, Attribute* ) )
+				providers have bundled with data sources. This element is recursive. Each Attribute
+				element defines a lexical scope. If there are no <value/> nodes present the type
+				must be "Container". name: The name of the attribute; must be unique within the
+				scope. type: The type of the attribute. Attributes are limited to simple types,
+				vectors of simple types and 'Containers' which are essentially structure types.
+				namespace: Use this to indicate that the given attribute means the same thing as the
+				matching item in the given namespace. This optional attribute is here to help
+				preserve information that a data server might know to be true and that a client
+				application could not assume with certainty. ( value* | ( OtherXML*, Attribute* ) )
 			</xs:documentation>
 		</xs:annotation>
 
 		<xs:choice>
 			<xs:sequence>
-				<xs:element name="value" type="xs:string" maxOccurs="unbounded"/>
+				<xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:sequence>
 				<xs:group ref="MetadataGroup"/>
@@ -160,14 +161,11 @@
 		<xs:annotation>
 			<xs:documentation> This is essentially a BLOB type. Like a String, it is a type with
 				varying size and it can be used in Structures, Arrays and Sequences. It cannot,
-				howerver, be part of a Grid. 
-			
-				This is left out of CardinalType because Attributes may not have
-				OpaqueType values; Attributes are either Vectors of CardinalType
-				or they are ContainerTypes.
-			</xs:documentation>
+				howerver, be part of a Grid. This is left out of CardinalType because Attributes may
+				not have OpaqueType values; Attributes are either Vectors of CardinalType or they
+				are ContainerTypes. </xs:documentation>
 		</xs:annotation>
-
+		
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Opaque"/>
 		</xs:restriction>
@@ -217,9 +215,11 @@
 			<xs:group ref="MetadataGroup"/>
 			<xs:element name="Group" type="GroupType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Dimension" type="DimensionType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Enumeration" type="EnumerationType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Enumeration" type="EnumerationType" minOccurs="0"
+				maxOccurs="unbounded"/>
 			<xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
+		
 		<xs:attribute name="name" type="xs:string" default="root"/>
 	</xs:complexType>
 
@@ -232,24 +232,23 @@
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="size" type="xs:integer" use="required"/>
 	</xs:complexType>
-
-	<xs:complexType name="EnumerationElementType">
-		<xs:annotation>
-			<xs:documentation> One name-value pair for an enumeration. Values must be integers and
-				the values must be strings. </xs:documentation>
-		</xs:annotation>
-		<xs:attribute name="name" type="xs:string" use="required"/>
-		<xs:attribute name="value" type="xs:string" use="required"/>
-	</xs:complexType>
-
+	
 	<xs:complexType name="EnumerationType">
 		<xs:annotation>
-			<xs:documentation> This defines an enumeration. name: The name of the dimension type:
-				The size of the dimension </xs:documentation>
+			<xs:documentation> This defines the values of an enumeration. 
+				
+				name: The name of the dimension 
+				type: The size of the dimension 
+			</xs:documentation>
 		</xs:annotation>
 
 		<xs:choice>
-			<xs:element name="elt" type="EnumerationElementType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="elt" minOccurs="1" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+					<xs:attribute name="value" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 
 		<xs:attribute name="name" type="xs:string" use="required"/>
@@ -275,7 +274,7 @@
 			<xs:element name="String" type="BaseType"/>
 			<xs:element name="Url" type="BaseType"/>
 			<xs:element name="Enum" type="EnumType"/>
-			<xs:element name="Opaque" type="OpaqueType"/>
+			<xs:element name="Opaque" type="BaseType"/>
 		</xs:choice>
 	</xs:group>
 
@@ -291,14 +290,12 @@
 		<xs:choice>
 			<xs:group ref="ArrayVariableGroup"/>
 
-			<xs:element name="Array" type="ArrayType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Grid" type="GridType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Sequence" type="SequenceType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:choice>
 	</xs:group>
 
 	<xs:complexType name="BaseType">
-	    
 	    <xs:annotation>
 	        
 	        <xs:documentation> Each variable in DAP4 is represented as a name and a collection of
@@ -324,11 +321,13 @@
             </xs:documentation>
 		
 	    </xs:annotation>
+		
 		<xs:sequence>
 			<xs:group ref="MetadataGroup"/>
+			<xs:element name="dimension" type="ArrayDimensionType" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="name" type="xs:string"/>
-	    <xs:attribute name="id" type="xs:string" form="qualified"/>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="id" type="xs:string" form="qualified"/>
 	</xs:complexType>
 
 	<xs:complexType name="ArrayDimensionType">
@@ -347,54 +346,17 @@
 		<xs:annotation>
 			<xs:documentation> </xs:documentation>
 		</xs:annotation>
-
+		
 		<xs:complexContent>
 			<xs:extension base="BaseType">
 				<xs:attribute name="type" type="xs:string" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-<!--
-	<xs:complexType name="dimensionsT">
-		<xs:annotation>
-			<xs:documentation> </xs:documentation>
-		</xs:annotation>
-		<xs:choice>
-			<xs:element name="dimension" type="ArrayDimensionType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:choice>
-	</xs:complexType>
 
-	<xs:complexType name="arrayTypeT">
-		<xs:annotation>
-			<xs:documentation> </xs:documentation>
-		</xs:annotation>
-		<xs:choice>
-			<xs:group ref="ArrayVariableGroup" minOccurs="1" maxOccurs="1"/>
-		</xs:choice>
-	</xs:complexType>
--->
-	<xs:complexType name="ArrayType">
-		<xs:annotation>
-			<xs:documentation> name: The name of the variable. NB: DAP4 allows for arrays of every
-				type except: Grid or Sequence. Since the 'Array' element may list N dimensions
-				(using the 'dim' child elements), the syntax does not allow 'Array' elements to be
-				children of 'Array'. Like Grids, Array dimensions may use name and size or a
-				reference to a Dimension. The scope in which the Dimension can be located is limited
-				to an enclosing Group (but it is not limited to the immediate parent Group). (
-				OtherXML*, Attribute*, type, dimensions) </xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="BaseType">
-				<xs:sequence>
-					<xs:group ref="ArrayVariableGroup" minOccurs="1" maxOccurs="1"/>
-					<!-- <xs:element name="type" type="arrayTypeT" minOccurs="1" maxOccurs="1"/>-->
-					<!-- <xs:element name="dimensions" type="dimensionsT" minOccurs="1" maxOccurs="1"/> -->
-					<xs:element name="dimension" type="ArrayDimensionType" minOccurs="1" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
+	<!-- Both GridType and SequenceType are extensions of BaseType, but they 
+		need to have the restriction that there can be no dimension elements
+		in their case -->
 	<xs:complexType name="GridType">
 		<xs:annotation>
 			<xs:documentation> A Grid is a type that relates one or more Maps (aka coordinate
@@ -409,10 +371,12 @@
 		<xs:complexContent>
 			<xs:extension base="BaseType">
 				<xs:sequence>
+					<xs:element name="Dimension" type="DimensionType" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element name="Map" type="MapType" minOccurs="1" maxOccurs="unbounded"/>
+					
 					<!-- Subtle change here: In DAP 3.2 and earlier, maxOccurs
 						for the Array element was 1, now it's 'unbounded' -->
-					<xs:element name="Array" type="ArrayType" minOccurs="1" maxOccurs="unbounded"/>
-					<xs:element name="Map" type="MapType" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:group ref="ArrayVariableGroup"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -428,22 +392,16 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BaseType">
-				<xs:sequence>
-					<xs:element name="dimension" type="ArrayDimensionType" minOccurs="1" maxOccurs="unbounded"/>
-				</xs:sequence>
-				
+				<!--
+					I need to add a restriction here that there must be a dimension
+					element; with BaseType it is optional.
+					
+					<xs:sequence>
+					<xs:element name="dimension" type="ArrayDimensionType" minOccurs="1"
+						maxOccurs="unbounded"/>
+				</xs:sequence> -->
+
 				<xs:attribute name="type" type="CardinalType" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="allTypeT">
-		<xs:annotation>
-			<xs:documentation> </xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="BaseType">
-				<xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -454,17 +412,14 @@
 				possible to from an Array of Structures. name: The name of the variable ( OtherXML*,
 				Attribute*, ( Byte | ... | Grid )+ ) </xs:documentation>
 		</xs:annotation>
-
+		
 		<xs:complexContent>
 			<xs:extension base="BaseType">
-				<xs:sequence>
-					<xs:element name="type" type="allTypeT" minOccurs="1" maxOccurs="1"/>
-				</xs:sequence>
-
+				<xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
+		
 	<xs:complexType name="SequenceType">
 		<xs:annotation>
 			<xs:documentation> A Sequence is a type that holds tabular data where each row of the
@@ -474,9 +429,7 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BaseType">
-				<xs:sequence>
-					<xs:element name="type" type="allTypeT" minOccurs="1" maxOccurs="1"/>
-				</xs:sequence>
+				<xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -493,8 +446,8 @@
 						(application/octet-stream) part within a multi-part MIME document or it
 						refers to a separate document, possibly not imediately available. The latter
 						case is included to support asynchronous responses (i.e., responses that
-						cannot be returned quickly). See http://www.w3.org/TR/xlink11/.</p> <h4>The
-						dc:date child element</h4>
+						cannot be returned quickly). See http://www.w3.org/TR/xlink11/.</p>
+					<h4>The dc:date child element</h4>
 					<p>If present, the <dc:date/> element indicates the time or time range when the
 						information will be available. This is only sensible (i.e., valid) when the
 						response is asynchronous (i.e.,
@@ -502,13 +455,13 @@
 						defines both a date and a date range. In the case of a date, this element
 						indicates when the information will likely be available; when its value is a
 						range, it denotes the when it will likely be present and when it wil go
-						away.</p> 
-					<p>Examples of the <dc:date/> element: 
-						<ul>
+						away.</p>
+					<p>Examples of the <dc:date/> element: <ul>
 							<li><code>&lt;dc:date>1994-11-05T13:15:30Z&lt;/dc:date></code></li>
 							<li><code>&lt;dc:date>1994-11-05T13:15:30Z/1994-11-06T00:00:00Z&lt;/dc:date></code></li>
 						</ul>
-					</p> <p>Element attributes:</p>
+					</p>
+					<p>Element attributes:</p>
 					<dl>
 						<dt>xlink:href:</dt>
 						<dd>Refers to the multi-part MIME document part that holds the data values,
@@ -516,8 +469,10 @@
 							must begin with 'cid:' (see the owsManifest schema for an example of
 							this use; http://schemas.opengis.net/ows/2.0/owsManifest.xsd). In the
 							latter case, the IRI must refer to a remote resourse, and will likely
-							start 'http:'.</dd> <dt>xlink:type:</dt>
-						<dd>Always 'simple'.</dd> <dt>xlink:role:</dt>
+							start 'http:'.</dd>
+						<dt>xlink:type:</dt>
+						<dd>Always 'simple'.</dd>
+						<dt>xlink:role:</dt>
 						<dd>If present the only values DAP4 supports are 'asynchronousResponse' and
 							'synchronousResponse'.</dd>
 						<!-- TODO: Better names than async... and sync... ? -->
