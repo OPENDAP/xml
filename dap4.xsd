@@ -62,7 +62,7 @@
 			<xs:element name="Attribute" type="AttributeType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:group>
-	
+
 	<xs:complexType name="DatasetType">
 		<xs:annotation>
 			<xs:documentation>
@@ -89,7 +89,7 @@
 
 		<xs:sequence>
 			<xs:group ref="MetadataGroup"/>
-			<xs:element name="Group" type="GroupType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="Group" type="GroupType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="blob" type="BlobType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 
@@ -165,7 +165,7 @@
 				not have OpaqueType values; Attributes are either Vectors of CardinalType or they
 				are ContainerTypes. </xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Opaque"/>
 		</xs:restriction>
@@ -219,8 +219,9 @@
 				maxOccurs="unbounded"/>
 			<xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
-		
+
 		<xs:attribute name="name" type="xs:string" default="root"/>
+		<xs:attribute name="newAttribute"/>
 	</xs:complexType>
 
 	<xs:complexType name="SharedDimensionType">
@@ -232,7 +233,7 @@
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="size" type="xs:integer" use="required"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="EnumerationType">
 		<xs:annotation>
 			<xs:documentation> This defines the values of an enumeration. 
@@ -301,13 +302,13 @@
 				This provides a version of BaseType that does not allow 
 				<dimension/> child elements since Grid and Sequence may not be
 				array types.
-			</xs:documentation>     			
+			</xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:sequence>
 			<xs:group ref="MetadataGroup"/>
 		</xs:sequence>
-		
+
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="id" type="xs:string" form="qualified"/>
 	</xs:complexType>
@@ -315,33 +316,36 @@
 	<xs:complexType name="BaseType">
 		<xs:annotation>
 			<xs:documentation>This extended ScalarBaseType so that instances
-				may be either scalar or N-dimensional.</xs:documentation>       
+				may be either scalar or N-dimensional.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="ScalarBaseType">
 				<xs:sequence>
-					<xs:element name="dimension" type="ArrayDimensionType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="dimension" type="ArrayDimensionType" minOccurs="0"
+						maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="GridArrayBaseType">
 		<xs:annotation>
 			<xs:documentation>This extended BaseType so that instances
-				must be N-dimensional (N >= 1) and reference one or more 
-				SharedDimension objects.</xs:documentation>		
+				must be N-dimensional (N &gt;= 1) and reference one or more 
+				SharedDimension objects.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="ScalarBaseType">
 				<xs:sequence>
-					<xs:element name="dimension" type="ArrayDimensionType" minOccurs="1" maxOccurs="unbounded"/>
-					<xs:element name="map" type="SharedDimensionRefType" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element name="dimension" type="ArrayDimensionType" minOccurs="1"
+						maxOccurs="unbounded"/>
+					<xs:element name="map" type="SharedDimensionRefType" minOccurs="1"
+						maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="ArrayDimensionType">
 		<xs:annotation>
 			<xs:documentation> name: The name of the dimension size: The size of the dimension ref:
@@ -360,15 +364,15 @@
 				This attribute is used to reference a SharedDimension object.
 			</xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:attribute name="ref" type="xs:string"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="EnumType">
 		<xs:annotation>
 			<xs:documentation> </xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:complexContent>
 			<xs:extension base="BaseType">
 				<xs:attribute name="type" type="xs:string" use="required"/>
@@ -393,9 +397,10 @@
 		<xs:complexContent>
 			<xs:extension base="ScalarBaseType">
 				<xs:sequence>
-					<xs:element name="SharedDimension" type="SharedDimensionType" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element name="SharedDimension" type="SharedDimensionType" minOccurs="1"
+						maxOccurs="unbounded"/>
 					<xs:element name="Map" type="MapType" minOccurs="1" maxOccurs="unbounded"/>
-					
+
 					<xs:group ref="GridArrayVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
@@ -419,33 +424,20 @@
 			<xs:element name="Float64" type="GridArrayBaseType"/>
 			<xs:element name="String" type="GridArrayBaseType"/>
 			<xs:element name="Url" type="GridArrayBaseType"/>
-			<xs:element name="Enum" type="GridEnumType"/>
+			<xs:element name="Enum" type="GridArrayEnumType"/>
 			<xs:element name="Opaque" type="GridArrayBaseType"/>
 		</xs:choice>
 	</xs:group>
-	
+
 	<xs:group name="GridArrayVariableGroup">
 		<xs:choice>
 			<xs:group ref="GridCardinalGroup"/>
-			
-			<xs:element name="Structure" type="GridStructureType" minOccurs="0" maxOccurs="unbounded"/>
+
+			<xs:element name="Structure" type="GridArrayStructureType" minOccurs="0"
+				maxOccurs="unbounded"/>
 		</xs:choice>
 	</xs:group>
-	
-	<xs:complexType name="MapBaseType">
-		<xs:complexContent>
-			<xs:restriction base="BaseType">
-				<xs:sequence>
-					<xs:group ref="MetadataGroup"/>
-					<xs:element name="dimension" type="ArrayDimensionType" minOccurs="1" maxOccurs="unbounded"/>
-				</xs:sequence>
-				
-				<xs:attribute name="name" type="xs:string" use="required"/>
-				<xs:attribute name="id" type="xs:string" form="qualified"/>
-			</xs:restriction>     
-		</xs:complexContent>
-	</xs:complexType>
-	
+
 	<xs:complexType name="MapType">
 		<xs:annotation>
 			<xs:documentation> name: Name for this Map. Maps are associated with Array dimentions by
@@ -455,7 +447,11 @@
 				dimensions ) </xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="MapBaseType">
+			<xs:extension base="ScalarBaseType">
+				<xs:sequence>
+					<xs:element name="dimension" type="SharedDimensionRefType" minOccurs="1"
+						maxOccurs="unbounded"/>
+				</xs:sequence>
 				<xs:attribute name="type" type="CardinalType" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
@@ -467,34 +463,34 @@
 				possible to from an Array of Structures. name: The name of the variable ( OtherXML*,
 				Attribute*, ( Byte | ... | Grid )+ ) </xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:complexContent>
 			<xs:extension base="BaseType">
 				<xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
-	<xs:complexType name="GridEnumType">
+
+	<xs:complexType name="GridArrayEnumType">
 		<xs:annotation>
 			<xs:documentation> </xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:complexContent>
 			<xs:extension base="GridArrayBaseType">
 				<xs:attribute name="type" type="xs:string" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
-	
-	<xs:complexType name="GridStructureType">
+
+
+	<xs:complexType name="GridArrayStructureType">
 		<xs:annotation>
 			<xs:documentation> A Structure; a simple aggregation of variables. Unlike a Group, it's
 				possible to from an Array of Structures. name: The name of the variable ( OtherXML*,
 				Attribute*, ( Byte | ... | Grid )+ ) </xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:complexContent>
 			<xs:extension base="GridArrayBaseType">
 				<xs:sequence>
@@ -503,7 +499,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="SequenceType">
 		<xs:annotation>
 			<xs:documentation> A Sequence is a type that holds tabular data where each row of the
@@ -541,8 +537,8 @@
 						range, it denotes the when it will likely be present and when it wil go
 						away.</p>
 					<p>Examples of the <dc:date/> element: <ul>
-							<li><code>&lt;dc:date>1994-11-05T13:15:30Z&lt;/dc:date></code></li>
-							<li><code>&lt;dc:date>1994-11-05T13:15:30Z/1994-11-06T00:00:00Z&lt;/dc:date></code></li>
+							<li><code>&lt;dc:date&gt;1994-11-05T13:15:30Z&lt;/dc:date&gt;</code></li>
+							<li><code>&lt;dc:date&gt;1994-11-05T13:15:30Z/1994-11-06T00:00:00Z&lt;/dc:date&gt;</code></li>
 						</ul>
 					</p>
 					<p>Element attributes:</p>
