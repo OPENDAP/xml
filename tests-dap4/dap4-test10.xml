@@ -21,12 +21,8 @@
                     <Attribute name="long_name" type="String">
                         <value>A long name for this vector of floating point values</value>
                     </Attribute>
-                    <type>
-                        <Float64/>
-                    </type>
-                    <dimensions>
-                        <dim size="256"/>
-                    </dimensions>
+                    <Float64/>
+                    <dimension size="256"/>
                 </Array>
                 <String name="s">
                     <Attribute name="long_name" type="String">

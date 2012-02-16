@@ -20,7 +20,7 @@
 	<xs:import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="dc.xsd"/>
 	<!-- http://dublincore.org/schemas/xmls/qdc/2008/02/11/dc.xsd -->
 
-	<xs:element name="Dataset" type="DatasetT">
+	<xs:element name="Dataset" type="DatasetType">
 		<xs:annotation>
 			<xs:documentation>
 				<div>
@@ -51,7 +51,7 @@
 		</xs:annotation>
 	</xs:element>
 
-	<xs:complexType name="DatasetT">
+	<xs:complexType name="DatasetType">
 		<xs:annotation>
 			<xs:documentation>
 				<div>
@@ -76,9 +76,9 @@
 		</xs:annotation>
 
 		<xs:sequence>
-			<xs:group ref="Metadata"/>
-			<xs:element name="Group" type="GroupT" minOccurs="1" maxOccurs="unbounded"/>
-			<xs:element name="blob" type="BlobT" minOccurs="0" maxOccurs="1"/>
+			<xs:group ref="MetadataGroup"/>
+			<xs:element name="Group" type="GroupType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="blob" type="BlobType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 
 		<xs:attribute name="name" type="xs:string" use="required"/>
@@ -86,19 +86,19 @@
 		<xs:attribute ref="xml:base" use="required"/>
 	</xs:complexType>
 
-	<xs:group name="Metadata">
+	<xs:group name="MetadataGroup">
 		<xs:annotation>
 			<xs:documentation> These elements are used in several places to hold the 'semantic'
 				and/or 'use' metadata for the dataset, its groups and variables. ( OtherXML*,
 				Attribute* ) </xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="OtherXML" type="OtherXmlT" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Attribute" type="AttributeT" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="OtherXML" type="OtherXmlType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Attribute" type="AttributeType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:group>
 
-	<xs:complexType name="AttributeT">
+	<xs:complexType name="AttributeType">
 		<xs:annotation>
 			<xs:documentation> DAP uses attributes as a way to encode information that data
 				providers has bundled with data sources. This element is recursive. Each Attribute
@@ -117,23 +117,22 @@
 				<xs:element name="value" type="xs:string" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:sequence>
-				<xs:group ref="Metadata"/>
+				<xs:group ref="MetadataGroup"/>
 			</xs:sequence>
 		</xs:choice>
 
 		<xs:attribute name="name" type="xs:string" use="required"/>
-		<!-- TODO: Extend to more DAP types? -->
-		<xs:attribute name="type" type="AttributeTypeT" use="required"/>
-		<xs:attribute name="namespace" type="xs:string" use="optional">
-			<xs:annotation>
-				<xs:documentation> The 'namespace' attribute. </xs:documentation>
-			</xs:annotation>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:union memberTypes="CardinalType ContainerType"/>
+			</xs:simpleType>
 		</xs:attribute>
+		<xs:attribute name="namespace" type="xs:string" use="optional"/>
 	</xs:complexType>
 
 	<!-- These types have been declared to minimize name duplication -->
 
-	<xs:simpleType name="CardinalT">
+	<xs:simpleType name="CardinalType">
 		<xs:annotation>
 			<xs:documentation> Changes from DAP2 to DAP4: The Byte type is now signed and unsigned
 				bytes are now represented by the 'UByte' data type. The types Int64 and UInt64
@@ -157,11 +156,16 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="OpaqueT">
+	<xs:simpleType name="OpaqueType">
 		<xs:annotation>
 			<xs:documentation> This is essentially a BLOB type. Like a String, it is a type with
 				varying size and it can be used in Structures, Arrays and Sequences. It cannot,
-				howerver, be part of a Grid. </xs:documentation>
+				howerver, be part of a Grid. 
+			
+				This is left out of CardinalType because Attributes may not have
+				OpaqueType values; Attributes are either Vectors of CardinalType
+				or they are ContainerTypes.
+			</xs:documentation>
 		</xs:annotation>
 
 		<xs:restriction base="xs:string">
@@ -169,7 +173,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="ContainerT">
+	<xs:simpleType name="ContainerType">
 		<xs:annotation>
 			<xs:documentation> The Container type is used to hold structure (or 'Container')
 				attributes. These correspond to the netCDF4/HDF5 compound type for attributes.
@@ -181,17 +185,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="AttributeTypeT">
-		<xs:annotation>
-			<xs:documentation> Hack: Here Attribute types are apparently defined as scalars or
-				Containers. However, they are actually scalars, vectors or containers.
-			</xs:documentation>
-		</xs:annotation>
-
-		<xs:union memberTypes="CardinalT ContainerT"/>
-	</xs:simpleType>
-
-	<xs:complexType name="OtherXmlT">
+	<xs:complexType name="OtherXmlType">
 		<xs:annotation>
 			<xs:documentation> Use this to embed arbitrary XML in a DDX. This functions like an
 				Attribute and appears in the same places as an Attribute, but its contents are
@@ -211,7 +205,7 @@
 		<xs:anyAttribute processContents="lax" namespace="##other"/>
 	</xs:complexType>
 
-	<xs:complexType name="GroupT">
+	<xs:complexType name="GroupType">
 		<xs:annotation>
 			<xs:documentation> A Group is a lexical scoping tool used to replicate HDF5 and netCDF4
 				Groups. Each Group defines a lexical scope. Each dataset has at least one Group; if
@@ -220,16 +214,16 @@
 				OtherXML*, Attribute*, Dimension*, ScalarType+ ) </xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:group ref="Metadata"/>
-			<xs:element name="Group" type="GroupT" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Dimension" type="DimensionT" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Enumeration" type="EnumerationT" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:group ref="AllVariableTypes" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:group ref="MetadataGroup"/>
+			<xs:element name="Group" type="GroupType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Dimension" type="DimensionType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Enumeration" type="EnumerationType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" default="root"/>
 	</xs:complexType>
 
-	<xs:complexType name="DimensionT">
+	<xs:complexType name="DimensionType">
 		<xs:annotation>
 			<xs:documentation> This defines a dimension (a name and size) that may be shared between
 				Grids and/or Arrays. name: The name of the dimension size: The size of the dimension
@@ -239,7 +233,7 @@
 		<xs:attribute name="size" type="xs:integer" use="required"/>
 	</xs:complexType>
 
-	<xs:complexType name="EnumerationElementT">
+	<xs:complexType name="EnumerationElementType">
 		<xs:annotation>
 			<xs:documentation> One name-value pair for an enumeration. Values must be integers and
 				the values must be strings. </xs:documentation>
@@ -248,14 +242,14 @@
 		<xs:attribute name="value" type="xs:string" use="required"/>
 	</xs:complexType>
 
-	<xs:complexType name="EnumerationT">
+	<xs:complexType name="EnumerationType">
 		<xs:annotation>
 			<xs:documentation> This defines an enumeration. name: The name of the dimension type:
 				The size of the dimension </xs:documentation>
 		</xs:annotation>
 
 		<xs:choice>
-			<xs:element name="elt" type="EnumerationElementT" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="elt" type="EnumerationElementType" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:choice>
 
 		<xs:attribute name="name" type="xs:string" use="required"/>
@@ -263,7 +257,7 @@
 
 	<!-- These groups have been defined to minimize name duplication -->
 
-	<xs:group name="CardinalTypes">
+	<xs:group name="CardinalGroup">
 		<xs:annotation>
 			<xs:documentation> DAP cardinal data types </xs:documentation>
 		</xs:annotation>
@@ -280,26 +274,26 @@
 			<xs:element name="Float64" type="BaseType"/>
 			<xs:element name="String" type="BaseType"/>
 			<xs:element name="Url" type="BaseType"/>
-			<xs:element name="Enum" type="EnumT"/>
-			<xs:element name="Opaque" type="OpaqueT"/>
+			<xs:element name="Enum" type="EnumType"/>
+			<xs:element name="Opaque" type="OpaqueType"/>
 		</xs:choice>
 	</xs:group>
 
-	<xs:group name="ArrayVariableTypes">
+	<xs:group name="ArrayVariableGroup">
 		<xs:choice>
-			<xs:group ref="CardinalTypes"/>
+			<xs:group ref="CardinalGroup"/>
 
-			<xs:element name="Structure" type="StructureT"/>
+			<xs:element name="Structure" type="StructureType"/>
 		</xs:choice>
 	</xs:group>
 
-	<xs:group name="AllVariableTypes">
+	<xs:group name="AllVariableGroup">
 		<xs:choice>
-			<xs:group ref="ArrayVariableTypes"/>
+			<xs:group ref="ArrayVariableGroup"/>
 
-			<xs:element name="Array" type="ArrayT" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Grid" type="GridT" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Sequence" type="SequenceT" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Array" type="ArrayType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Grid" type="GridType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Sequence" type="SequenceType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:choice>
 	</xs:group>
 
@@ -317,13 +311,13 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:group ref="Metadata"/>
+			<xs:group ref="MetadataGroup"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string"/>
 	    <xs:attribute name="id" type="xs:string" form="qualified"/>
 	</xs:complexType>
 
-	<xs:complexType name="ArrayDimensionT">
+	<xs:complexType name="ArrayDimensionType">
 		<xs:annotation>
 			<xs:documentation> name: The name of the dimension size: The size of the dimension ref:
 				A reference to a Dimension definition Note: either name and size must be present or
@@ -335,7 +329,7 @@
 		<xs:attribute name="ref" type="xs:string"/>
 	</xs:complexType>
 
-	<xs:complexType name="EnumT">
+	<xs:complexType name="EnumType">
 		<xs:annotation>
 			<xs:documentation> </xs:documentation>
 		</xs:annotation>
@@ -346,13 +340,13 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
+<!--
 	<xs:complexType name="dimensionsT">
 		<xs:annotation>
 			<xs:documentation> </xs:documentation>
 		</xs:annotation>
 		<xs:choice>
-			<xs:element name="dim" type="ArrayDimensionT" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="dimension" type="ArrayDimensionType" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:choice>
 	</xs:complexType>
 
@@ -361,11 +355,11 @@
 			<xs:documentation> </xs:documentation>
 		</xs:annotation>
 		<xs:choice>
-			<xs:group ref="ArrayVariableTypes" minOccurs="1" maxOccurs="1"/>
+			<xs:group ref="ArrayVariableGroup" minOccurs="1" maxOccurs="1"/>
 		</xs:choice>
 	</xs:complexType>
-
-	<xs:complexType name="ArrayT">
+-->
+	<xs:complexType name="ArrayType">
 		<xs:annotation>
 			<xs:documentation> name: The name of the variable. NB: DAP4 allows for arrays of every
 				type except: Grid or Sequence. Since the 'Array' element may list N dimensions
@@ -378,15 +372,16 @@
 		<xs:complexContent>
 			<xs:extension base="BaseType">
 				<xs:sequence>
-					<!-- <xs:group ref="ArrayVariableTypes" minOccurs="1" maxOccurs="1"/> -->
-					<xs:element name="type" type="arrayTypeT" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="dimensions" type="dimensionsT" minOccurs="1" maxOccurs="1"/>
+					<xs:group ref="ArrayVariableGroup" minOccurs="1" maxOccurs="1"/>
+					<!-- <xs:element name="type" type="arrayTypeT" minOccurs="1" maxOccurs="1"/>-->
+					<!-- <xs:element name="dimensions" type="dimensionsT" minOccurs="1" maxOccurs="1"/> -->
+					<xs:element name="dimension" type="ArrayDimensionType" minOccurs="1" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="GridT">
+	<xs:complexType name="GridType">
 		<xs:annotation>
 			<xs:documentation> A Grid is a type that relates one or more Maps (aka coordinate
 				variables) to the dimensions of one or more Array variables. It is often the case
@@ -402,14 +397,14 @@
 				<xs:sequence>
 					<!-- Subtle change here: In DAP 3.2 and earlier, maxOccurs
 						for the Array element was 1, now it's 'unbounded' -->
-					<xs:element name="Array" type="ArrayT" minOccurs="1" maxOccurs="unbounded"/>
-					<xs:element name="Map" type="MapT" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element name="Array" type="ArrayType" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element name="Map" type="MapType" minOccurs="1" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="MapT">
+	<xs:complexType name="MapType">
 		<xs:annotation>
 			<xs:documentation> name: Name for this Map. Maps are associated with Array dimentions by
 				name, so this is a required attribute. type: The type of a Map is limited to the
@@ -420,26 +415,26 @@
 		<xs:complexContent>
 			<xs:extension base="BaseType">
 				<xs:sequence>
-					<xs:element name="dimensions" type="dimensionsT" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="dimension" type="ArrayDimensionType" minOccurs="1" maxOccurs="unbounded"/>
 				</xs:sequence>
-
-				<xs:attribute name="type" type="CardinalT" use="required"/>
+				
+				<xs:attribute name="type" type="CardinalType" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
+	
 	<xs:complexType name="allTypeT">
 		<xs:annotation>
 			<xs:documentation> </xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BaseType">
-				<xs:group ref="AllVariableTypes" minOccurs="1" maxOccurs="unbounded"/>
+				<xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="StructureT">
+	<xs:complexType name="StructureType">
 		<xs:annotation>
 			<xs:documentation> A Structure; a simple aggregation of variables. Unlike a Group, it's
 				possible to from an Array of Structures. name: The name of the variable ( OtherXML*,
@@ -456,7 +451,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="SequenceT">
+	<xs:complexType name="SequenceType">
 		<xs:annotation>
 			<xs:documentation> A Sequence is a type that holds tabular data where each row of the
 				table represents a relation, as in a relational database. Sequences can nest, but
@@ -472,7 +467,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="BlobT">
+	<xs:complexType name="BlobType">
 		<xs:annotation>
 			<xs:documentation>
 				<div class="bodytext">
