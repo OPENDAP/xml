@@ -298,18 +298,32 @@
 	</xs:group>
 
 	<xs:complexType name="BaseType">
-		<xs:annotation>
-			<xs:documentation> Each variable in DAP4 is represented as a name and a collection of
-				metadata (Attributes, ...). The type of the variable is given in the element name
-				(e.g., &lt;Byte name="x"/>) name: The name of the variable ( OtherXML*, Attribute*)
-				
-				The attribute 'id' represents the locally (as in within the dataset) unique 
-				identifier of the variable. This is usually period separated concatanation of the
-				values of the name attributes of the enclosing variables, starting with the outermost 
-				and ending with the name of the variable instance.
-				
-			</xs:documentation>
-		</xs:annotation>
+	    
+	    <xs:annotation>
+	        
+	        <xs:documentation> Each variable in DAP4 is represented as a name and a collection of
+	            metadata (Attributes, ...). The type of the variable is given in the element name
+	            (e.g., &lt;Byte name="x"/>) name: The name of the variable ( OtherXML*, Attribute*)
+	            
+	            The attribute 'id' represents the locally (as in within the dataset) unique 
+	            identifier of the variable. This is usually period separated concatanation of the
+	            values of the name attributes of the enclosing variables, starting with the outermost 
+	            and ending with the name of the variable instance.
+	        </xs:documentation>		
+            
+	        <xs:documentation> 
+                <font color='red'>
+                    Is it the case that we want dap:id to be used when clients are selecting data? If so then
+                    I think the server would have to be able to accept these id's as part of the projection/selection
+                    Or - is it the case that we want to continue to use the "name" as the data selector - even though
+                    the use of name is indeterminate w.r.t many datasets and we KNOW that the current dap implementations 
+                    return the first variable associated with a matching 'name' value.
+                    
+                    It may be that we want to change server behavior to accept only full variable names.               
+                </font>
+            </xs:documentation>
+		
+	    </xs:annotation>
 		<xs:sequence>
 			<xs:group ref="MetadataGroup"/>
 		</xs:sequence>
