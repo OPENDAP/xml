@@ -1,66 +1,65 @@
 <?xml version="1.0"?>
-<Dataset name="test1" dapVersion="4.0" xml:base="file:/Users/jimg/src/shrew/xml/dap/tests-dap4/dap-4-test1.xml"
-    xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
-    xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
-    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
-    xmlns:xlink="http://www.w3.org/1999/xlink"
+<Dataset name="test1" dapVersion="4.0"
+    xml:base="file:/Users/jimg/src/shrew/xml/dap/tests-dap4/dap-4-test1.xml"
+    xmlns="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd">
-        
+
     <Group>
-        <Dimension name="x" size="1024"/>
-        <Dimension name="y" size="1024"/>
-        
         <Enumeration name="mask_values">
             <elt name="clear" value="1"/>
             <elt name="cloud" value="2"/>
         </Enumeration>
-        
+
         <Grid name="Soundings">
-            <Array name="data">
+            <SharedDimension name="x" size="1024"/>
+            <SharedDimension name="y" size="1024"/>
+
+            <Map name="latitude" type="Float32">
+                <Attribute name="maybe" type="UByte">
+                    <value>255</value>
+                </Attribute>
+                <dimension ref="x"/>
+                <dimension ref="y"/>
+            </Map>
+
+            <Map name="longitude" type="Float32">
+                <dimension ref="x"/>
+                <dimension ref="y"/>
+            </Map>
+
+            <Map name="elevation" type="Float32">
+                <Attribute name="no_data" type="Byte">
+                    <value>-1</value>
+                </Attribute>
+
+                <dimension ref="x"/>
+                <dimension ref="y"/>
+            </Map>
+
+            <Byte name="data">
                 <Attribute name="long_name" type="String">
                     <value>Atmospheric soundings</value>
                 </Attribute>
-                <type><Byte/></type>
-                <dimensions>
-                    <dim ref="elevation"/>
-                    <dim ref="latitude"/>
-                    <dim ref="longitude"/>
-                </dimensions>
-            </Array>
-            
-            <Array name="surface_data">
-                <type><Byte/></type>
-                <dimensions>
-                    <dim ref="latitude"/>
-                    <dim ref="longitude"/>
-                </dimensions>
-            </Array>
-            
-            <Map name="latitude" type="Float32">
-                <Attribute name="maybe" type="UByte"><value>255</value></Attribute>
-                <dimensions>
-                    <dim ref="x"/>
-                    <dim ref="y"/>
-                </dimensions>
-            </Map>
-            
-            <Map name="longitude" type="Float32">
-                <dimensions>
-                    <dim ref="x"/>
-                    <dim ref="y"/>
-                </dimensions>
-            </Map>
-            
-            <Map name="elevation" type="Float32">
-                <Attribute name="no_data" type="Byte"><value>-1</value></Attribute>
-                <dimensions>
-                    <dim ref="x"/>
-                    <dim ref="y"/>
-                </dimensions>
-            </Map>
-        </Grid>
-        
-    </Group>
 
+                <dimension ref="elevation"/>
+                <dimension ref="latitude"/>
+                <dimension ref="longitude"/>
+                
+                <map ref="elevation"/>
+                <map ref="latitude"/>
+                <map ref="longitude"/>
+            </Byte>
+
+            <Byte name="surface_data">
+                <dimension ref="latitude"/>
+                <dimension ref="longitude"/>
+                
+                <map ref="latitude"/>
+                <map ref="longitude"/>
+            </Byte>
+
+        </Grid>
+    </Group>
 </Dataset>

@@ -7,31 +7,25 @@
     xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  ../dap4.xsd">
 
     <Group>
-        <Dimension name="latitude" size="1024"/>
-        <Dimension name="longitude" size="1024"/>
-
         <Structure name="A name from an HDF4 file!">
             <Attribute name="long_name" type="String">
                 <value>Sea Surface Temperature</value>
             </Attribute>
-            <type> 
-                <Byte name="b"/>
-                <UByte name="ub"/>
-                <Array name="vector">
-                    <Attribute name="long_name" type="String">
-                        <value>A long name for this vector of floating point values</value>
-                    </Attribute>
-                    <Float64/>
-                    <dimension size="256"/>
-                </Array>
-                <String name="s">
-                    <Attribute name="long_name" type="String">
-                        <value>The long name for the string</value>
-                    </Attribute>
-                </String>
-            </type>
-        </Structure>
 
+            <Byte name="b"/>
+            <UByte name="ub"/>
+            <Float64 name="vector">
+                <Attribute name="long_name" type="String">
+                    <value>A long name for this vector of floating point values</value>
+                </Attribute>
+                <dimension size="256"/>
+            </Float64>
+            <String name="s">
+                <Attribute name="long_name" type="String">
+                    <value>The long name for the string</value>
+                </Attribute>
+            </String>
+
+        </Structure>
     </Group>
-    
 </Dataset>

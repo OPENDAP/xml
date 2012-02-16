@@ -8,38 +8,36 @@
     xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd">
         
     <Group>
-        <Dimension name="x" size="1024"/>
-        <Dimension name="y" size="1024"/>
         
         <Grid name="SST">
-            <Array name="MSST">
-                <Attribute name="long_name" type="String">
-                    <value>Model Sea Surface Temperature</value>
-                </Attribute>
-                <type>
-                    <Byte/>
-                </type>
-                <dimensions>
-                    <dim name="run_number" size="7"/>
-                    <dim ref="latitude"/>
-                    <dim ref="longitude"/>
-                </dimensions>
-            </Array>
-            
+            <SharedDimension name="x" size="1024"/>
+            <SharedDimension name="y" size="1024"/>
+
             <Map name="latitude" type="Float32">
                 <Attribute name="maybe" type="UByte"><value>255</value></Attribute>
-                <dimensions>
-                    <dim ref="x"/>
-                    <dim ref="y"/>
-                </dimensions>
+                
+                <dimension ref="x"/>
+                <dimension ref="y"/>              
             </Map>
             
-            <Map name="longitude" type="Float32">
-                <dimensions>
-                    <dim ref="x"/>
-                    <dim ref="y"/>
-                </dimensions>
+            <Map name="longitude" type="Float32">                
+                <dimension ref="x"/>
+                <dimension ref="y"/>                
             </Map>
+
+            <Byte name="MSST">
+                <Attribute name="long_name" type="String">
+                    <value>Modeled Sea Surface Temperature</value>
+                </Attribute>
+      
+                <dimension name="run_number" size="7"/>
+                <dimension ref="latitude"/>
+                <dimension ref="longitude"/>
+               
+                <map ref="latitude"/>
+                <map ref="longitude"/>
+            </Byte>
+            
         </Grid>
     </Group>
 </Dataset>

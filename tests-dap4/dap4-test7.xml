@@ -24,8 +24,6 @@
             <Url name="u"/>
         </Group>
 
-        <Dimension name="latitude" size="1024"/>
-
         <Enumeration name="elements">
             <elt name="Hydrogen" value="1"/>
             <elt name="Helium" value="2"/>
