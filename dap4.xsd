@@ -119,18 +119,12 @@
 				<xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:sequence>
-				<!--<xs:element name="Attribute" type="AttributeType" minOccurs="0" maxOccurs="unbounded"/>-->
 				<xs:group ref="MetadataGroup"/>
 			</xs:sequence>
 		</xs:choice>
 
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="type" type="CardinalType" use="optional"/>
-			<!-- See the note below attached to ContainerType.
-				
-				<xs:simpleType>
-				<xs:union memberTypes="CardinalType ContainerType"/>
-			</xs:simpleType>-->
 		<xs:attribute name="namespace" type="xs:string" use="optional"/>
 	</xs:complexType>
 
@@ -159,39 +153,6 @@
 			<xs:enumeration value="Enum"/>
 		</xs:restriction>
 	</xs:simpleType>
-
-	<!-- Mot used.
-		
-		<xs:simpleType name="OpaqueType">
-		<xs:annotation>
-			<xs:documentation> This is essentially a BLOB type. Like a String, it is a type with
-				varying size and it can be used in Structures, Arrays and Sequences. It cannot,
-				howerver, be part of a Grid. This is left out of CardinalType because Attributes may
-				not have OpaqueType values; Attributes are either Vectors of CardinalType or they
-				are ContainerTypes. </xs:documentation>
-		</xs:annotation>
-
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Opaque"/>
-		</xs:restriction>
-	</xs:simpleType>-->
-
-	<!-- Not needed; we can use the syntax <Attribute name="..."> ... </Attr.>
-		for attribute containers. This will be less error prone since the 
-		syntax can be enforced by XML schema 1.0 where as using type="Container"
-		and then only have other attributes as values cannot.
-		
-		<xs:simpleType name="ContainerType">
-		<xs:annotation>
-			<xs:documentation> The Container type is used to hold structure (or 'Container')
-				attributes. These correspond to the netCDF4/HDF5 compound type for attributes.
-			</xs:documentation>
-		</xs:annotation>
-
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Container"/>
-		</xs:restriction>
-	</xs:simpleType>-->
 
 	<xs:complexType name="OtherXmlType">
 		<xs:annotation>
@@ -224,9 +185,7 @@
 		<xs:sequence>
 			<xs:group ref="MetadataGroup"/>
 			<xs:element name="Group" type="GroupType" minOccurs="0" maxOccurs="unbounded"/>
-			<!-- <xs:element name="SharedDimension" type="SharedDimensionType" minOccurs="0" maxOccurs="unbounded"/> -->
-			<xs:element name="Enumeration" type="EnumerationType" minOccurs="0"
-				maxOccurs="unbounded"/>
+			<xs:element name="Enumeration" type="EnumerationType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 
