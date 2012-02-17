@@ -10,23 +10,15 @@
     xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd">
     
     <Group>
-        <Dimension name="x" size="1024"/>
-        <Dimension name="y" size="1024"/>
-        
         <Enumeration name="mask_values">
             <elt name="clear" value="1"/>
             <elt name="cloud" value="2"/>
         </Enumeration>
         
-        <Array name="surface_data">
-            <type>
-                <Byte/>
-            </type>
-            <dimensions>
-                <dim ref="latitude"/>
-                <dim ref="longitude"/>
-            </dimensions>
-        </Array>
+        <Byte name="surface_data">
+            <dimension ref="latitude"/>
+            <dimension ref="longitude"/>
+        </Byte>
     </Group>
     
     <blob xlink:href="http://host.server.gov/opendap/tmp/file.h5" xlink:role="asynchronousResponse">

@@ -89,6 +89,7 @@
 
 		<xs:sequence>
 			<xs:group ref="MetadataGroup"/>
+			
 			<xs:element name="Group" type="GroupType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="blob" type="BlobType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
@@ -118,16 +119,18 @@
 				<xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:sequence>
+				<!--<xs:element name="Attribute" type="AttributeType" minOccurs="0" maxOccurs="unbounded"/>-->
 				<xs:group ref="MetadataGroup"/>
 			</xs:sequence>
 		</xs:choice>
 
 		<xs:attribute name="name" type="xs:string" use="required"/>
-		<xs:attribute name="type" use="required">
-			<xs:simpleType>
+		<xs:attribute name="type" type="CardinalType" use="optional"/>
+			<!-- See the note below attached to ContainerType.
+				
+				<xs:simpleType>
 				<xs:union memberTypes="CardinalType ContainerType"/>
-			</xs:simpleType>
-		</xs:attribute>
+			</xs:simpleType>-->
 		<xs:attribute name="namespace" type="xs:string" use="optional"/>
 	</xs:complexType>
 
@@ -157,7 +160,9 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="OpaqueType">
+	<!-- Mot used.
+		
+		<xs:simpleType name="OpaqueType">
 		<xs:annotation>
 			<xs:documentation> This is essentially a BLOB type. Like a String, it is a type with
 				varying size and it can be used in Structures, Arrays and Sequences. It cannot,
@@ -169,9 +174,14 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Opaque"/>
 		</xs:restriction>
-	</xs:simpleType>
+	</xs:simpleType>-->
 
-	<xs:simpleType name="ContainerType">
+	<!-- Not needed; we can use the syntax <Attribute name="..."> ... </Attr.>
+		for attribute containers. This will be less error prone since the 
+		syntax can be enforced by XML schema 1.0 where as using type="Container"
+		and then only have other attributes as values cannot.
+		
+		<xs:simpleType name="ContainerType">
 		<xs:annotation>
 			<xs:documentation> The Container type is used to hold structure (or 'Container')
 				attributes. These correspond to the netCDF4/HDF5 compound type for attributes.
@@ -181,7 +191,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Container"/>
 		</xs:restriction>
-	</xs:simpleType>
+	</xs:simpleType>-->
 
 	<xs:complexType name="OtherXmlType">
 		<xs:annotation>
@@ -328,6 +338,18 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<xs:complexType name="EnumType">
+		<xs:annotation>
+			<xs:documentation> </xs:documentation>
+		</xs:annotation>
+		
+		<xs:complexContent>
+			<xs:extension base="BaseType">
+				<xs:attribute name="type" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<xs:complexType name="GridArrayBaseType">
 		<xs:annotation>
 			<xs:documentation>This extended BaseType so that instances
@@ -346,40 +368,97 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="ArrayDimensionType">
+	<xs:group name="GridArrayVariableGroup">
 		<xs:annotation>
-			<xs:documentation> name: The name of the dimension size: The size of the dimension ref:
-				A reference to a Dimension definition Note: either name and size must be present or
-				only ref must be present </xs:documentation>
+			<xs:documentation>
+				Grids cannot have scalars (they have only Arrays and Maps) and
+				Arrays have both dimensions and references to maps. Regular
+				arrays do not have references to maps.
+			</xs:documentation>
 		</xs:annotation>
-
-		<xs:attribute name="name" type="xs:string"/>
-		<xs:attribute name="size" type="xs:integer"/>
-		<xs:attribute name="ref" type="xs:string"/>
-	</xs:complexType>
-
+		<xs:choice>
+			<xs:element name="Byte" type="GridArrayBaseType"/>
+			<xs:element name="UByte" type="GridArrayBaseType"/>
+			<xs:element name="Int16" type="GridArrayBaseType"/>
+			<xs:element name="UInt16" type="GridArrayBaseType"/>
+			<xs:element name="Int32" type="GridArrayBaseType"/>
+			<xs:element name="UInt32" type="GridArrayBaseType"/>
+			<xs:element name="Int64" type="GridArrayBaseType"/>
+			<xs:element name="UInt64" type="GridArrayBaseType"/>
+			<xs:element name="Float32" type="GridArrayBaseType"/>
+			<xs:element name="Float64" type="GridArrayBaseType"/>
+			<xs:element name="String" type="GridArrayBaseType"/>
+			<xs:element name="Url" type="GridArrayBaseType"/>
+			<xs:element name="Opaque" type="GridArrayBaseType"/>
+			
+			<xs:element name="Enum">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="GridArrayBaseType">
+							<xs:attribute name="type" type="xs:string" use="required"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+				
+			</xs:element>
+			
+			<xs:element name="Structure">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="GridArrayBaseType">
+							<xs:sequence>
+								<xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			
+		</xs:choice>
+	</xs:group>
+	
 	<xs:complexType name="SharedDimensionRefType">
 		<xs:annotation>
 			<xs:documentation>
 				This attribute is used to reference a SharedDimension object.
 			</xs:documentation>
 		</xs:annotation>
-
+		
 		<xs:attribute name="ref" type="xs:string"/>
 	</xs:complexType>
-
-	<xs:complexType name="EnumType">
+	
+	<xs:complexType name="ArrayDimensionType">
 		<xs:annotation>
-			<xs:documentation> </xs:documentation>
+			<xs:documentation> name: The name of the dimension size: The size of the dimension ref:
+				A reference to a Dimension definition Note: either name and size must be present or
+				only ref must be present </xs:documentation>
 		</xs:annotation>
-
 		<xs:complexContent>
-			<xs:extension base="BaseType">
-				<xs:attribute name="type" type="xs:string" use="required"/>
+			<xs:extension base="SharedDimensionRefType">
+				<xs:attribute name="name" type="xs:string"/>
+				<xs:attribute name="size" type="xs:integer"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
+	<xs:complexType name="MapType">
+		<xs:annotation>
+			<xs:documentation> name: Name for this Map. Maps are associated with Array dimentions by
+				name, so this is a required attribute. type: The type of a Map is limited to the
+				Cardinal types. NB: Note the limitation on the type of a Map, which excludes Maps
+				that are Opaques, Structures, Sequences or Grids. ( OtherXML*, Attribute*,
+				dimensions ) </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="ScalarBaseType">
+				<xs:sequence>
+					<xs:element name="dimension" type="SharedDimensionRefType" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="type" type="CardinalType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<!-- Both GridType and SequenceType are extensions of BaseType, but they 
 		need to have the restriction that there can be no dimension elements
 		in their case -->
@@ -397,62 +476,11 @@
 		<xs:complexContent>
 			<xs:extension base="ScalarBaseType">
 				<xs:sequence>
-					<xs:element name="SharedDimension" type="SharedDimensionType" minOccurs="1"
-						maxOccurs="unbounded"/>
+					<xs:element name="SharedDimension" type="SharedDimensionType" minOccurs="1" maxOccurs="unbounded"/>
 					<xs:element name="Map" type="MapType" minOccurs="1" maxOccurs="unbounded"/>
 
 					<xs:group ref="GridArrayVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
 				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:group name="GridCardinalGroup">
-		<xs:annotation>
-			<xs:documentation> DAP cardinal data types </xs:documentation>
-		</xs:annotation>
-		<xs:choice>
-			<xs:element name="Byte" type="GridArrayBaseType"/>
-			<xs:element name="UByte" type="GridArrayBaseType"/>
-			<xs:element name="Int16" type="GridArrayBaseType"/>
-			<xs:element name="UInt16" type="GridArrayBaseType"/>
-			<xs:element name="Int32" type="GridArrayBaseType"/>
-			<xs:element name="UInt32" type="GridArrayBaseType"/>
-			<xs:element name="Int64" type="GridArrayBaseType"/>
-			<xs:element name="UInt64" type="GridArrayBaseType"/>
-			<xs:element name="Float32" type="GridArrayBaseType"/>
-			<xs:element name="Float64" type="GridArrayBaseType"/>
-			<xs:element name="String" type="GridArrayBaseType"/>
-			<xs:element name="Url" type="GridArrayBaseType"/>
-			<xs:element name="Enum" type="GridArrayEnumType"/>
-			<xs:element name="Opaque" type="GridArrayBaseType"/>
-		</xs:choice>
-	</xs:group>
-
-	<xs:group name="GridArrayVariableGroup">
-		<xs:choice>
-			<xs:group ref="GridCardinalGroup"/>
-
-			<xs:element name="Structure" type="GridArrayStructureType" minOccurs="0"
-				maxOccurs="unbounded"/>
-		</xs:choice>
-	</xs:group>
-
-	<xs:complexType name="MapType">
-		<xs:annotation>
-			<xs:documentation> name: Name for this Map. Maps are associated with Array dimentions by
-				name, so this is a required attribute. type: The type of a Map is limited to the
-				Cardinal types. NB: Note the limitation on the type of a Map, which excludes Maps
-				that are Opaques, Structures, Sequences or Grids. ( OtherXML*, Attribute*,
-				dimensions ) </xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="ScalarBaseType">
-				<xs:sequence>
-					<xs:element name="dimension" type="SharedDimensionRefType" minOccurs="1"
-						maxOccurs="unbounded"/>
-				</xs:sequence>
-				<xs:attribute name="type" type="CardinalType" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -471,34 +499,6 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="GridArrayEnumType">
-		<xs:annotation>
-			<xs:documentation> </xs:documentation>
-		</xs:annotation>
-
-		<xs:complexContent>
-			<xs:extension base="GridArrayBaseType">
-				<xs:attribute name="type" type="xs:string" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-
-	<xs:complexType name="GridArrayStructureType">
-		<xs:annotation>
-			<xs:documentation> A Structure; a simple aggregation of variables. Unlike a Group, it's
-				possible to from an Array of Structures. name: The name of the variable ( OtherXML*,
-				Attribute*, ( Byte | ... | Grid )+ ) </xs:documentation>
-		</xs:annotation>
-
-		<xs:complexContent>
-			<xs:extension base="GridArrayBaseType">
-				<xs:sequence>
-					<xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 
 	<xs:complexType name="SequenceType">
 		<xs:annotation>

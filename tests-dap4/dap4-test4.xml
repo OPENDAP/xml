@@ -8,7 +8,7 @@
     xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd"
     xmlns:snafu="http:/snafu">
     
-    <Attribute name="test" type="Container">
+    <Attribute name="test">
         <OtherXML>
             <bar:foo xmlns:bar="http://bar" name="name"/>
             <snafu:foo name="name"/>
@@ -20,7 +20,7 @@
         
     </Attribute>
     
-    <Attribute name="test" type="Container">
+    <Attribute name="test">
         
         <Attribute name="test" type="Byte">
             <value>255</value>
@@ -28,7 +28,7 @@
         
     </Attribute>
 
-    <Attribute name="test" type="Container"> </Attribute>
+    <Attribute name="test"> </Attribute>
     
     <Group name="root">
         <Byte name="b"/>
