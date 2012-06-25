@@ -1,0 +1,593 @@
+<html>
+<!-- Relax NG Grammar -->
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         xmlns:doc="http://www.example.com/annotation"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+         ns="http://xml.opendap.org/ns/DAP/4.0#"
+         >
+
+<start>
+  <ref name="rootgroup"/>
+</start>
+
+<doc:RootGroup>
+<h2>DAP4 DDX Dataset Structure</h2>
+In DAP4, a dataset consists of a tree of group
+definitions. The root group is the top-level group
+in a tree of groups. It may have a name, but that name
+is ignored for purposes of group paths; that is, if the
+root group has name "X", group paths still begin with "/".
+The root groupt name, if present is purely to provide a means
+for identifying the dataset from which the DAP4 DDX came.
+<h3>Fully Qualified Names</h3>
+A fully qualified name for an object consists of a "path name"
+suffixed with "/" and the name of the object. A path name is formed
+from the list of groups that must be traversed to reach the group
+that is the immediate container of the object. The path name is formed
+by concatenating the names of all the groups in the list separated
+by "/". The root group is always treated as if its name is "",
+so all path names start with "/".
+<h3>A note about XML element names</h3>
+Element names that start with capital letters correspond to parts of the
+DAP4 data model while those that start with lowercase letters are used
+for document structure and syntax.
+<h3>About changes in going from DAP2 to DAP4</h3>
+DAP 4.0 introduces shared dimensions, groups, new cardinal types
+(e.g. Opaque, 64-bit integers, UByte, Char).
+In addition: The syntax for Array has been changed so that
+it's easier for processing software to figure out the type of an array;
+OtherXML has been made its own element (it's no longer a type of
+'Attribute').
+<h3>Defined Attributes</h3>
+<table>
+<tr valign=top><td>dapVersion<td>--<td>the protocol version that corresponds to this document.
+<tr valign=top><td>base<td>--<td>the URL that references the DAP4 service endoint used to access this
+        dataset.
+</table>
+<p>
+</doc:Dataset>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="dataset">
+  <element name="Group">
+    <optional>
+      <attribute name="dapVersion"><data type="string"/></attribute>
+      <attribute name="ns"><data type="string"/></attribute>
+      <attribute name="base" ns="http://www.w3.org/XML/1998/namespace">
+        <text/>
+      </attribute>
+    </optional>
+    <ref name="groupdef"/>
+  </element>
+</define>
+</textarea>
+
+<doc:Groups>
+<h2>Groups</h2>
+A Group is a lexical scoping tool used to replicate HDF5 and
+netCDF4 Groups. Each Group defines a lexical scope.  A root
+group exists. A group is a collection of enumerations,
+dimensions, variables, and (recursively) sub-groups.
+<h3>Defined Attributes</h3>
+<table>
+<tr valign=top><td>name<td>--<td>the name of the group; used in paths to provide a unique name
+for the group and the objects within it. The root group
+may have a name to identify the dataset from which it came,
+but that root group name is ignored for purposes of constructing paths.
+</table>
+<p>
+</doc:Groups>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="groupdef">
+  <attribute name="name"><data type="ID"/></attribute>
+  <ref name="metadata"/>
+  <zeroOrMore>
+    <interleave>
+      <ref name="enumdef"/>
+      <ref name="dimdef"/>
+      <ref name="variable"/>
+      <ref name="sequencevariable"/>
+    </interleave>
+  </zeroOrMore>
+  <zeroOrMore>
+    <ref name="groupdef"/>
+  </zeroOrMore>
+</define>
+</textarea>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="enumdef">
+  <element name="Enumeration">
+    <attribute name="name"><data type="ID"/></attribute>
+    <attribute name="basetype"><data type="ATOMICTYPE"/></attribute>
+    <oneOrMore><ref name="enumconst"/></oneOrMore>
+  </element>
+</define>
+</textarea>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="enumconst">
+  <element name="elt">
+    <attribute name="name"><data type="ID"/></attribute>
+    <attribute name="value"><data type="integer"/></attribute>
+  </element>
+</define>
+</textarea>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="namespacedef">
+  <zeroOrMore>
+    <element name="Namespace">
+      <attribute name="href"><data type="string"/></attribute>
+    </element>
+  </zeroOrMore>
+</define>
+</textarea>
+
+<doc:Dimension>
+<h2>Dimensions Definitions</h2>
+A dimension definition is a name and a size.
+Note however that there may also be
+anonymous and variable length dimensions
+that are not defined here.
+<h3>Defined Attributes</h3>
+<table>
+<tr valign=top><td>name<td>--<td>the name of the dimension.
+<tr valign=top><td>size<td>--<td>an integer
+</table>
+<p>
+</doc:Dimension>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="dimdef">
+  <element name="Dimension">
+    <attribute name="name"><data type="ID"/></attribute>
+    <attribute name="size">
+      <data type="integer"/>
+    </attribute>
+    <ref name="metadata"/>
+  </element>
+</define>
+</textarea>
+
+<doc:DimensionReference>
+<h2>Dimensions references</h2>
+A dimension reference specifies either a
+named dimension or an anonymous dimension,
+where the named dimension is presumably
+defined somewhere in the group tree. It specifies the
+dimension name as a  consisting of
+o the group immediately
+containing that dimension.
+<h3>Defined Attributes</h3>
+<table>
+<tr valign=top><td>size<td>--<td>integer defining the size of an anonymous dimension
+        or the string '*'.
+<tr valign=top><td>name<td>--<td>the fully qualified name of a dimension defined elsewhere in the group tree.
+</table>
+<p>
+</doc:DimensionReference>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="dimref">
+  <element name="Dimension">
+    <attribute name="name"><data type="FQN"/></attribute>
+    <attribute name="size"><data type="integer"/></attribute>
+  </element>
+</define>
+</textarea>
+
+<doc:VariableLengthDimension>
+<h2>Variable Length Dimension Reference</h2>
+A variable length dimension reference
+is an anonymous dimension with size specified as "*".
+</doc:VariableLengthDimension>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="vardimref">
+      <!-- only value allowed is *-->
+      <attribute name="size"><data type="string"/></attribute>
+</define>
+</textarea>
+
+<doc:Dimensions>
+<h2>Dimensions Sets</h2>
+A set of references to dimensions.
+This is use to define the dimensions
+associated with a variable.
+Note that the use of variable length dimension
+is restricted to the last dimension.
+<p>
+</doc:Dimensions>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="dimset">
+  <optional>
+      <oneOrMore><ref name="dimref"/></oneOrMore>
+      <optional><ref="vardimref"/></optional>
+ </optional>
+</define>
+</textarea>
+
+
+<doc:CardinalType>
+<h2>Cardinal Types</h2>
+Define an enumeration of the Cardinal (primitive) types: those which
+have no internal structure.
+<h2>New or modified types since DAP2</h2>
+<table>
+<tr valign=top><td>Boolean<td>--<td>1 bit.
+<tr valign=top><td>Char<td>--<td>7 bit US ASCII character with the
+high order bit always zero.
+(7 bit because a single character cannot represent a
+multi-byte UTF-8 character).
+<tr valign=top><td>Byte<td>--<td>8 bit signed integer.
+<tr valign=top><td>UByte<td>--<td>8 bit unsigned integer.
+<tr valign=top><td>Int64<td>--<td>64 bit signed integer.
+<tr valign=top><td>UInt64<td>--<td>64 bit unsigned integer.
+<tr valign=top><td>String<td>--<td>now defined as a a vector of UTF8 codepoints.
+<tr valign=top><td>Enumeration<td>--<td>named type with a set of named constants.
+<tr valign=top><td>Opaque<td>--<td>a variable length vector of UByte.
+</table>
+<p>
+</doc:CardinalType>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="cardinaltype">
+  <!-- This must be consistent with "variable" below -->
+  <choice>
+    <value>Boolean</value>
+    <value>Bit</value>
+    <value>Char</value>
+    <value>Byte</value>
+    <value>UByte</value>
+    <value>Int16</value>
+    <value>UInt16</value>
+    <value>Int32</value>
+    <value>UInt32</value>
+    <value>Int64</value>
+    <value>UInt64</value>
+    <value>Float32</value>
+    <value>Float64</value>
+    <value>String</value>
+    <value>Enumeration</value>
+    <value>Opaque</value>
+  </choice>
+</define>
+</textarea>
+
+<doc:EnumerationReference>
+<h2>Enumeration References</h2>
+An enumeration reference specifies
+the name of an enumeration constant
+defined somewhere in the group tree. It specifies the
+fully qualified enumeration name and the enumeration constant name.
+<h3>Defined Attributes</h3>
+<table>
+<tr valign=top><td>name<td>--<td>the fully qualified name of an enumeration defined elsewhere in the group tree.
+<tr valign=top><td>value<td>--<td>an enumeration constant defined in the named enumeration.
+</table>
+<p>
+</doc:EnumerationReference>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="enumref">
+  <attribute name="name"><data type="FQN"/></attribute>
+  <attribute name="value"><data type="ID"/></attribute>
+</define>
+</textarea>
+
+<doc:Variable>
+<h2>Variable Definitions</h2>
+A simple variable defines an array of data items
+of some cardinal type. A complex variable is
+one which has a structure type.
+Structure types may be nested and may be dimensioned.
+<p>
+</doc:Variable>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="variable">
+  <choice>
+    <ref name="simplevariable"/>
+    <ref name="structurevariable"/>
+  </choice>
+</define>
+</textarea>
+
+<doc:SimpleVariable>
+<h2>Simple Variable Definitions</h2>
+A simple variable has a name, some associated cardinal type,
+optionally a set of dimensions, optionally some map
+variables, and optionally some meta-data.
+<h3>Defined Attributes</h3>
+<table>
+<tr valign=top><td>name<td>--<td>the variable's name.
+</table>
+<p>
+</doc:SimpleVariable>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="simplevariable">
+  <choice>
+    <!-- Following  must be consistent with "cardinaltype" -->
+    <element name="Boolean"><ref name="variabledef"/></element>
+    <element name="Char"   ><ref name="variabledef"/></element>
+    <element name="Byte"   ><ref name="variabledef"/></element>
+    <element name="UByte"  ><ref name="variabledef"/></element>
+    <element name="Int16"  ><ref name="variabledef"/></element>
+    <element name="UInt16" ><ref name="variabledef"/></element>
+    <element name="Int32"  ><ref name="variabledef"/></element>
+    <element name="UInt32" ><ref name="variabledef"/></element>
+    <element name="Int64"  ><ref name="variabledef"/></element>
+    <element name="UInt64" ><ref name="variabledef"/></element>
+    <element name="Float32"><ref name="variabledef"/></element>
+    <element name="Float64"><ref name="variabledef"/></element>
+    <element name="String" ><ref name="variabledef"/></element>
+    <element name="Enumeration">
+      <ref name="enumref"/>
+      <ref name="variabledef"/>
+    </element>
+    <element name="Opaque">
+      <attribute name="size"><data type="integer"/></attribute>
+      <ref name="variabledef"/>
+    </element>
+  </choice>
+</define>
+</textarea>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="variabledef">
+  <attribute name="name"><data type="ID"/></attribute>
+  <ref name="dimset"/>
+  <ref name="mapvars"/>
+  <ref name="metadata"/>
+</define>
+</textarea>
+
+<doc:MapVars>
+<h2>Map Variable Definitions</h2>
+An n-dimensional array variable may have an associated set
+of variable 'maps'.  A variable map is a reference to
+another simple variable somewhere in the group tree.
+<p>
+In the simplest case, an n-dimensional array variable has n
+associated variable maps, and each mapped variable is
+1-dimensional. Assuming the n-th dimension of the array
+variable has name "X", then the corresponding map variable
+will be named "X", and its single dimension will also be
+named "X". This corresponds to the DAP2 notion of Grid.
+<p>
+More generally, an n-dimensional array variable may
+have m variable maps. Each variable being used as a map
+must is associated with the array variable by the fact
+that it has at least one named dimension that appears in the
+set of dimensions of the array.
+<p>
+Since the mapped variables may be anywhere in the group
+tree, they must have an associated fully qualified name to
+specify their location in the tree.
+</doc:MapVars>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="mapvars">
+  <zeroOrMore>
+    <ref name="mapref"/>
+  </zeroOrMore>
+</define>
+</textarea>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="mapref">
+  <element name="Map">
+    <attribute name="name"><data type="FQN"/></attribute>
+  </element>
+</define>
+</textarea>
+
+<doc:StructureVariable>
+<h2>Structure Variable Definitions</h2>
+It is possible to define variables whose type has complex
+internal structure (as opposed to a variable with simple
+cardinal type).
+<p>
+If the variable is defined as a structure, then it has
+one or more 'fields', which are themselves variable definitions.
+In addition, the structure itself may be an array of structures
+(i.e. dimensioned), and the structure may also contain meta-data.
+<h3>Defined Attributes</h3>
+<table>
+<tr valign=top><td>name<td>--<td>the name of the structure variable.
+</table>
+<p>
+</doc:StructureVariable>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="structurevariable">
+  <element name="Structure">
+    <attribute name="name"><data type="ID"/></attribute>
+    <ref name="dimset"/>
+    <zeroOrMore>
+      <ref name="variable"/>
+    </zeroOrMore>
+    <ref name="metadata"/>
+  </element>
+</define>
+</textarea>
+
+<doc:SequenceVariable>
+<h2>Sequence Variable Definitions</h2>
+A sequence typed variable looks syntactically similar to
+a structure in that it has columns (aka fields) and meta-data.
+The intent of a structure is to represent a relation
+from a relational database, hence it has no dimensions.
+<p>
+A sequence is the only object for which selection
+constraints can be applied.  A sequence variable can only be
+defined at the top-level within a group.
+<p>
+Sequence columns are divided into two classes: simple columns
+and blobs. Simple columns have no dimensions; they can be of
+any primitive type or can be a non-dimensioned structure.
+<p>
+Blob columns can be dimensioned and can be of any type, but
+blobs may not be used in constraint selection expressions.
+<h3>Defined Attributes</h3>
+<table>
+<tr valign=top><td>name<td>--<td>the name of the variable.
+</table>
+<p>
+</doc:SequenceVariable>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="sequencevariable">
+  <element name="Sequence">
+    <attribute name="name"><data type="ID"/></attribute>
+    <zeroOrMore>
+      <ref name="externalkey"/>
+    </zeroOrMore>
+    <oneOrMore>
+      <choice>
+        <ref name="simplecolumn"/>
+        <ref name="blobcolumn"/>
+      </choice>
+    </oneOrMore>
+    <ref name="metadata"/>
+  </element>
+</define>
+</textarea>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="externalkey">
+  <element name="ForeignKey">
+    <attribute name="source"><data type="FQFN"/></attribute>
+  </element>
+</define>
+</textarea>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="blobcolumn">
+  <ref name="variable"/>
+</define>
+</textarea>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="simplecolumn">
+  <choice>
+    <!-- Following  must be consistent with "cardinaltype" -->
+    <element name="Boolean"><ref name="simplecolumndef"/></element>
+    <element name="Char"   ><ref name="simplecolumndef"/></element>
+    <element name="Byte"   ><ref name="simplecolumndef"/></element>
+    <element name="UByte"  ><ref name="simplecolumndef"/></element>
+    <element name="Int16"  ><ref name="simplecolumndef"/></element>
+    <element name="UInt16" ><ref name="simplecolumndef"/></element>
+    <element name="Int32"  ><ref name="simplecolumndef"/></element>
+    <element name="UInt32" ><ref name="simplecolumndef"/></element>
+    <element name="Int64"  ><ref name="simplecolumndef"/></element>
+    <element name="UInt64" ><ref name="simplecolumndef"/></element>
+    <element name="Float32"><ref name="simplecolumndef"/></element>
+    <element name="Float64"><ref name="simplecolumndef"/></element>
+    <element name="String" ><ref name="simplecolumndef"/></element>
+    <element name="Enumeration">
+      <ref name="enumref"/>
+      <ref name="simplecolumndef"/>
+    </element>
+    <element name="Opaque">
+      <attribute name="size"><data type="integer"/></attribute>
+      <ref name="simplecolumndef"/>
+    </element>
+  </choice>
+</define>
+</textarea>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="simplecolumndef">
+  <optional>
+    <attribute name="key"><data type="BOOLEAN"/></attribute>
+  </optional>
+  <attribute name="name"><data type="ID"/></attribute>
+  <ref name="metadata"/>
+</define>
+</textarea>
+
+<doc:description>
+<h2>Meta-Data Annotations</h2>
+The following "meta-data" or "semantic" definition is used in several places to
+prescribe metadata for elements of the groups and variables.
+These elements consists of an optional OtherXML and zero or more Attributes
+and zero or more Namespaces.
+Each metadata group is associated with the closest containing element.
+</doc:description>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="metadata">
+  <interleave>
+  <zeroOrMore>
+    <element name="OtherXML"><ref name="otherxml"/></element> 
+    <element name="Attribute"><ref name="attributedef"/></element>
+    <element name="Namespace"><ref name="string"/></element>
+  </zeroOrMore>
+</define>
+</textarea>
+
+<doc:Attribute>
+<h2>Attributes</h2>
+DAP uses attributes as a way to encode information that data
+providers have bundled with data sources.
+Attributes types are limited to the cardinal types.
+The issue of whether attributes can be nested -- as in DAP2 --
+is still under discussion.
+</doc:Attribute>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="attributedef">
+  <attribute name="name"><data type="ID"/></attribute>
+  <optional>
+    <attribute name="type"><ref name="cardinaltype"/></attribute>
+  </optional>
+  <zeroOrMore>
+    <optional>
+      <element name="Namespace">
+      <attribute name="name"><data type="string"/></attribute>
+    </element>
+    </optional>
+    <element name="Value">
+      <attribute name="value"><data type="string"/></attribute>
+    </element>
+  </zeroOrMore>
+</define>
+</textarea>
+
+<doc:OtherXML>
+<h2>OtherXML</h2>
+Use this to embed arbitrary XML in a DDX. This functions
+like an Attribute and appears in the same places as an
+Attribute, but its contents are ignored by DAP
+software. Other software might find the information
+useful. The XML elements must satisfy the requirements for
+'lax' processing under schema 1.0. In practice, that means
+just about anything.
+This element can contain any other attributes that conform
+to the schema 1.0 definition of 'lax' processing ( xs:any+ )
+</doc:OtherXML>
+
+<textarea lang="xml" cols=80 rows=10>
+<define name="otherxml">
+  <element>
+    <anyName/>
+    <zeroOrMore>
+      <choice>
+        <attribute>
+          <anyName/>
+        </attribute>
+        <text/>
+        <ref name="otherxml"/>
+      </choice>
+    </zeroOrMore>
+  </element>
+</define>
+</textarea>
+
+</grammar>
