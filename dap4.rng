@@ -88,7 +88,6 @@ but that root group name is ignored for purposes of constructing paths.
       <ref name="enumdef"/>
       <ref name="dimdef"/>
       <ref name="variable"/>
-      <ref name="sequencevariable"/>
     </interleave>
   </zeroOrMore>
   <zeroOrMore>
@@ -414,101 +413,6 @@ In addition, the structure itself may be an array of structures
     </zeroOrMore>
     <ref name="metadata"/>
   </element>
-</define>
-</textarea>
-
-<doc:SequenceVariable>
-<h2>Sequence Variable Definitions</h2>
-A sequence typed variable looks syntactically similar to
-a structure in that it has columns (aka fields) and meta-data.
-The intent of a structure is to represent a relation
-from a relational database, hence it has no dimensions.
-<p>
-A sequence is the only object for which selection
-constraints can be applied.  A sequence variable can only be
-defined at the top-level within a group.
-<p>
-Sequence columns are divided into two classes: simple columns
-and blobs. Simple columns have no dimensions; they can be of
-any primitive type or can be a non-dimensioned structure.
-<p>
-Blob columns can be dimensioned and can be of any type, but
-blobs may not be used in constraint selection expressions.
-<h3>Defined Attributes</h3>
-<table>
-<tr valign=top><td>name<td>--<td>the name of the variable.
-</table>
-<p>
-</doc:SequenceVariable>
-
-<textarea lang="xml" cols=80 rows=10>
-<define name="sequencevariable">
-  <element name="Sequence">
-    <attribute name="name"><data type="ID"/></attribute>
-    <zeroOrMore>
-      <ref name="externalkey"/>
-    </zeroOrMore>
-    <oneOrMore>
-      <choice>
-        <ref name="simplecolumn"/>
-        <ref name="blobcolumn"/>
-      </choice>
-    </oneOrMore>
-    <ref name="metadata"/>
-  </element>
-</define>
-</textarea>
-
-<textarea lang="xml" cols=80 rows=10>
-<define name="externalkey">
-  <element name="ForeignKey">
-    <attribute name="source"><data type="FQFN"/></attribute>
-  </element>
-</define>
-</textarea>
-
-<textarea lang="xml" cols=80 rows=10>
-<define name="blobcolumn">
-  <ref name="variable"/>
-</define>
-</textarea>
-
-<textarea lang="xml" cols=80 rows=10>
-<define name="simplecolumn">
-  <choice>
-    <!-- Following  must be consistent with "cardinaltype" -->
-    <element name="Boolean"><ref name="simplecolumndef"/></element>
-    <element name="Char"   ><ref name="simplecolumndef"/></element>
-    <element name="Byte"   ><ref name="simplecolumndef"/></element>
-    <element name="UByte"  ><ref name="simplecolumndef"/></element>
-    <element name="Int16"  ><ref name="simplecolumndef"/></element>
-    <element name="UInt16" ><ref name="simplecolumndef"/></element>
-    <element name="Int32"  ><ref name="simplecolumndef"/></element>
-    <element name="UInt32" ><ref name="simplecolumndef"/></element>
-    <element name="Int64"  ><ref name="simplecolumndef"/></element>
-    <element name="UInt64" ><ref name="simplecolumndef"/></element>
-    <element name="Float32"><ref name="simplecolumndef"/></element>
-    <element name="Float64"><ref name="simplecolumndef"/></element>
-    <element name="String" ><ref name="simplecolumndef"/></element>
-    <element name="Enumeration">
-      <ref name="enumref"/>
-      <ref name="simplecolumndef"/>
-    </element>
-    <element name="Opaque">
-      <attribute name="size"><data type="integer"/></attribute>
-      <ref name="simplecolumndef"/>
-    </element>
-  </choice>
-</define>
-</textarea>
-
-<textarea lang="xml" cols=80 rows=10>
-<define name="simplecolumndef">
-  <optional>
-    <attribute name="key"><data type="BOOLEAN"/></attribute>
-  </optional>
-  <attribute name="name"><data type="ID"/></attribute>
-  <ref name="metadata"/>
 </define>
 </textarea>
 
