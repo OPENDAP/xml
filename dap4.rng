@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar 
+    xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    xmlns:doc="http://www.example.com/annotation"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    ns="http://xml.opendap.org/ns/DAP/4.0#">
+    
+    <start>
+        <!-- <ref name="rootgroup"/> -->
+        <ref name="dataset"/>
+    </start>
+
+    <!-- Relax NG Grammar -->
+    
+    <define name="dataset">
+        <element name="Dataset">
+            <optional>
+                <attribute name="dapVersion">
+                    <data type="string"/></attribute>
+                <attribute name="ns"><data type="string"/></attribute>
+                <attribute name="base"
+                    ns="http://www.w3.org/XML/1998/namespace">
+                    <text/>
+                </attribute>
+            </optional>
+            <ref name="groupdef"/>
+        </element>
+    </define>
+    
+    <define name="groupdef">
+        <element name="Group">
+        <attribute name="name"><data type="ID"/></attribute>
+        <ref name="metadata"/>
+        <zeroOrMore>
+            <interleave>
+                <ref name="enumdef"/>
+                <ref name="dimdef"/>
+                <ref name="variable"/>
+            </interleave>
+        </zeroOrMore>
+        <zeroOrMore>
+            <ref name="groupdef"/>
+        </zeroOrMore>
+        </element>
+    </define>
+    
+    <define name="enumdef">
+        <element name="Enumeration">
+            <!-- This is effectively a type definition; the variable is declared
+                using 'Enum' -->
+            <attribute name="name"><data type="ID"/></attribute>
+            <attribute name="basetype">
+                <!-- I think this should be a list of the integer DAP4 type names. jhrg
+                <data type="ATOMICTYPE"/> -->
+                <choice>
+                    <value>Byte</value>
+                    <value>UByte</value>
+                    <value>Int16</value>
+                    <value>UInt16</value>
+                    <value>Int32</value>
+                    <value>UInt32</value>
+                    <value>Int64</value>
+                    <value>UInt64</value>
+                </choice>
+            </attribute>
+            <oneOrMore><ref name="enumconst"/></oneOrMore>
+        </element>
+    </define>
+    
+    <define name="enumconst">
+        <element name="elt">
+            <attribute name="name"><data type="ID"/></attribute>
+            <attribute name="value"><data type="integer"/></attribute>
+        </element>
+    </define>
+    
+    <define name="namespacedef">
+        <zeroOrMore>
+            <element name="Namespace">
+                <attribute name="href"><data type="string"/></attribute>
+            </element>
+        </zeroOrMore>
+    </define>
+    
+    <define name="dimdef">
+        <!-- This is effectively a type definition; the variable-part is declared
+                using 'Dim' -->
+        <element name="Dimension">
+            <attribute name="name"><data type="ID"/></attribute>
+            <attribute name="size">
+                <data type="integer"/>
+            </attribute>
+            <ref name="metadata"/>
+        </element>
+    </define>
+    
+    <define name="dimref">
+        <element name="Dim">
+            <!-- There is no FQN type in http://www.w3.org/2001/XMLSchema-datatypes -->
+            <attribute name="name"><data type="string"/></attribute>
+            <a:documentation>The string value bound to the 'name' attribute is the Dimension's Fully Qualified Name (FQN).</a:documentation>
+            <attribute name="size"><data type="integer"/></attribute>
+        </element>
+    </define>
+    
+    <define name="vardimref">
+        <!-- only value allowed is *-->
+        <attribute name="size"><data type="string"/></attribute>
+    </define>
+    
+    <define name="dimset">
+        <optional>
+            <oneOrMore><ref name="dimref"/></oneOrMore>
+            <optional><ref name="vardimref"/></optional>
+        </optional>
+    </define>
+    
+    <define name="atomictype">
+        <!-- This must be consistent with "variable" below -->
+        <choice>
+            <value>Bit</value>
+            <value>Char</value>
+            <value>Byte</value>
+            <value>UByte</value>
+            <value>Int16</value>
+            <value>UInt16</value>
+            <value>Int32</value>
+            <value>UInt32</value>
+            <value>Int64</value>
+            <value>UInt64</value>
+            <value>Float32</value>
+            <value>Float64</value>
+            <value>String</value>
+            <!-- I changed the name from Enumeration to Enum to avoid a 
+                conflict with the enumdef rule's element -->
+            <value>Enum</value>
+            <value>Opaque</value>
+        </choice>
+    </define>
+    
+    <!-- is this needed? jhrg -->
+    <define name="enumref">
+        <!-- having the name of the enumeration element bound to the 'name' 
+            attribute was colliding with the name attribute for a variabledef -->
+        <attribute name="element"><data type="string"/></attribute>
+        <attribute name="value"><data type="ID"/></attribute>
+    </define>
+    
+    <define name="variable">
+        <choice>
+            <ref name="simplevariable"/>
+            <ref name="structurevariable"/>
+        </choice>
+    </define>
+    
+    <define name="simplevariable">
+        <choice>
+            <!-- Following  must be consistent with "atomictype" -->
+            <element name="Char"   ><ref name="variabledef"/></element>
+            <element name="Byte"   ><ref name="variabledef"/></element>
+            <element name="UByte"  ><ref name="variabledef"/></element>
+            <element name="Int16"  ><ref name="variabledef"/></element>
+            <element name="UInt16" ><ref name="variabledef"/></element>
+            <element name="Int32"  ><ref name="variabledef"/></element>
+            <element name="UInt32" ><ref name="variabledef"/></element>
+            <element name="Int64"  ><ref name="variabledef"/></element>
+            <element name="UInt64" ><ref name="variabledef"/></element>
+            <element name="Float32"><ref name="variabledef"/></element>
+            <element name="Float64"><ref name="variabledef"/></element>
+            <element name="String" ><ref name="variabledef"/></element>
+            <element name="Enum">
+                <!-- <ref name="enumref"/> -->
+                <ref name="variabledef"/>
+            </element>
+            <element name="Opaque"> 
+                <!-- These are not sized -->
+                <!-- <attribute name="size"><data type="integer"/></attribute> -->
+                <ref name="variabledef"/>
+            </element>
+        </choice>
+    </define>
+    <define name="variabledef">
+        <attribute name="name"><data type="ID"/></attribute>
+        <ref name="dimset"/>
+        <ref name="mapvars"/>
+        <ref name="metadata"/>
+    </define>
+    
+    <define name="mapvars">
+        <zeroOrMore>
+            <ref name="mapref"/>
+        </zeroOrMore>
+    </define>
+    <define name="mapref">
+        <element name="Map">
+            <attribute name="name"><data type="string"/></attribute>
+        </element>
+    </define>
+    
+    <define name="structurevariable">
+        <element name="Structure">
+            <attribute name="name"><data type="ID"/></attribute>
+            <ref name="dimset"/>
+            <zeroOrMore>
+                <ref name="variable"/>
+            </zeroOrMore>
+            <ref name="metadata"/>
+        </element>
+    </define>
+    
+    <define name="metadata">
+        <interleave>
+            <zeroOrMore>
+                <element name="OtherXML"><ref name="otherxml"/></element> 
+                <element name="Attribute">
+                    <ref name="attributedef"/>
+                </element>
+                <element name="Namespace">
+                    <attribute name="name"><data type="string"/></attribute>
+                </element>
+                <!-- <element name="Namespace"><ref name="string"/></element> -->
+            </zeroOrMore>
+        </interleave>
+    </define>
+    
+    <define name="attributedef">
+        <attribute name="name"><data type="ID"/></attribute>
+        <optional>
+            <attribute name="type">
+                <!-- need to exclude opaque? -->
+                <ref name="atomictype"/>
+            </attribute>
+        </optional>
+        <zeroOrMore>
+            <optional>
+                <element name="Namespace">
+                    <attribute name="name"><data type="string"/></attribute>
+                </element>
+            </optional>
+            <element name="Value">
+                <attribute name="value"><data type="string"/></attribute>
+            </element>
+        </zeroOrMore>
+    </define>
+    
+    <define name="otherxml">
+        <element name="OtherXML">
+            <!-- <anyName/>  jhrg -->
+            <zeroOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="otherxml"/>
+                </choice>
+            </zeroOrMore>
+        </element>
+    </define>
+</grammar>
