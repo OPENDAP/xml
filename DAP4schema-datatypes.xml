@@ -1,0 +1,33 @@
+<?xml version='1.0'?>
+<!-- DAP4 DDX Datatypes -->
+<!DOCTYPE schema PUBLIC "-//W3C//DTD XMLSCHEMA 200102//EN" "XMLSchema.dtd" [
+<!ENTITY % s ''>
+<!ENTITY % p ''>
+]>
+<schema xmlns="http://xml.opendap.org/ns/DAP/4.0"
+        targetNamespace="https://scm.opendap.org/svn/trunk/dap4/DAP4schema-datatypes"
+	version="1.0">
+  <annotation>
+   <documentation>
+     This schema is intended to provide the datatypes
+     for the DAP4 RELAXNG grammar at 
+     https://scm.opendap.org/svn/trunk/dap4/dap4.rng.
+  </annotation>
+
+  <simpleType name="STRING">
+  </simpleType>
+  <simpleType name="CHARACTER">
+  </simpleType>
+  <simpleType name="STAR">
+  </simpleType>
+  <simpleType name="INTEGER">
+  </simpleType>
+  <simpleType name="FLOAT">
+  </simpleType>
+  <simpleType name="OPAQUE">
+  </simpleType>
+  <simpleType name="ID">
+  </simpleType>
+  <simpleType name="FQN">
+  </simpleType>
+</schema>
