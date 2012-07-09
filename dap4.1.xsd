@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+  <!-- Relax NG Grammar -->
+  <xs:element name="Dataset">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dap:Group"/>
+      </xs:sequence>
+      <xs:attribute name="dapVersion" type="xs:string"/>
+      <xs:attribute name="ns" type="xs:string"/>
+      <xs:attribute ref="xml:base"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Group">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="dap:metadata"/>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element ref="dap:Enumeration"/>
+          <xs:element ref="dap:Dimension"/>
+          <xs:element ref="dap:variable"/>
+        </xs:choice>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="dap:Group"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:ID"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Enumeration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="dap:elt"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:ID"/>
+      <xs:attribute name="basetype" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="Byte"/>
+            <xs:enumeration value="UByte"/>
+            <xs:enumeration value="Int16"/>
+            <xs:enumeration value="UInt16"/>
+            <xs:enumeration value="Int32"/>
+            <xs:enumeration value="UInt32"/>
+            <xs:enumeration value="Int64"/>
+            <xs:enumeration value="UInt64"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="elt">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:ID"/>
+      <xs:attribute name="value" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="namespacedef">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Namespace">
+        <xs:complexType>
+          <xs:attribute name="href" use="required" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="Dimension">
+    <xs:complexType>
+      <xs:group ref="dap:metadata"/>
+      <xs:attribute name="name" use="required" type="xs:ID"/>
+      <xs:attribute name="size" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Dim">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="size" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="vardimref">
+    <xs:attribute name="size" use="required" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:complexType name="dimset">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="dap:Dim"/>
+    </xs:sequence>
+    <xs:attribute name="size" type="xs:string"/>
+  </xs:complexType>
+  <xs:simpleType name="atomictype">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="Bit"/>
+      <xs:enumeration value="Char"/>
+      <xs:enumeration value="Byte"/>
+      <xs:enumeration value="UByte"/>
+      <xs:enumeration value="Int16"/>
+      <xs:enumeration value="UInt16"/>
+      <xs:enumeration value="Int32"/>
+      <xs:enumeration value="UInt32"/>
+      <xs:enumeration value="Int64"/>
+      <xs:enumeration value="UInt64"/>
+      <xs:enumeration value="Float32"/>
+      <xs:enumeration value="Float64"/>
+      <xs:enumeration value="String"/>
+      <xs:enumeration value="Enum"/>
+      <xs:enumeration value="Opaque"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- is this needed? jhrg -->
+  <xs:attributeGroup name="enumref">
+    <xs:attribute name="element" use="required" type="xs:string"/>
+    <xs:attribute name="value" use="required" type="xs:ID"/>
+  </xs:attributeGroup>
+  <xs:element name="variable" abstract="true"/>
+  <xs:element name="simplevariable" abstract="true" substitutionGroup="dap:variable" type="dap:variabledef"/>
+  <xs:element name="Char" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Byte" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="UByte" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Int16" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="UInt16" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Int32" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="UInt32" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Int64" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="UInt64" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Float32" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Float64" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="String" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Enum" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Opaque" substitutionGroup="dap:simplevariable"/>
+  <xs:complexType name="variabledef">
+    <xs:complexContent>
+      <xs:extension base="dap:dimset">
+        <xs:sequence>
+          <xs:group ref="dap:mapvars"/>
+          <xs:group ref="dap:metadata"/>
+        </xs:sequence>
+        <xs:attribute name="name" use="required" type="xs:ID"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:group name="mapvars">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="dap:Map"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="Map">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Structure" substitutionGroup="dap:variable">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="dap:dimset">
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="dap:variable"/>
+            <xs:group ref="dap:metadata"/>
+          </xs:sequence>
+          <xs:attribute name="name" use="required" type="xs:ID"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="metadata">
+    <xs:sequence>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="OtherXML">
+          <xs:complexType>
+            <xs:group ref="dap:otherxml"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element ref="dap:Attribute"/>
+        <xs:element name="Namespace">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="Attribute" type="dap:attributedef"/>
+  <xs:complexType name="attributedef">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="0" name="Namespace">
+        <xs:complexType>
+          <xs:attribute name="name" use="required" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="dap:Value"/>
+    </xs:sequence>
+    <xs:attribute name="name" use="required" type="xs:ID"/>
+    <xs:attribute name="type" type="dap:atomictype"/>
+  </xs:complexType>
+  <xs:element name="Value">
+    <xs:complexType>
+      <xs:attribute name="value" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="otherxml">
+    <xs:sequence>
+      <xs:element name="OtherXML">
+        <xs:complexType mixed="true">
+          <xs:group minOccurs="0" maxOccurs="unbounded" ref="dap:otherxml"/>
+          <xs:anyAttribute processContents="skip"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+</xs:schema>
