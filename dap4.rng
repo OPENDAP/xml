@@ -4,6 +4,7 @@
 
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
          xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+         ns="http://xml.opendap.org/ns/DAP/4.0#"
          datatypeLibrary="http://xml.opendap.org/datatypes/dap4"
          >
 <start>
@@ -13,7 +14,7 @@
 <define name="group">
   <element name="Group">
     <a:documentation>
-        Semantic restriction: attributes are allowed
+        Semantic restriction: xml attributes are allowed
         only on the root group.
     </a:documentation>
     <optional>
