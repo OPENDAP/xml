@@ -15,7 +15,8 @@
   <element name="Group">
     <a:documentation>
         Semantic restriction: xml attributes are allowed
-        only on the root group.
+        only on the root group, where both dapVersion and base are 
+        required and ns is optional.
     </a:documentation>
     <optional>
       <attribute name="dapVersion"><data type="dap4_string"/></attribute>
@@ -54,9 +55,9 @@
     <attribute name="basetype">
 	<choice> <!-- Must be consistent with atomictype and variable -->
 	    <value>Byte</value>
-            <value>UByte</value>
+        <!--value>UByte</value-->
 	    <value>Int8</value>
-            <value>UInt8</value>
+        <value>UInt8</value>
 	    <value>Int16</value>
 	    <value>UInt16</value>
 	    <value>Int32</value>
@@ -119,7 +120,7 @@
   <choice>
     <value>Char</value>
     <value>Byte</value>
-    <value>UByte</value>
+    <!-- value>UByte</value-->
     <value>Int8</value>
     <value>UInt8</value>
     <value>Int16</value>
@@ -131,6 +132,7 @@
     <value>Float32</value>
     <value>Float64</value>
     <value>String</value>
+    <value>URL</value>
     <value>Enumeration</value>
     <value>Opaque</value>
   </choice>
@@ -153,9 +155,11 @@
     <!-- Following  must be consistent with "atomictype" -->
     <element name="Char"   ><ref name="variabledef"/></element>
     <element name="Byte"   ><ref name="variabledef"/></element>
-    <element name="UByte"  ><ref name="variabledef"/></element>
+    <!-- Byte is unsigned. jhrg  -->
+    <!--element name="UByte"  ><ref name="variabledef"/></element-->
     <element name="Int8"   ><ref name="variabledef"/></element>
-    <element name="Uint8"  ><ref name="variabledef"/></element>
+    <!-- Change Uint8 to UInt8. jhrg -->
+    <element name="UInt8"  ><ref name="variabledef"/></element>
     <element name="Int16"  ><ref name="variabledef"/></element>
     <element name="UInt16" ><ref name="variabledef"/></element>
     <element name="Int32"  ><ref name="variabledef"/></element>
@@ -164,7 +168,10 @@
     <element name="UInt64" ><ref name="variabledef"/></element>
     <element name="Float32"><ref name="variabledef"/></element>
     <element name="Float64"><ref name="variabledef"/></element>
-    <element name="string" ><ref name="variabledef"/></element>
+    <!-- Made 'string' capitalized. jhrg -->
+    <element name="String" ><ref name="variabledef"/></element>
+    <!-- Added URL type. jhrg -->
+    <element name="URL" ><ref name="variabledef"/></element>
     <element name="Opaque"><ref name="variabledef"/></element>
     <element name="Enum">
       <attribute name="enum"><data type="dap4_fqn"/></attribute>
@@ -240,6 +247,8 @@
           <value>Float32</value>
           <value>Float64</value>
           <value>String</value>
+          <!-- Added URL -->
+          <value>URL</value>
           <value>Enumeration</value>
           <value>Opaque</value>
         </choice>
@@ -249,7 +258,7 @@
       </optional>
       <zeroOrMore>
           <element name="Value">
-              <attribute name="value">
+            <attribute name="value">
 		<choice> <!-- is order important? -->
 		    <data type="dap4_integer"/>
 		    <data type="dap4_float"/>
