@@ -21,6 +21,9 @@
       <attribute name="dapVersion"><data type="dap4_string"/></attribute>
     </optional>
     <optional>
+      <attribute name="ddxVersion"><data type="dap4_string"/></attribute>
+    </optional>
+    <optional>
       <attribute name="ns"><data type="dap4_uri"/></attribute>
     </optional>
     <optional>
