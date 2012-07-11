@@ -7,7 +7,9 @@
   xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#">
 
   <Byte name="b"/>
+  
   <Int8 name="i8"/>
+  <UInt8 name="ui8"/>
   
   <Int16 name="i16"/>
   <UInt16 name="ui16"/>
