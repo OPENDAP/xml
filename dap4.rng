@@ -4,9 +4,13 @@
 
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
          xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
-         ns="http://xml.opendap.org/ns/DAP/4.0#"
          datatypeLibrary="http://xml.opendap.org/datatypes/dap4"
          >
+<!-- We need to leave this out because we do not have a namespace
+     for this grammar
+         ns="http://xml.opendap.org/ns/DAP/4.0#"
+-->
+
 <start>
   <ref name="group"/>
 </start>
@@ -53,17 +57,16 @@
   <element name="Enumeration">
     <attribute name="name"><data type="dap4_id"/></attribute>
     <attribute name="basetype">
-	<choice> <!-- Must be consistent with atomictype and variable -->
-	    <value>Byte</value>
-        <!--value>UByte</value-->
-	    <value>Int8</value>
-        <value>UInt8</value>
-	    <value>Int16</value>
-	    <value>UInt16</value>
-	    <value>Int32</value>
-	    <value>UInt32</value>
-	    <value>Int64</value>
-	    <value>UInt64</value>
+        <choice> <!-- Must be consistent with atomictype and variable -->
+            <value>Byte</value> <!-- equivalent to UInt8 -->
+            <value>Int8</value>
+            <value>UInt8</value>
+            <value>Int16</value>
+            <value>UInt16</value>
+            <value>Int32</value>
+            <value>UInt32</value>
+            <value>Int64</value>
+            <value>UInt64</value>
         </choice>
     </attribute>
     <oneOrMore><ref name="enumconst"/></oneOrMore>
@@ -89,7 +92,7 @@
   <element name="Dimension">
     <attribute name="name"><data type="dap4_id"/></attribute>
     <attribute name="size">
-        <data type="dap4_integer"/>
+        <data type="dap4_dim"/>
     </attribute>
     <ref name="metadata"/>
   </element>
@@ -103,7 +106,7 @@
     <optional>
       <attribute name="size">
         <choice>
-            <data type="dap4_integer"/>
+            <data type="dap4_dim"/>
             <data type="dap4_vdim"/>
         </choice>
       </attribute>
@@ -120,7 +123,6 @@
   <choice>
     <value>Char</value>
     <value>Byte</value>
-    <!-- value>UByte</value-->
     <value>Int8</value>
     <value>UInt8</value>
     <value>Int16</value>
@@ -155,10 +157,7 @@
     <!-- Following  must be consistent with "atomictype" -->
     <element name="Char"   ><ref name="variabledef"/></element>
     <element name="Byte"   ><ref name="variabledef"/></element>
-    <!-- Byte is unsigned. jhrg  -->
-    <!--element name="UByte"  ><ref name="variabledef"/></element-->
     <element name="Int8"   ><ref name="variabledef"/></element>
-    <!-- Change Uint8 to UInt8. jhrg -->
     <element name="UInt8"  ><ref name="variabledef"/></element>
     <element name="Int16"  ><ref name="variabledef"/></element>
     <element name="UInt16" ><ref name="variabledef"/></element>
@@ -235,7 +234,6 @@
         <choice>
           <value>Char</value>
           <value>Byte</value>
-          <value>UByte</value>
           <value>Int8</value>
           <value>UInt8</value>
           <value>Int16</value>
@@ -259,15 +257,15 @@
       <zeroOrMore>
           <element name="Value">
             <attribute name="value">
-		<choice> <!-- is order important? -->
-		    <data type="dap4_integer"/>
-		    <data type="dap4_float"/>
-		    <data type="dap4_opaque"/>
-		    <data type="dap4_fqn"/> <!-- for enum consts -->
-		    <data type="dap4_char"/>
-		    <data type="dap4_string"/>
-		</choice>
-	      </attribute>
+                <choice> <!-- is order important? -->
+                    <data type="dap4_integer"/>
+                    <data type="dap4_float"/>
+                    <data type="dap4_opaque"/>
+                    <data type="dap4_fqn"/> <!-- for enum consts -->
+                    <data type="dap4_char"/>
+                    <data type="dap4_string"/>
+                </choice>
+              </attribute>
           </element>
       </zeroOrMore>
   </element>

@@ -16,6 +16,8 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
 	// Define helper validation patterns
 	// Assume all XML escapes (&xxx;) have been translated out
 
+	static final Pattern dim_integer = Pattern
+			.compile("\\d+");
 	static final Pattern decimal_integer = Pattern
 			.compile("[+-]?\\d+([BbSsLl]|(ll)|(LL))?");
 	static final Pattern hex_integer = Pattern.compile("0[xX][0-9a-fA-F]+");
@@ -37,7 +39,18 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
 
 	// Define an enumeration of possible type names
 	static enum DAP4type {
-		dap4_unknown, dap4_integer, dap4_float, dap4_char, dap4_string, dap4_opaque, dap4_vdim, dap4_id, dap4_fqn, dap4_uri;
+                dap4_integer,
+                dap4_float,
+                dap4_char,
+                dap4_string,
+                dap4_opaque,
+                dap4_vdim,
+                dap4_id,
+                dap4_fqn,
+                dap4_uri,
+                // Added dmh 7/10/12
+                dap4_dim, // for dimension defs and refs
+		dap4_unknown;
 
 		static DAP4type fromString(String name) {
 			if (name != null) {
@@ -242,6 +255,10 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
 				} catch (java.net.URISyntaxException use) {
 					valid = false;
 				}
+				break;
+			case dap4_dim:
+				matcher = dim_integer.matcher(literal);
+				valid = matcher.matches();
 				break;
 			}
 			report(datatype, literal, valid);

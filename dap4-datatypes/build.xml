@@ -20,7 +20,7 @@
 
 <target name="compile" depends="init">
   <!-- "f:/svn/dap4/dap4-datatypes/src" -->
-  <javac srcdir="/Users/jimg/src/shrew/dap4/dap4-datatypes/src"
+  <javac srcdir="src"
          destdir="${classes.dir}"
          classpath="${jing.jar}"
 	 includeantruntime="false"
