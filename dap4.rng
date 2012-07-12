@@ -5,12 +5,8 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
          xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
          datatypeLibrary="http://xml.opendap.org/datatypes/dap4"
-         >
-<!-- We need to leave this out because we do not have a namespace
-     for this grammar
          ns="http://xml.opendap.org/ns/DAP/4.0#"
--->
-
+         >
 <start>
   <ref name="group"/>
 </start>

@@ -1,6 +1,6 @@
 <Group name="example"
        dapVersion="4.0"
-       ns="http://xml.opendap.org/ns/DAP/4.0#">
+       xmlns="http://xml.opendap.org/ns/DAP/4.0#">
 
 <Enumeration name="e1" basetype="UInt8">
   <Element name="econst1" value="1"/>
