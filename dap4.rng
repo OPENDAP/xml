@@ -90,7 +90,7 @@
     <attribute name="size">
         <data type="dap4_dim"/>
     </attribute>
-    <ref name="metadata"/>
+    <ref name="metadatalist"/>
   </element>
 </define>
 
@@ -110,10 +110,10 @@
   </element>
 </define>
 
-<define name="dimset">
-    <oneOrMore><ref name="dimref"/></oneOrMore>
-</define>
-
+<!-- Atomictype define is only a way
+     to list the set of atomictypes;
+     it is never used in the grammar
+-->
 <define name="atomictype">
   <!-- This must be consistent with "variable" below -->
   <choice>
@@ -131,14 +131,9 @@
     <value>Float64</value>
     <value>String</value>
     <value>URL</value>
-    <value>Enumeration</value>
+    <value>Enum</value>
     <value>Opaque</value>
   </choice>
-</define>
-
-<define name="enumref">
-  <attribute name="name"><data type="dap4_fqn"/></attribute>
-  <attribute name="value"><data type="dap4_id"/></attribute>
 </define>
 
 <define name="variable">
@@ -179,18 +174,13 @@
   <attribute name="name"><data type="dap4_id"/></attribute>
   <zeroOrMore>
     <choice>
-      <ref name="dimset"/>
-      <ref name="mapvars"/>
+      <ref name="dimref"/>
+      <ref name="mapref"/>
       <ref name="metadata"/>
     </choice>
   </zeroOrMore>
 </define>
 
-<define name="mapvars">
-  <zeroOrMore>
-    <ref name="mapref"/>
-  </zeroOrMore>
-</define>
 <define name="mapref">
   <element name="Map">
     <attribute name="name"><data type="dap4_fqn"/></attribute>
@@ -202,7 +192,7 @@
     <attribute name="name"><data type="dap4_id"/></attribute>
     <zeroOrMore>
       <choice>
-        <ref name="dimset"/>
+        <ref name="dimref"/>
         <ref name="variable"/>
         <ref name="metadata"/>
       </choice>
@@ -210,13 +200,17 @@
   </element>
 </define>
 
-<define name="metadata">
+<define name="metadatalist">
   <zeroOrMore>
+    <ref name="metadata"/>
+  </zeroOrMore>
+</define>
+
+<define name="metadata">
     <choice>
 <!--    <ref name="otherxml"/> -->
     <ref name="attribute"/>
     </choice>
-  </zeroOrMore>
 </define>
 
 <define name="attribute">
@@ -224,7 +218,7 @@
       <attribute name="name"><data type="dap4_id"/></attribute>
       <a:documentation>
         Semantic constraint: type must be compatible
-        with the set of attribute values
+        with the set of attribute value types
       </a:documentation>
       <attribute name="type">
         <choice>

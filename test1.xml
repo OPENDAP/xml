@@ -1,10 +1,12 @@
 <Group name="example"
        dapVersion="4.0"
-       ns="http://xml.opendap.org/ns/DAP/4.0#">
+       xml:base="file:dap4/test_dap4_1.xml"
+       xmlns="http://xml.opendap.org/ns/DAP/4.0#"
+       xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#">
 
 <Enumeration name="e1" basetype="UInt8">
-  <Element name="econst1" value="1"/>
-  <Element name="econst2" value="2"/>
+  <EnumConst name="econst1" value="1"/>
+  <EnumConst name="econst2" value="2"/>
 </Enumeration>
 
 <Dimension name="d1" size="10"/>
