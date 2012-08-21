@@ -3,8 +3,8 @@
        xmlns="http://xml.opendap.org/ns/DAP/4.0#">
 
 <Enumeration name="e1" basetype="UInt8">
-  <Element name="econst1" value="1"/>
-  <Element name="econst2" value="2"/>
+  <EnumConst name="econst1" value="1"/>
+  <EnumConst name="econst2" value="2"/>
 </Enumeration>
 
 <Dimension name="d1" size="10"/>
@@ -23,7 +23,7 @@
   <Attribute name="a1" type="Int32"/>
   <Attribute name="a2" type="Float64">
     <Value value="7.5"/>    
-    <Value value="10"/>    
+    <Value>10</Value>
   </Attribute>  
   <!-- Structure dimensions -->
   <Dim size="*"/>

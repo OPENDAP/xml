@@ -245,8 +245,9 @@
           <ref name="namespace"/>
       </optional>
       <zeroOrMore>
+	<choice>
           <element name="Value">
-            <attribute name="value">
+              <attribute name="value">
                 <choice> <!-- is order important? -->
                     <data type="dap4_integer"/>
                     <data type="dap4_float"/>
@@ -256,7 +257,9 @@
                     <data type="dap4_string"/>
                 </choice>
               </attribute>
-          </element>
+         </element>
+	 <element name="Value"><data type="dap4_text"/></element>
+	</choice>
       </zeroOrMore>
   </element>
 </define>

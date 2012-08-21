@@ -50,6 +50,7 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
                 dap4_uri,
                 // Added dmh 7/10/12
                 dap4_dim, // for dimension defs and refs
+		dap4_text,
 		dap4_unknown;
 
 		static DAP4type fromString(String name) {
@@ -259,6 +260,9 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
 			case dap4_dim:
 				matcher = dim_integer.matcher(literal);
 				valid = matcher.matches();
+				break;
+			case dap4_text:
+				valid = true;
 				break;
 			}
 			report(datatype, literal, valid);
