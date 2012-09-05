@@ -1,0 +1,49 @@
+<project name="RELAX NG DAP4 Datatype Handler" default="all" basedir=".">
+
+<property name="build.dir" value="build"/>
+<property name="classes.dir" value="${build.dir}/classes"/>
+<property name="jing.jar" value="lib/jing.jar"/>
+<property name="datatype.jar" value="${build.dir}/dap4-datatypes.jar"/>
+<property name="dist.dir" value="dap4-datatypes"/>
+<property name="dist.jar" value="dap4-datatypes.jar"/>
+
+<target name="all" depends="clean,jar"/>
+
+<target name="init">
+  <mkdir dir="${build.dir}"/>
+  <mkdir dir="${classes.dir}"/>
+</target>
+
+<target name="clean">
+    <delete dir="${build.dir}"/>
+</target>
+
+<target name="compile" depends="init">
+  <javac srcdir="/Users/jimg/src/shrew/xml/relaxNG-datatypes/src"
+         destdir="${classes.dir}"
+         classpath="${jing.jar}"
+	     includeantruntime="false"
+	     debug="true"/>
+</target>
+
+<target name="jar" depends="compile">
+  <jar jarfile="${datatype.jar}">
+    <fileset dir="${classes.dir}"/>
+    <fileset dir="src" includes="META-INF/services/*"/>
+  </jar>
+</target>
+
+<!-- I'm pretty sure this target is broken. Check the code out of SVN. jhrg -->
+<target name="dist" depends="clean">
+  <delete dir="${dist.dir}"/>
+  <mkdir dir="${dist.dir}"/>
+  <copy file="jing.jar" todir="${dist.dir}"/>
+  <copy file="build.xml" todir="${dist.dir}"/>
+  <copy todir="${dist.dir}">
+    <fileset dir="." includes="src/**/*.java"/>
+    <fileset dir="." includes="src/META-INF/services/*"/>
+  </copy>
+  <zip destfile="${dist.jar}" basedir="${dist.dir}"/>
+</target>
+
+</project>
