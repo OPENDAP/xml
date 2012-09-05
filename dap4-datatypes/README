@@ -1,0 +1,35 @@
+
+This directory contains a relaxNG datatype library that will enable a
+XML editor that supports validation to recognize the type names
+specific to DAP4 (e.g., dap4_int) used in the dap4.rng grammar.
+
+To build, use 'ant jar'.
+
+To install the library, configure your editor to use the library
+build/dap4-datatypes.jar. 
+
+Here's how to do that for the OxygenXML plugin running with Eclipse:
+
+First we need to find the OxygenXML directory for plugins/libraries. When
+it is running under Eclipse, this will be a directory named something like
+'com.oxygenxml.editor_14.0.0...' inside the Eclipse 'plugins' directory. On
+My system it is:
+/Applications/eclipse-3.7/plugins/com.oxygenxml.editor_14.0.0.v2012071212
+
+Call that directory $oxy.
+
+To install and configure the library, copy build/dap4-datatypes.jar to 
+$oxy/lib and then edit $oxy/plugin.xml so that it contains the line
+'<library name="lib/dap4-datatypes.jar"/>' within the <runtime> element.
+
+Restart Eclipse.
+
+The standalone OxygenXML editor should configure in more or less the same
+way, modulo the Eclipse part of the pathname.
+
+Note that whenever Eclipse updates OxygenXML, even for the same version of
+the editor but with a different build date, the lib will have to be
+reinstalled. For example, I have to 14.0.0 directories with different build
+dates. The lib needs to be installed in the copy of oxygen that actually
+used.  
+ 
