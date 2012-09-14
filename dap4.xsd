@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RELAX NG Grammar -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+  <xs:element name="Group">
+    <xs:annotation>
+      <xs:documentation>
+        Semantic restriction: xml attributes are allowed
+        only on the root group, where both dapVersion and base are 
+        required and ns is optional.
+    </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="dap:groupdef">
+          <xs:attribute name="dapVersion" type="xs:string"/>
+          <xs:attribute name="dmrVersion" type="xs:string"/>
+          <xs:attribute name="xmlns" type="xs:string"/>
+          <xs:attribute ref="xml:base"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="groupdef">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="dap:Enumeration"/>
+      <xs:element ref="dap:Dimension"/>
+      <xs:element ref="dap:variable"/>
+      <xs:element ref="dap:metadata"/>
+      <xs:element ref="dap:Group"/>
+    </xs:choice>
+    <xs:attribute name="name" use="required" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="Enumeration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="dap:EnumConst"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="basetype" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="Byte"/>
+            <xs:enumeration value="Int8"/>
+            <xs:enumeration value="UInt8"/>
+            <xs:enumeration value="Int16"/>
+            <xs:enumeration value="UInt16"/>
+            <xs:enumeration value="Int32"/>
+            <xs:enumeration value="UInt32"/>
+            <xs:enumeration value="Int64"/>
+            <xs:enumeration value="UInt64"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EnumConst">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="value" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="namespace">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="dap:Namespace"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="Namespace">
+    <xs:complexType>
+      <xs:attribute name="href" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Dimension">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="dap:metadatalist">
+          <xs:attribute name="name" use="required" type="xs:string"/>
+          <xs:attribute name="size" use="required" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Dim">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="size">
+        <xs:simpleType>
+          <xs:union memberTypes="xs:string xs:string"/>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <!--
+    Atomictype define is only a way
+    to list the set of atomictypes;
+    it is never used in the grammar
+  -->
+  <xs:simpleType name="atomictype">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="Char"/>
+      <xs:enumeration value="Byte"/>
+      <xs:enumeration value="Int8"/>
+      <xs:enumeration value="UInt8"/>
+      <xs:enumeration value="Int16"/>
+      <xs:enumeration value="UInt16"/>
+      <xs:enumeration value="Int32"/>
+      <xs:enumeration value="UInt32"/>
+      <xs:enumeration value="Int64"/>
+      <xs:enumeration value="UInt64"/>
+      <xs:enumeration value="Float32"/>
+      <xs:enumeration value="Float64"/>
+      <xs:enumeration value="String"/>
+      <xs:enumeration value="URL"/>
+      <xs:enumeration value="Enum"/>
+      <xs:enumeration value="Opaque"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="variable" abstract="true"/>
+  <xs:element name="simplevariable" abstract="true" substitutionGroup="dap:variable" type="dap:variabledef"/>
+  <xs:element name="Char" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Byte" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Int8" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="UInt8" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Int16" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="UInt16" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Int32" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="UInt32" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Int64" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="UInt64" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Float32" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Float64" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="String" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="URL" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Opaque" substitutionGroup="dap:simplevariable"/>
+  <xs:element name="Enum" substitutionGroup="dap:simplevariable">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="dap:variabledef">
+          <xs:attribute name="enum" use="required" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="variabledef">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="dap:Dim"/>
+      <xs:element ref="dap:Map"/>
+      <xs:element ref="dap:metadata"/>
+    </xs:choice>
+    <xs:attribute name="name" use="required" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="Map">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Structure" substitutionGroup="dap:variable">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="dap:Dim"/>
+        <xs:element ref="dap:variable"/>
+        <xs:element ref="dap:metadata"/>
+      </xs:choice>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="metadatalist">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="dap:metadata"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="metadata" abstract="true">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group minOccurs="0" ref="dap:namespace"/>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="Value">
+            <xs:complexType>
+              <xs:attribute name="value" use="required">
+                <xs:simpleType>
+                  <xs:union memberTypes="xs:string xs:string xs:string xs:string xs:string xs:string"/>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Value" type="xs:string"/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="Char"/>
+            <xs:enumeration value="Byte"/>
+            <xs:enumeration value="Int8"/>
+            <xs:enumeration value="UInt8"/>
+            <xs:enumeration value="Int16"/>
+            <xs:enumeration value="UInt16"/>
+            <xs:enumeration value="Int32"/>
+            <xs:enumeration value="UInt32"/>
+            <xs:enumeration value="Int64"/>
+            <xs:enumeration value="UInt64"/>
+            <xs:enumeration value="Float32"/>
+            <xs:enumeration value="Float64"/>
+            <xs:enumeration value="String"/>
+            <xs:enumeration value="URL"/>
+            <xs:enumeration value="Enumeration"/>
+            <xs:enumeration value="Opaque"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Attribute" substitutionGroup="dap:metadata"/>
+  <xs:element name="OtherXML" type="dap:arbitraryxml"/>
+  <xs:complexType name="arbitraryxml">
+    <xs:sequence>
+      <xs:any processContents="skip"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
