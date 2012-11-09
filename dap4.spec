@@ -113,8 +113,7 @@ official DAP4 Specification Document.
 <tr><td width="25%">2012.11.1
     <td>Integrate Jame's changes with recent changes
 <tr><td width="25%">2012.11.9
-    <td>Rebuild the .docx because of repeated Word crashes; minor formatting
-        info changed/lost.
+    <td>Rebuild the .docx because of repeated Word crashes; minor formatting info changed/lost.
 </table>
 <p>
 <p>
@@ -809,8 +808,13 @@ characters. The count is of the following form.
 which is the ASCII representation of a 32 bit count
 where each of the 'X' is a hex digit (i.e. a decimal digit
 or a upper or lowercase letter A, B, C, D, E, or F.
-Note that endian-ness is not relevant, any more than it is
-for, for example, the integer string '378'.
+Note that this is effectively always big-endian
+and given the value '0xABCD' it is converted to the integer value
+<blockquote>
+<pre>
+(A*2<sup>24</sup> + B*2<sup>16</sup> + C*2<sup>8</sup> + D).
+</pre>
+</blockquote>
 <p>
 The logical organization of the Data Response is shown below.
 
@@ -878,7 +882,7 @@ If the variable is scalar, then it is represented as a single scalar value.
 
 For the numeric atomic types, scalar instances are represented as follows. In all cases a consistent byte ordering is assumed, but the choice of byte order is at the discretion of the program that generates the serial representation, typically a server program.
 <p>
-<table border=1 width="85%">
+<table border=1 width="50%">
 <tr><th>Type Name<th>Description<th>Representation
 <tr><td>Int8<td>Signed 8-bit integer<td>8 bits 
 <tr><td>UInt8<td>Unsigned 8-bit integer<td>8 bits
@@ -901,17 +905,16 @@ In narrative form: all numeric quantities are used as a raw, unsigned vector of 
 If the server chooses to byte swap transmitted values, then the following swapping rules are used. Not that a size of 16 bytes is also included. This is used solely to represent checksums as 128-bit unsigned integers
 (See Section <a href="#checksums">checksums</a>).
 <p>
-<center><b>Byte Swapping Rules</b></center>
-<table border=1 width="85%">
-<tr><th>Size (in bytes)<th>Rules<th>
-<tr><td>1<td>Not Applicable.<td>
-<tr><td>2<td>Byte 0 -> Byte 1<br>
+<table border=1 width="50%">
+<tr><th width="20%">Size (bytes)<th>Byte Swapping Rules<th>
+<tr><th>1<td>Not Applicable.<td>
+<tr><th>2<td>Byte 0 -> Byte 1<br>
 Byte 1 ->Byte 0<td>
-<tr><td>4<td>Byte 0 -> Byte 3<br>
+<tr><th>4<td>Byte 0 -> Byte 3<br>
 Byte 1 ->Byte 2<br>
 Byte 2 -> Byte 1<br>
 Byte 3 ->Byte 0<td>
-<tr><td>8<td>Byte 0 -> Byte 7<br>
+<tr><th>8<td>Byte 0 -> Byte 7<br>
 Byte 1 ->Byte 6<br>
 Byte 2 -> Byte 5<br>
 Byte 3 ->Byte 4
@@ -919,7 +922,7 @@ Byte 3 ->Byte 4
 Byte 5 ->Byte 2<br>
 Byte 6 -> Byte 1<br>
 Byte 7 ->Byte 0
-<tr><td>16<td>Byte 0 -> Byte 15<br>
+<tr><th>16<td>Byte 0 -> Byte 15<br>
 Byte 1 ->Byte 14<br>
 Byte 2 -> Byte 13<br>
 Byte 3 ->Byte 12<br>

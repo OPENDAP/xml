@@ -385,8 +385,6 @@ assignsections(List<Line> lines)
     for(int i=0;i<lines.size();i++) {
 	Line line = lines.get(i);
 	if(line.tag == Tag.DIV && line.classtag == ClassTag.APPENDIX) {
-	    if(format == Format.HTML)
-		stacktop = 0;
             continue;
 	}
 	if(line.classtag != ClassTag.SECTION
@@ -401,10 +399,7 @@ assignsections(List<Line> lines)
 	} else {
 	    depthstack[stacktop]++;
 	}
-	if(format != Format.HTML || line.classtag == ClassTag.SECTION)
-	    line.section = makesectionnumber();
-	else
-	    line.section = makeappendixnumber();
+        line.section = makesectionnumber();
     }	     
 }
 
@@ -624,19 +619,21 @@ output(List<Line> lines)
 static void
 outputhtml(List<Line> lines)
 {
-    String prefix = null;
-    String suffix = null;
-
     for(Line line: lines) {
-	String text =  null;
+        String prefix = null;
+        String suffix = null;
+
+	String text = line.text;
 	switch (line.tag) {
 
 	case DIV:
 	    if(line.classtag == ClassTag.TOC) {
 		outputtoc(toc);
 	        continue; // to skip the <div class="toc" line
-	    } else
-	        text = line.text;
+	    } else if(line.classtag == ClassTag.APPENDIX) {
+		text = "<h1 style=\"font-size:18pt\"><u>Appendices</u></h1>";
+		break;
+	    }
 	    break;
 
 	case HEADER:
@@ -744,10 +741,11 @@ static void
 outputwiki(List<Line> lines)
 {
     int i;
-    String prefix = null; 
-    String suffix = null; 
 
     for(i=0;i<lines.size();i++) {
+        String prefix = null;
+        String suffix = null;
+
         Line line = lines.get(i);
 	String text = line.text;
 
@@ -854,12 +852,11 @@ For word:
 static void
 outputword(List<Line> lines)
 {
-    String prefix = null;
-    String suffix = null;
     boolean inpre = false;
 
     for(Line line: lines) {
-	// Fix double quotes
+        String prefix = null;
+        String suffix = null;
 
 	String text = line.text;
 

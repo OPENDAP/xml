@@ -89,8 +89,7 @@ official DAP4 Specification Document.
 <tr><td width="25%">2012.11.1
     <td>Integrate Jame's changes with recent changes
 <tr><td width="25%">2012.11.9
-    <td>Rebuild the .docx because of repeated Word crashes; minor formatting
-        info changed/lost.
+    <td>Rebuild the .docx because of repeated Word crashes; minor formatting info changed/lost.
 </table>
 
 
@@ -744,8 +743,13 @@ characters. The count is of the following form.
 which is the ASCII representation of a 32 bit count
 where each of the 'X' is a hex digit (i.e. a decimal digit
 or a upper or lowercase letter A, B, C, D, E, or F.
-Note that endian-ness is not relevant, any more than it is
-for, for example, the integer string '378'.
+Note that this is effectively always big-endian
+and given the value '0xABCD' it is converted to the integer value
+<blockquote>
+<pre>
+(A*2<sup>24</sup> + B*2<sup>16</sup> + C*2<sup>8</sup> + D).
+</pre>
+</blockquote>
 
 The logical organization of the Data Response is shown below.
 
@@ -809,7 +813,7 @@ If the variable is scalar, then it is represented as a single scalar value.
 
 For the numeric atomic types, scalar instances are represented as follows. In all cases a consistent byte ordering is assumed, but the choice of byte order is at the discretion of the program that generates the serial representation, typically a server program.
 
-<table border=1 width="85%">
+<table border=1 width="50%">
 <tr><th>Type Name<th>Description<th>Representation
 <tr><td>Int8<td>Signed 8-bit integer<td>8 bits 
 <tr><td>UInt8<td>Unsigned 8-bit integer<td>8 bits
@@ -832,16 +836,16 @@ In narrative form: all numeric quantities are used as a raw, unsigned vector of 
 If the server chooses to byte swap transmitted values, then the following swapping rules are used. Not that a size of 16 bytes is also included. This is used solely to represent checksums as 128-bit unsigned integers
 (See Section [[#Checksums|6.2.5]]).
 
-<table border=1 width="85%">
-<tr><th>Size (in bytes)<th>Rules<th>
-<tr><td>1<td>Not Applicable.<td>
-<tr><td>2<td>Byte 0 -> Byte 1<br>
+<table border=1 width="50%">
+<tr><th width="20%">Size (bytes)<th>Byte Swapping Rules<th>
+<tr><th>1<td>Not Applicable.<td>
+<tr><th>2<td>Byte 0 -> Byte 1<br>
 Byte 1 ->Byte 0<td>
-<tr><td>4<td>Byte 0 -> Byte 3<br>
+<tr><th>4<td>Byte 0 -> Byte 3<br>
 Byte 1 ->Byte 2<br>
 Byte 2 -> Byte 1<br>
 Byte 3 ->Byte 0<td>
-<tr><td>8<td>Byte 0 -> Byte 7<br>
+<tr><th>8<td>Byte 0 -> Byte 7<br>
 Byte 1 ->Byte 6<br>
 Byte 2 -> Byte 5<br>
 Byte 3 ->Byte 4
@@ -849,7 +853,7 @@ Byte 3 ->Byte 4
 Byte 5 ->Byte 2<br>
 Byte 6 -> Byte 1<br>
 Byte 7 ->Byte 0
-<tr><td>16<td>Byte 0 -> Byte 15<br>
+<tr><th>16<td>Byte 0 -> Byte 15<br>
 Byte 1 ->Byte 14<br>
 Byte 2 -> Byte 13<br>
 Byte 3 ->Byte 12<br>
@@ -1465,810 +1469,272 @@ edition 2, version 2, 2003
 <div style="font-size:18pt">
 '''Appendices'''
 </div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ==FQN Syntax==
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 An FQN has two parts. First, there is the path, which refers to Group traversal, and second is the suffix, which refers to the traversal of Structures. An FQN is the concatenation of the path with the suffix and separated by the '/' Character. The suffix may not exist if O is a group or is not a Structure typed variable.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 Fully qualified names conform to the following syntax.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 FQN:   grouppath
-</div>
-<div style="font-size:18pt">
      | grouppath '/' name
-</div>
-<div style="font-size:18pt">
      | grouppath '/' structurepath
-</div>
-<div style="font-size:18pt">
      | grouppath '/' structurepath '.' name
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 grouppath: /*empty*/ | grouppath '/' groupname
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 structurepath: /*empty*/ | structurepath '.' structname
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 To write a path for an object O, follow these steps.
-</div>
-<div style="font-size:18pt">
 <ol>
-</div>
-<div style="font-size:18pt">
 <li><!--0-->
-</div>
-<div style="font-size:18pt">
 Locate the closest enclosing group G for O.  If O is a group, then O and G will be the same.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <li> Create the scope prefix for O by traversing a path through the Group tree to and including G. Concatenate the group names on that path and separating them with '/'. The name for root group is ignored, hence the FQN will begin with "/".
-</div>
-<div style="font-size:18pt">
 </ol>
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 If O is not a Structure typed variable, then we are done and the FQN for O is just the path. Otherwise, the suffix must be computed as follows.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <ol>
-</div>
-<div style="font-size:18pt">
 <li> Traverse the nested Structure declarations from G to O, including O, but not including G in the path. Traversal here means following the enclosing Structure typed variables until O is reached.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <li> Concatenate the names on that suffix path and separating them with '.' to create a suffix.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <li> Create the final FQN as the concatenation of the path, the character '/', and the suffix.
-</div>
-<div style="font-size:18pt">
 </ol>
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ==DAP4 Lexical Elements==
-</div>
-<div style="font-size:18pt">
 This section describes the lexical elements that occur in the DAP4 DMR.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 Within the RELAXNG DAP4 grammar
-</div>
-<div style="font-size:18pt">
 (Section [[#DAP4 DMR Syntax as a RELAX NG Schema|12]])
-</div>
-<div style="font-size:18pt">
 there are markers for occurrences of primitive type such as integers, floats, or strings (ignoring case). The markers typically look like this when defining an attribute that can occur in the DAP4 DMR.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 &lt;attribute name="Principal_Investigator"&gt;
-</div>
-<div style="font-size:18pt">
 &lt;datatype="dap4_string"/&gt;
-</div>
-<div style="font-size:18pt">
 &lt;/attribute&gt;
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 The "&lt;data type="dap4_string"/&gt;" specifies the lexical class for the values that this attribute can have. In this case, the "Principal_Investigator" attribute is defined to have a DAP4 string value. Similar notation is used for values occurring as text within an xml element.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 The lexical specification later in this section defines the legal lexical structure for such items. Specifically, it defines the format of the following lexical items.
-</div>
-<div style="font-size:18pt">
 <ol>
-</div>
-<div style="font-size:18pt">
 <li> Constants, namely: string, float, integer, character, and opaque.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <li> Identifiers
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <li> Fully qualified names (also referred to as FQNs)
-</div>
-<div style="font-size:18pt">
 (Section [[#Fully Qualified Names|5.3]]).
-</div>
-<div style="font-size:18pt">
 </ol>
-</div>
-<div style="font-size:18pt">
 The specification is written using the extended POSIX regular expression notation [11] with some additions.
-</div>
-<div style="font-size:18pt">
 <ol>
-</div>
-<div style="font-size:18pt">
 <li> Names are assigned to regular expressions using the notation "name = {regular expression}"
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <li> Named expressions can be used in subsequent regular expressions by using the notation "{name}". Such occurrences are equivalent to textually substituting the expression associated with name for the "{name}" occurrence.
-</div>
-<div style="font-size:18pt">
 </ol>
-</div>
-<div style="font-size:18pt">
 Notes:
-</div>
-<div style="font-size:18pt">
 <ol>
-</div>
-<div style="font-size:18pt">
 <li> The definition of {UTF8} is deferred to the next section.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <li> Comments are indicated using the "//" notation. Standard xml escape formats (&amp;x#DDD; or &amp;{name};) are assumed to be used as needed.
-</div>
-<div style="font-size:18pt">
 </ol>
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ===Basic character set definitions===
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 CONTROLS   = [\x00-\x1F] // ASCII control characters
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 WHITESPACE = [ \r\n\t\f]+
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 HEXCHAR    = [0-9a-zA-Z]
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 // ASCII printable characters
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ASCII = [0-9a-zA-Z !"#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\\]\\^_`|{}~]
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ===Ascii characters that may appear unescaped in Identifiers===
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 This is assumed to be basically all ASCII printable characters except these characters: '.', '/', '"', '&#39;',  and '&amp;'. Occurrences of these characters are assumed to be representable using the standard xml &amp;{name}; notation (e.g. &amp;amp;). In this expression, backslash is interpreted as an escape character.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 IDASCII=[0-9a-zA-Z!#$%()*+:;<=>?@\[\]\\^_`|{}~]
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ===The Numeric Constant Classes: integer and float===
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 INTEGER    = {INT}|{UINT}|{HEXINT}
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 INT        = [+-][0-9]+{INTTYPE}?
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 UINT       = [0-9]+{INTTYPE}?
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 HEXINT     = {HEXSTRING}{INTTYPE}?
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 INTTYPE    = ([BbSsLl]|"ll"|"LL")
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 HEXSTRING  = (0[xX]{HEXCHAR}+)
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 FLOAT      = ({MANTISSA}{EXPONENT}?)|{NANINF}
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 EXPONENT   = ([eE][+-]?[0-9]+)
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 MANTISSA   = [+-]?[0-9]*\.[0-9]*
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 NANINF     = (-?inf|nan|NaN)B.1.4 The String Constant Class
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 STRING     = ([^"&amp;&lt;&gt;]|{XMLESCAPE})*
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 CHAR       = ([^'&amp;&lt;&gt;]|{XMLESCAPE})
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 URL        = (http|https|[:][/][/][a-zA-Z0-9\-]+
-</div>
-<div style="font-size:18pt">
              ([.][a-zA-Z\-]+)+([:][0-9]+)?
-</div>
-<div style="font-size:18pt">
              ([/]([a-zA-Z0-9\-._,'\\+%)*
-</div>
-<div style="font-size:18pt">
              ([?].+)?([#].+)?
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ===The String/URL Constant Class===
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 STRING = "\({SIMPLESTRING}{ESCAPEDQUOTE}?\)*"
-</div>
-<div style="font-size:18pt">
 SIMPLESTRING = [^"\\]
-</div>
-<div style="font-size:18pt">
 ESCAPEDQOTE=\\"
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ===The Opaque Constant Class===
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 OPAQUE = 0x([0-9A-Fa-f] [0-9A-Fa-f])+
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 There is a semantic constraint that if there is an odd
-</div>
-<div style="font-size:18pt">
 number of hex digits in the opaque constant, a zero hex digit
-</div>
-<div style="font-size:18pt">
 will be added to the end to ensure that the constant represents
-</div>
-<div style="font-size:18pt">
 a set of 8-bit bytes.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ===The Identifier Class===
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 ID         = {IDCHAR}+
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 IDCHAR     = ({IDASCII}|{XMLESCAPE}|{UTF8})
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 XMLESCAPE  = [&amp;][#][0-9]+;
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ===The Atomic Type Class===
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 ATOMICTYPE =   Char | Byte
-</div>
-<div style="font-size:18pt">
              | Int8 | UInt8 | Int16 | UInt16
-</div>
-<div style="font-size:18pt">
              | Int32 | UInt32 | Int64 | UInt64
-</div>
-<div style="font-size:18pt">
              | Float32 | Float64
-</div>
-<div style="font-size:18pt">
              | String | URL
-</div>
-<div style="font-size:18pt">
              | Enum
-</div>
-<div style="font-size:18pt">
              | Opaque ;
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 This list should be consistent with the atomic types in the grammar. 
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ===The Fully Qualified Name Class===
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 FQN      = ([/]{EID})+([.]{EID})*
-</div>
-<div style="font-size:18pt">
 EID      = {EIDCHAR}+
-</div>
-<div style="font-size:18pt">
 EIDCHAR  =  ({EIDASCII}|{XMLESCAPE}|{UTF8})
-</div>
-<div style="font-size:18pt">
 EIDASCII = [0-9a-zA-Z!#$%()*+:;<=>?@\[\]\\^_`|{}~]
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 This should be consistent with the definition in Section [[#Fully Qualified Names|5.3]].
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ===DAP4 Type Definitions===
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 The RELAXNG [13] grammar references the following specific types. For each type, the following table give the lexical format as defined by the patterns previously given or by specific patterns as listed.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <table border=1 width="50%">
-</div>
-<div style="font-size:18pt">
 <tr><th>RELAXNG Data Type Name<th>Lexical Pattern
-</div>
-<div style="font-size:18pt">
 <tr><td>dap4_integer<td>{INTEGER}
-</div>
-<div style="font-size:18pt">
 <tr><td>dap4_float<td>{FLOAT}
-</div>
-<div style="font-size:18pt">
 <tr><td>dap4_char<td>{CHAR}
-</div>
-<div style="font-size:18pt">
 <tr><td>dap4_string<td>{STRING}
-</div>
-<div style="font-size:18pt">
 <tr><td>dap4_opaque<td>{OPAQUE}
-</div>
-<div style="font-size:18pt">
 <tr><td>dap4_vdim<td>[*]
-</div>
-<div style="font-size:18pt">
 <tr><td>dap4_id<td>{ID}
-</div>
-<div style="font-size:18pt">
 <tr><td>dap4_fqn<td>{FQN}
-</div>
-<div style="font-size:18pt">
 <tr><td>dap4_uri<td>{URL}
-</div>
-<div style="font-size:18pt">
 <tr><td>dap4_dim<td>[0-9]+
-</div>
-<div style="font-size:18pt">
 </table>
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 Note that the above lexical element classes are not disjoint.  The type element "&lt;datatype=.../&gt;" should be sufficient to interpret the type within the DMR.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ===UTF-8===
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 The UTF-8 specification [14] defines several ways to validate a UTF-8 string of characters.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 The full (most correct) validating version of UTF8 character set is as follows.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 UTF8 =   ([\xC2-\xDF][\x80-\xBF])
-</div>
-<div style="font-size:18pt">
        | (\xE0[\xA0-\xBF][\x80-\xBF])
-</div>
-<div style="font-size:18pt">
        | ([\xE1-\xEC][\x80-\xBF][\x80-\xBF])
-</div>
-<div style="font-size:18pt">
        | (\xED[\x80-\x9F][\x80-\xBF])
-</div>
-<div style="font-size:18pt">
        | ([\xEE-\xEF][\x80-\xBF][\x80-\xBF])
-</div>
-<div style="font-size:18pt">
        | (\xF0[\x90-\xBF][\x80-\xBF][\x80-\xBF])
-</div>
-<div style="font-size:18pt">
        | ([\xF1-\xF3][\x80-\xBF][\x80-\xBF][\x80-\xBF])
-</div>
-<div style="font-size:18pt">
        | (\xF4[\x80-\x8F][\x80-\xBF][\x80-\xBF])
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 The lines of the above expression cover the UTF-8 characters as follows:
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <ol>
-</div>
-<div style="font-size:18pt">
 <li> non-overlong 2-byte
-</div>
-<div style="font-size:18pt">
 <li>  excluding overlongs
-</div>
-<div style="font-size:18pt">
 <li> straight 3-byte
-</div>
-<div style="font-size:18pt">
 <li> excluding surrogates
-</div>
-<div style="font-size:18pt">
 <li> straight 3-byte
-</div>
-<div style="font-size:18pt">
 <li> planes 1-3
-</div>
-<div style="font-size:18pt">
 <li> planes 4-15
-</div>
-<div style="font-size:18pt">
 <li> plane 16
-</div>
-<div style="font-size:18pt">
 </ol>
-</div>
-<div style="font-size:18pt">
 Note that values from 0 through 127 (ASCII and control characters)
-</div>
-<div style="font-size:18pt">
 are not included in this any of these definitions.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 The above reference also defines some alternative regular expressions.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 There is what is termed the partially relaxed version of UTF8 defined by this regular expression.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 UTF8 =    ([\xC0-\xD6][\x80-\xBF])
-</div>
-<div style="font-size:18pt">
         | ([\xE0-\xEF][\x80-\xBF][\x80-\xBF])
-</div>
-<div style="font-size:18pt">
         | ([\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF])
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 Second, there is what is termed the most-relaxed version of UTF8 defined by this regular expression.
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 <blockquote>
-</div>
-<div style="font-size:18pt">
 <pre>
-</div>
-<div style="font-size:18pt">
 UTF8 = ([\xC0-\xD6]...)|([\xE0-\xEF)...)|([\xF0 \xF7]...)
-</div>
-<div style="font-size:18pt">
 </pre>
-</div>
-<div style="font-size:18pt">
 </blockquote>
-</div>
-<div style="font-size:18pt">
 Any conforming DAP4 implementation MUST use at least the most-relaxed expression for validating UTF-8 character strings, but MAY use either the partially-relaxed or the full validation expression. 
-</div>
-<div style="font-size:18pt">
 
-</div>
-<div style="font-size:18pt">
 ==DAP4 DMR Syntax as a RELAX NG Schema==
-</div>
-<div style="font-size:18pt">
 The RELAX NG grammar for the DMR currently resides at this URL.
-</div>
-<div style="font-size:18pt">
 https://scm.opendap.org/svn/trunk/dap4/dap4.rng
-</div>
-<div style="font-size:18pt">
 
-</div>

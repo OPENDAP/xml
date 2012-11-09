@@ -113,8 +113,7 @@ official DAP4 Specification Document.
 <tr><td width="25%">2012.11.1
     <td>Integrate Jame's changes with recent changes
 <tr><td width="25%">2012.11.9
-    <td>Rebuild the .docx because of repeated Word crashes; minor formatting
-        info changed/lost.
+    <td>Rebuild the .docx because of repeated Word crashes; minor formatting info changed/lost.
 </table>
 <p>
 <p>
@@ -160,9 +159,9 @@ official DAP4 Specification Document.
 <tr><td>9<td><a href="#references">References</a>
 </table>
 <table>
-<tr><td>Appendix A.<td><a href="#fqnsemantics">FQN Syntax</a>
-<tr><td>Appendix B.<td><a href="#lexical">DAP4 Lexical Elements</a>
-<tr><td>Appendix C.<td><a href="#relaxng">DAP4 DMR Syntax as a RELAX NG Schema</a>
+<tr><td>10<td><a href="#fqnsemantics">FQN Syntax</a>
+<tr><td>11<td><a href="#lexical">DAP4 Lexical Elements</a>
+<tr><td>12<td><a href="#relaxng">DAP4 DMR Syntax as a RELAX NG Schema</a>
 </table>
 
 <div class="section"></div>
@@ -202,8 +201,8 @@ The DAP characterizes a data source as a collection of variables, dimensions, an
 <p>
 The distinction between information in a variable and in an Attribute is somewhat arbitrary. However, the intention is that Attributes hold information that aids in the interpretation of data held in a variable. Variables, on the other hand, hold the primary content of a data source.
 <p>
-Section <a href="#relaxng">Appendix C.</a> provides a formal syntax for DAP DMR characterizations. It is defined using the RelaxNG standard [13] for describing the context-free syntax of a class of XML documents, the DMR in this case. It should be noted that any syntax specification requires a specification of the lexical elements of the syntax.
-The XML specification [16] provides most of the lexical context for the syntax, but there are certain places where additional lexical elements must be used. Section <a href="#lexical">Appendix B.</a> describes those additional lexical elements, and those elements are discussed at appropriate points in the following discussion.
+Section <a href="#relaxng">12</a> provides a formal syntax for DAP DMR characterizations. It is defined using the RelaxNG standard [13] for describing the context-free syntax of a class of XML documents, the DMR in this case. It should be noted that any syntax specification requires a specification of the lexical elements of the syntax.
+The XML specification [16] provides most of the lexical context for the syntax, but there are certain places where additional lexical elements must be used. Section <a href="#lexical">11</a> describes those additional lexical elements, and those elements are discussed at appropriate points in the following discussion.
 <p>
 Since the syntax is context-free, there are semantic limitations on what is legal in a DMR. These semantic limitations are noted at appropriate places in the following documentation. It should also be noted that if there are conflicts between what is described here and the RelaxNG syntax, then the syntax takes precedence.
 
@@ -236,7 +235,7 @@ A name (aka identifier) in DAP4 consists of a sequence of any legal non-control 
 
 Every object in a DAP4 Dataset has a Fully Qualified Name (FQN), which provides a way to unambiguously name variables and groups in a dataset and which can be used in several contexts such as in the DMR in a constraint expression
 (see Section <a href="#constraints">8</a>).
-These FQNs follow the common conventions of names for lexically scoped identifiers.  In DAP4 two kinds of lexical items provide lexical scoping: Groups and Structures . Just as with hierarchical file systems or variables in many programming languages, a simple grammar formally defines how the names are built using the names of the FQN's components (see Section <a href="#fqnsemantics">Appendix A.</a>). Consider the following simple dataset, which contains a structure name "inner" within a Structure named "outer" all contained in the Group "G".
+These FQNs follow the common conventions of names for lexically scoped identifiers.  In DAP4 two kinds of lexical items provide lexical scoping: Groups and Structures . Just as with hierarchical file systems or variables in many programming languages, a simple grammar formally defines how the names are built using the names of the FQN's components (see Section <a href="#fqnsemantics">10</a>). Consider the following simple dataset, which contains a structure name "inner" within a Structure named "outer" all contained in the Group "G".
 
 <blockquote>
 <hr>
@@ -431,7 +430,7 @@ The DAP4 specification assumes the existence of certain pre-defined, declared ty
 
 The integer types are summarized in the following table.
 The lexical structure for integer constants is defined in
-Section <a href="#numericconst">Appendix B.3</a>.
+Section <a href="#numericconst">11.3</a>.
 <p>
 <center><b>Table 1. The DAP Integer Data types.</b></center>
 <table border=1 width="85%">
@@ -452,7 +451,7 @@ Note that for historical reasons, the Char type is defined to be a synonym of UI
 
 <h3 class="section"><a name="floating">5.9.2 Floating Point Types</a></h3>
 
-The floating-point data types are summarized in Table 2. The two floating-point data types use IEEE 754 [6] to represent values. The two types correspond to ANSI C's float and double data types. The lexical structure for floating point constants is defined in Section <a href="#numericconst">Appendix B.3</a>.
+The floating-point data types are summarized in Table 2. The two floating-point data types use IEEE 754 [6] to represent values. The two types correspond to ANSI C's float and double data types. The lexical structure for floating point constants is defined in Section <a href="#numericconst">11.3</a>.
 <p>
 <center><b>Table 2. The DAP Floating Point Data types.</b></center>
 <table border=1 width="85%">
@@ -463,7 +462,7 @@ The floating-point data types are summarized in Table 2. The two floating-point 
 
 <h3 class="section"><a name="string">5.9.3 String Types</a></h3>
 
-The string data types are summarized in Table 3.  Again, the lexical structure for these is defined in Section <a href="#stringconst">Appendix B.4</a>
+The string data types are summarized in Table 3.  Again, the lexical structure for these is defined in Section <a href="#stringconst">11.4</a>
 <p>
 Strings are individually sized. This means that in an array of strings, for example, each instance of that string MAY be of a different size.
 <p>
@@ -760,7 +759,7 @@ While the DAP does not require any particular Attributes, some may be required b
 <li> All of the Atomic types as well as containers are allowed as the type for an attribute
 <p>
 <li> Attribute value constants MUST conform to the appropriate constant format for the given attribute type and as defined in
-Section <a href="#lexical">Appendix B.</a>.
+Section <a href="#lexical">11</a>.
 <p>
 <li> Attributes may themselves have attributes: effectively leading to
 nested attributes. However Attributes containing attributes may not
@@ -853,8 +852,13 @@ characters. The count is of the following form.
 which is the ASCII representation of a 32 bit count
 where each of the 'X' is a hex digit (i.e. a decimal digit
 or a upper or lowercase letter A, B, C, D, E, or F.
-Note that endian-ness is not relevant, any more than it is
-for, for example, the integer string '378'.
+Note that this is effectively always big-endian
+and given the value '0xABCD' it is converted to the integer value
+<blockquote>
+<pre>
+(A*2<sup>24</sup> + B*2<sup>16</sup> + C*2<sup>8</sup> + D).
+</pre>
+</blockquote>
 <p>
 The logical organization of the Data Response is shown below.
 
@@ -922,7 +926,7 @@ If the variable is scalar, then it is represented as a single scalar value.
 
 For the numeric atomic types, scalar instances are represented as follows. In all cases a consistent byte ordering is assumed, but the choice of byte order is at the discretion of the program that generates the serial representation, typically a server program.
 <p>
-<table border=1 width="85%">
+<table border=1 width="50%">
 <tr><th>Type Name<th>Description<th>Representation
 <tr><td>Int8<td>Signed 8-bit integer<td>8 bits 
 <tr><td>UInt8<td>Unsigned 8-bit integer<td>8 bits
@@ -945,17 +949,16 @@ In narrative form: all numeric quantities are used as a raw, unsigned vector of 
 If the server chooses to byte swap transmitted values, then the following swapping rules are used. Not that a size of 16 bytes is also included. This is used solely to represent checksums as 128-bit unsigned integers
 (See Section <a href="#checksums">6.2.5</a>).
 <p>
-<center><b>Byte Swapping Rules</b></center>
-<table border=1 width="85%">
-<tr><th>Size (in bytes)<th>Rules<th>
-<tr><td>1<td>Not Applicable.<td>
-<tr><td>2<td>Byte 0 -> Byte 1<br>
+<table border=1 width="50%">
+<tr><th width="20%">Size (bytes)<th>Byte Swapping Rules<th>
+<tr><th>1<td>Not Applicable.<td>
+<tr><th>2<td>Byte 0 -> Byte 1<br>
 Byte 1 ->Byte 0<td>
-<tr><td>4<td>Byte 0 -> Byte 3<br>
+<tr><th>4<td>Byte 0 -> Byte 3<br>
 Byte 1 ->Byte 2<br>
 Byte 2 -> Byte 1<br>
 Byte 3 ->Byte 0<td>
-<tr><td>8<td>Byte 0 -> Byte 7<br>
+<tr><th>8<td>Byte 0 -> Byte 7<br>
 Byte 1 ->Byte 6<br>
 Byte 2 -> Byte 5<br>
 Byte 3 ->Byte 4
@@ -963,7 +966,7 @@ Byte 3 ->Byte 4
 Byte 5 ->Byte 2<br>
 Byte 6 -> Byte 1<br>
 Byte 7 ->Byte 0
-<tr><td>16<td>Byte 0 -> Byte 15<br>
+<tr><th>16<td>Byte 0 -> Byte 15<br>
 Byte 1 ->Byte 14<br>
 Byte 2 -> Byte 13<br>
 Byte 3 ->Byte 12<br>
@@ -1399,7 +1402,7 @@ slicename: ID ;
 </pre>
 </blockquote>
 
-The variablesubset rule specifies a subset of values for a variable as specified by the slices. The PATH lexical element is the same as the FQN path as defined in Section <a href="#fqnsemantics">Appendix A.</a>.
+The variablesubset rule specifies a subset of values for a variable as specified by the slices. The PATH lexical element is the same as the FQN path as defined in Section <a href="#fqnsemantics">10</a>.
 <p>
 The structpath is almost the same as the FQN prefix as defined in that same Section. The difference is that each component (between '.' separators) of the structpath can have an optional dimset indicating the set of dimension slices to apply.
 <p>
@@ -1600,9 +1603,9 @@ edition 2, version 2, 2003
 <a href="http://www.wmo.int/pages/prog/www/DPS/FM92-GRIB2-11-2003.pdf">(http://www.wmo.int/pages/prog/www/DPS/FM92-GRIB2-11-2003.pdf).007</a>
 </ol>
 
-<div class="appendix"></div>
+<h1 style="font-size:18pt"><u>Appendices</u></h1>
 
-<h1 class="appendix"><a name="fqnsemantics">Appendix A. FQN Syntax</a></h1>
+<h1 class="appendix"><a name="fqnsemantics">10 FQN Syntax</a></h1>
 
 An FQN has two parts. First, there is the path, which refers to Group traversal, and second is the suffix, which refers to the traversal of Structures. An FQN is the concatenation of the path with the suffix and separated by the '/' Character. The suffix may not exist if O is a group or is not a Structure typed variable.
 <p>
@@ -1639,11 +1642,11 @@ If O is not a Structure typed variable, then we are done and the FQN for O is ju
 <li> Create the final FQN as the concatenation of the path, the character '/', and the suffix.
 </ol>
 
-<h1 class="appendix"><a name="lexical">Appendix B. DAP4 Lexical Elements</a></h1>
+<h1 class="appendix"><a name="lexical">11 DAP4 Lexical Elements</a></h1>
 This section describes the lexical elements that occur in the DAP4 DMR.
 <p>
 Within the RELAXNG DAP4 grammar
-(Section <a href="#relaxng">Appendix C.</a>)
+(Section <a href="#relaxng">12</a>)
 there are markers for occurrences of primitive type such as integers, floats, or strings (ignoring case). The markers typically look like this when defining an attribute that can occur in the DAP4 DMR.
 
 <blockquote>
@@ -1679,7 +1682,7 @@ Notes:
 <li> Comments are indicated using the "//" notation. Standard xml escape formats (&amp;x#DDD; or &amp;{name};) are assumed to be used as needed.
 </ol>
 
-<h2 class="appendix"><a name="charsetdef">Appendix B.1 Basic character set definitions</a></h2>
+<h2 class="appendix"><a name="charsetdef">11.1 Basic character set definitions</a></h2>
 <blockquote>
 <pre>
 CONTROLS   = [\x00-\x1F] // ASCII control characters
@@ -1694,7 +1697,7 @@ ASCII = [0-9a-zA-Z !"#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\\]\\^_`|{}~]
 </pre>
 </blockquote>
 
-<h2 class="appendix"><a name="unescapedascii">Appendix B.2 Ascii characters that may appear unescaped in Identifiers</a></h2>
+<h2 class="appendix"><a name="unescapedascii">11.2 Ascii characters that may appear unescaped in Identifiers</a></h2>
 
 This is assumed to be basically all ASCII printable characters except these characters: '.', '/', '"', '&#39;',  and '&amp;'. Occurrences of these characters are assumed to be representable using the standard xml &amp;{name}; notation (e.g. &amp;amp;). In this expression, backslash is interpreted as an escape character.
 <p>
@@ -1704,7 +1707,7 @@ IDASCII=[0-9a-zA-Z!#$%()*+:;<=>?@\[\]\\^_`|{}~]
 </pre>
 </blockquote>
 
-<h2 class="appendix"><a name="numericconst">Appendix B.3 The Numeric Constant Classes: integer and float</a></h2>
+<h2 class="appendix"><a name="numericconst">11.3 The Numeric Constant Classes: integer and float</a></h2>
 <blockquote>
 <pre>
 INTEGER    = {INT}|{UINT}|{HEXINT}
@@ -1738,7 +1741,7 @@ URL        = (http|https|[:][/][/][a-zA-Z0-9\-]+
 </pre>
 </blockquote>
 
-<h2 class="appendix"><a name="stringconst">Appendix B.4 The String/URL Constant Class</a></h2>
+<h2 class="appendix"><a name="stringconst">11.4 The String/URL Constant Class</a></h2>
 <blockquote>
 <pre>
 STRING = "\({SIMPLESTRING}{ESCAPEDQUOTE}?\)*"
@@ -1747,7 +1750,7 @@ ESCAPEDQOTE=\\"
 </pre>
 </blockquote>
 
-<h2 class="appendix"><a name="opaqueconst">Appendix B.5 The Opaque Constant Class</a></h2>
+<h2 class="appendix"><a name="opaqueconst">11.5 The Opaque Constant Class</a></h2>
 <blockquote>
 <pre>
 OPAQUE = 0x([0-9A-Fa-f] [0-9A-Fa-f])+
@@ -1759,7 +1762,7 @@ number of hex digits in the opaque constant, a zero hex digit
 will be added to the end to ensure that the constant represents
 a set of 8-bit bytes.
 
-<h2 class="appendix"><a name="idclass">Appendix B.6 The Identifier Class</a></h2>
+<h2 class="appendix"><a name="idclass">11.6 The Identifier Class</a></h2>
 <blockquote>
 <pre>
 ID         = {IDCHAR}+
@@ -1770,7 +1773,7 @@ XMLESCAPE  = [&amp;][#][0-9]+;
 </pre>
 </blockquote>
 
-<h2 class="appendix"><a name="atomicclass">Appendix B.7 The Atomic Type Class</a></h2>
+<h2 class="appendix"><a name="atomicclass">11.7 The Atomic Type Class</a></h2>
 <blockquote>
 <pre>
 ATOMICTYPE =   Char | Byte
@@ -1784,7 +1787,7 @@ ATOMICTYPE =   Char | Byte
 </blockquote>
 This list should be consistent with the atomic types in the grammar. 
 
-<h2 class="appendix"><a name="fqnclass">Appendix B.8 The Fully Qualified Name Class</a></h2>
+<h2 class="appendix"><a name="fqnclass">11.8 The Fully Qualified Name Class</a></h2>
 <blockquote>
 <pre>
 FQN      = ([/]{EID})+([.]{EID})*
@@ -1795,7 +1798,7 @@ EIDASCII = [0-9a-zA-Z!#$%()*+:;<=>?@\[\]\\^_`|{}~]
 </blockquote>
 This should be consistent with the definition in Section <a href="#fqn">5.3</a>.
 
-<h2 class="appendix"><a name="dap4_type">Appendix B.9 DAP4 Type Definitions</a></h2>
+<h2 class="appendix"><a name="dap4_type">11.9 DAP4 Type Definitions</a></h2>
 
 The RELAXNG [13] grammar references the following specific types. For each type, the following table give the lexical format as defined by the patterns previously given or by specific patterns as listed.
 <p>
@@ -1817,7 +1820,7 @@ The RELAXNG [13] grammar references the following specific types. For each type,
 <p>
 Note that the above lexical element classes are not disjoint.  The type element "&lt;datatype=.../&gt;" should be sufficient to interpret the type within the DMR.
 
-<h2 class="appendix"><a name="utf8">Appendix B.10 UTF-8</a></h2>
+<h2 class="appendix"><a name="utf8">11.10 UTF-8</a></h2>
 
 The UTF-8 specification [14] defines several ways to validate a UTF-8 string of characters.
 <p>
@@ -1870,7 +1873,7 @@ UTF8 = ([\xC0-\xD6]...)|([\xE0-\xEF)...)|([\xF0 \xF7]...)
 </blockquote>
 Any conforming DAP4 implementation MUST use at least the most-relaxed expression for validating UTF-8 character strings, but MAY use either the partially-relaxed or the full validation expression. 
 
-<h1 class="appendix"><a name="relaxng">Appendix C. DAP4 DMR Syntax as a RELAX NG Schema</a></h1>
+<h1 class="appendix"><a name="relaxng">12 DAP4 DMR Syntax as a RELAX NG Schema</a></h1>
 The RELAX NG grammar for the DMR currently resides at this URL.
 https://scm.opendap.org/svn/trunk/dap4/dap4.rng
 
