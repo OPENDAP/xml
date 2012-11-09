@@ -749,7 +749,7 @@ outputwiki(List<Line> lines)
 
     for(i=0;i<lines.size();i++) {
         Line line = lines.get(i);
-	String text = null;
+	String text = line.text;
 
 	switch (line.tag) {
 
@@ -762,9 +762,8 @@ outputwiki(List<Line> lines)
 	    break;
 
 	case HEADER:
-	    if(line.classtag == null)
-                text = line.text;
-            else switch (line.classtag) {
+	    if(line.classtag != null)
+            switch (line.classtag) {
 	    case APPENDIX:
 	    case SECTION:
 		text = makeheader(line);	
@@ -774,7 +773,6 @@ outputwiki(List<Line> lines)
 			    line.headtext);
 		break;
 	    default:
-		text = line.text;
 		break;
 	    }
 	    break;
@@ -782,13 +780,11 @@ outputwiki(List<Line> lines)
 	case BLOCKQUOTE_:
 	    if(lines.get(i+1).tag == Tag.TABLE_)
 		continue; // skip
-	    text = line.text;
 	    break;
 
 	case _BLOCKQUOTE:
 	    if(lines.get(i-1).tag == Tag._TABLE)
 		continue; // skip
-	    text = line.text;
 	    break;
 
 	case P:
@@ -828,7 +824,6 @@ outputwiki(List<Line> lines)
 	    continue;
 
 	default:
-	    text = line.text;
 	    break;
 	}
 	// Process the text to fix anchor references (href=)
