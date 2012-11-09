@@ -1,0 +1,31 @@
+The generate directory contains
+a simple tool to convert dap4.spec
+to various other formats.
+It contains the following files:
+
+* build.xml - ant builder for the generator program; also can generate
+              the different formats
+
+* src/Generator.java - the generator program
+
+* template.dotx - a Microsoft Word template for use with the
+                  generated dap4.word
+
+Notes:
+* To generate the .docx file do this:
+   1. generate dap4.word using ant all
+   2. open Word and read dap4.word into it.
+   3. apply the template.docx file
+   4. insert the table of contents where indicated
+   5. insert page breaks where appropriate and otherwise
+      pretty up the Word document.
+   6. save as dap4.docx
+
+* For the wiki, do this:
+   1. generate dap4.wiki using ant all  
+   2. Find the DAP4 spec page at the opuls wiki pages
+   3. edit the content of that page
+   4. replace all of the content with dap4.wiki
+   5. save the modified page
+
+

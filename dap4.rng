@@ -38,14 +38,22 @@
 
 <define name="groupdef">
   <attribute name="name"><data type="dap4_id"/></attribute>
+  <optional
+      <ref name="metadata"/>
+  </optional>
   <zeroOrMore>
     <choice>
       <ref name="enumdef"/>
       <ref name="dimdef"/>
       <ref name="variable"/>
-      <ref name="metadata"/>
       <ref name="group"/>
     </choice>
+  <optional
+      <ref name="metadata"/>
+  </optional>
+  <optional
+    <zeroOrMore> 
+  </optional>
   </zeroOrMore>
 </define>
 
@@ -214,6 +222,13 @@
 </define>
 
 <define name="attribute">
+  <choice>
+    <ref name="atomicattribute"/>
+    <ref name="containerattribute"/>
+  </choice>
+</define>
+
+<define name="atomicattribute">
   <element name="Attribute">
       <attribute name="name"><data type="dap4_id"/></attribute>
       <a:documentation>
@@ -262,6 +277,15 @@
 	</choice>
       </zeroOrMore>
   </element>
+</define>
+
+<define name="containerattribute">
+  <element name="Attribute">
+    <attribute name="name"><data type="dap4_id"/></attribute>
+    <zeroOrMore>
+	<ref name="attribute"/>
+    </zeroOrMore>
+  </element
 </define>
 
 <define name="otherxml">
