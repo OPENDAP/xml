@@ -35,7 +35,7 @@ p.italic {font-style:italic}
 <center>
 <table border=1 width="85%">
 <tr><td width="20%">Date:<td>May 31, 2012
-<tr><td width="20%">Revised:<td>June 26, 2012
+<tr><td width="20%">Last Revised:<td>November 11, 2012
 <tr><td width="20%">Status:<td>Draft
 <tr><td width="20%">Authors:<td>John Caron (Unidata)
 <tr><td width="20%"><td>Ethan Davis (Unidata)
@@ -267,16 +267,6 @@ group, or enumeration) must occur before any reference to that object.
 This rule also applies within a group, which in turn implies that,
 for example, all dimensions must be declared before all variables
 that reference them.
-<p>
-<!--A further restriction is imposed that declarations must occur-->
-<!--in the following order within a group.-->
-<!--<ol>-->
-<!--<li> (Group-level) Attributes-->
-<!--<li> Dimensions-->
-<!--<li> Enumerations-->
-<!--<li> Variables-->
-<!--<li> Nested Groups-->
-<!--</ol>-->
 
 <h2 class="section"><a name="declarationtypes">Definitional Declarations versus Data-Bearing Declarations</a></h2>
 
