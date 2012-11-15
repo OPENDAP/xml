@@ -38,22 +38,14 @@
 
 <define name="groupdef">
   <attribute name="name"><data type="dap4_id"/></attribute>
-  <optional
-      <ref name="metadata"/>
-  </optional>
   <zeroOrMore>
     <choice>
       <ref name="enumdef"/>
       <ref name="dimdef"/>
       <ref name="variable"/>
       <ref name="group"/>
-    </choice>
-  <optional
       <ref name="metadata"/>
-  </optional>
-  <optional
-    <zeroOrMore> 
-  </optional>
+    </choice>
   </zeroOrMore>
 </define>
 
