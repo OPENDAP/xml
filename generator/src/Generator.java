@@ -742,6 +742,10 @@ outputwiki(List<Line> lines)
 {
     int i;
 
+    // Output prolog
+    System.out.println("[[Category:Development|Development]][[Category:DAP4|DAP4]]");
+    System.out.println("[[OPULS_Development| << Back to OPULS Development]]");
+
     for(i=0;i<lines.size();i++) {
         String prefix = null;
         String suffix = null;

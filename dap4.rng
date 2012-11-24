@@ -2,51 +2,53 @@
 
 <!-- RELAX NG Grammar -->
 
+<!-- Date: June 15, 2012 -->
+<!-- Last Revised: November 23, 2012 -->
+
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
          xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
          datatypeLibrary="http://xml.opendap.org/datatypes/dap4"
          ns="http://xml.opendap.org/ns/DAP/4.0#"
          >
 <start>
-  <ref name="group"/>
+  <ref name="dataset"/>
 </start>
 
-<define name="group">
-  <element name="Group">
+<define name="dataset">
+  <element name="Dataset">
     <a:documentation>
-        Semantic restriction: xml attributes are allowed
-        only on the root group, where both dapVersion and base are 
+        Semantic restriction: both dapVersion and dmrVersion and base are 
         required and ns is optional.
     </a:documentation>
-    <optional>
-      <attribute name="dapVersion"><data type="dap4_string"/></attribute>
-    </optional>
-    <optional>
-      <attribute name="ddxVersion"><data type="dap4_string"/></attribute>
-    </optional>
+    <attribute name="dapVersion"><data type="dap4_string"/></attribute>
+    <attribute name="dmrVersion"><data type="dap4_string"/></attribute>
+    <attribute name="base" ns="http://www.w3.org/XML/1998/namespace">
+        <data type="dap4_uri"/>
+    </attribute>
     <optional>
       <attribute name="ns"><data type="dap4_uri"/></attribute>
     </optional>
-    <optional>
-      <attribute name="base" ns="http://www.w3.org/XML/1998/namespace">
-        <data type="dap4_uri"/>
-      </attribute>
-    </optional>
-    <ref name="groupdef"/>
+    <ref name="groupbody"/>
   </element>
 </define>
 
 <define name="groupdef">
-  <attribute name="name"><data type="dap4_id"/></attribute>
-  <zeroOrMore>
-    <choice>
-      <ref name="enumdef"/>
-      <ref name="dimdef"/>
-      <ref name="variable"/>
-      <ref name="group"/>
-      <ref name="metadata"/>
-    </choice>
-  </zeroOrMore>
+  <element name="Group">
+    <ref name="groupbody">
+  </element>
+</define>
+
+<define name="groupbody">
+    <attribute name="name"><data type="dap4_id"/></attribute>
+    <zeroOrMore>
+      <choice>
+        <ref name="enumdef"/>
+        <ref name="dimdef"/>
+        <ref name="variable"/>
+        <ref name="groupdef"/>
+        <ref name="metadata"/>
+      </choice>
+    </zeroOrMore>
 </define>
 
 <define name="enumdef">

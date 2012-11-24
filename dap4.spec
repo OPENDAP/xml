@@ -35,7 +35,7 @@ p.italic {font-style:italic}
 <center>
 <table border=1 width="85%">
 <tr><td width="20%">Date:<td>May 31, 2012
-<tr><td width="20%">Last Revised:<td>November 11, 2012
+<tr><td width="20%">Last Revised:<td>November 23, 2012
 <tr><td width="20%">Status:<td>Draft
 <tr><td width="20%">Authors:<td>John Caron (Unidata)
 <tr><td width="20%"><td>Ethan Davis (Unidata)
@@ -114,6 +114,8 @@ official DAP4 Specification Document.
     <td>Integrate Jame's changes with recent changes
 <tr><td width="25%">2012.11.9
     <td>Rebuild the .docx because of repeated Word crashes; minor formatting info changed/lost.
+<tr><td width="25%">2012.11.23
+    <td>Add a Dataset construct to make the root group concept clear syntactically.
 </table>
 <p>
 <p>
@@ -189,61 +191,63 @@ A name (aka identifier) in DAP4 consists of a sequence of any legal non-control 
 
 <h2 class="section"><a name="fqn">Fully Qualified Names</a></h2>
 
-Every object in a DAP4 Dataset has a Fully Qualified Name (FQN), which provides a way to unambiguously name variables and groups in a dataset and which can be used in several contexts such as in the DMR in a constraint expression
+Every object in a DAP4 Dataset has a Fully Qualified Name (FQN), which provides a way to unambiguously reference declarations in a dataset and which can be used in several contexts such as in the DMR in a constraint expression
 (see Section <a href="#constraints">constraints</a>).
-These FQNs follow the common conventions of names for lexically scoped identifiers.  In DAP4 two kinds of lexical items provide lexical scoping: Groups and Structures . Just as with hierarchical file systems or variables in many programming languages, a simple grammar formally defines how the names are built using the names of the FQN's components (see Section <a href="#fqnsemantics">fqnsemantics</a>). Consider the following simple dataset, which contains a structure name "inner" within a Structure named "outer" all contained in the Group "G".
+These FQNs follow the common conventions of names for lexically scoped identifiers.  In DAP4 three kinds of lexical items provide lexical scoping: Dataset, Groups and Structures . Just as with hierarchical file systems or variables in many programming languages, a simple grammar formally defines how the names are built using the names of the FQN's components (see Section <a href="#fqnsemantics">fqnsemantics</a>). Consider the following simple dataset, which contains a structure name "inner" within a Structure named "outer" all contained in the Dataset "D".
 
 <blockquote>
 <hr>
 <pre>
-&lt;Group name="G"&gt;
-        &lt;Structure name="places"&gt;
-                &lt;String name="name"/&gt;
-                &lt;Structure name="weather"&gt;
-                        &lt;Float64 name="temperature"/&gt;
-                        &lt;Float64 name="dew_point"/&gt;
-                &lt;/Structure&gt;
+&lt;Dataset name="D"&gt;
+    &lt;Structure name="places"&gt;
+        &lt;String name="name"/&gt;
+        &lt;Structure name="weather"&gt;
+            &lt;Float64 name="temperature"/&gt;
+            &lt;Float64 name="dew_point"/&gt;
         &lt;/Structure&gt;
-&lt;/Group&gt;
+    &lt;/Structure&gt;
+&lt;/Dataset&gt;
 </pre>
 <hr>
 </blockquote>
 <p>
 The FQN for the field 'temperature' is
 <blockquote>
-'/G/places.weather.temperature'.
+'/places.weather.temperature'.
 </blockquote>
 As is the case with Structure variables, Groups can be nested to form hierarchies, too, and this example shows that case. 
 
 <blockquote>
 <hr>
 <pre>
-&lt;Group name="G"&gt;
-        &lt;Group name="environmental_data"&gt;
-                &lt;Structure name="places"&gt;
-                        &lt;String name="name"/&gt;
-                        &lt;Structure name="weather"&gt;
-                                &lt;Float64 name="temperature"/&gt;
-                                &lt;Float64 name="dew_point"/&gt;
-                        &lt;/Structure&gt;
-                &lt;/Structure&gt;
-        &lt;/Group&gt;
-        &lt;Group name="demographic_data"&gt;
-        ...
-        &lt;/Group&gt;
-&lt;/Group&gt;
+&lt;Dataset name="D"&gt;
+    &lt;Group name="environmental_data"&gt;
+        &lt;Structure name="places"&gt;
+            &lt;String name="name"/&gt;
+            &lt;Structure name="weather"&gt;
+                &lt;Float64 name="temperature"/&gt;
+                &lt;Float64 name="dew_point"/&gt;
+            &lt;/Structure&gt;
+        &lt;/Structure&gt;
+     &lt;/Group&gt;
+     &lt;Group name="demographic_data"&gt;
+         ...
+     &lt;/Group&gt;
+&lt;/Dataset&gt;
 </pre>
 <hr>
 </blockquote>
 <p>
 The FQN to the field 'temperature' in the dataset shown is
 <blockquote>
-'/G/environmental _data/places.weather.temperature'.
+'/environmental _data/places.weather.temperature'.
 </blockquote>
 <p>
 Notes:
 <ol>
-<li>Every dataset has a 'root Group'. Whatever name that group has is ignored for the purposes of forming the FQN and instead is treated as if it has the empty name ("").
+<li>Every dataset has a single outermost &lt;Dataset&gt; declaration,
+which semantically, acts like the root group.
+Whatever name that dataset has is ignored for the purposes of forming the FQN and instead is treated as if it has the empty name ("").
 <li>There is no limit to the nesting of groups or the nesting of Structures.
 </ol>
 <p>
@@ -273,13 +277,45 @@ that reference them.
 The declarations in a DMR can be grouped into two classes.
 One class is <i>definitional</i>. That is, it defines metadata that is
 used in the rest of the DMR.
-These definitional declarations are Groups, Dimensions, and Enumerations.
+These definitional declarations are Groups (including the outer Dataset),
+Dimensions, and Enumerations.
 Such declarations do not contain data values themselves, although they may define constants such as the dimension size.
 The data-bearing declarations are Variables and Attributes.
 These elements of the data model are used to house data values or semantic metadata read from the dataset (or, in the latter case) synthesized from the values and standards/conventions that the dataset is known to follow.
 
-<h2 class="section"><a name="groups">Groups</a></h2>
+<h2 class="section"><a name="dataset">Dataset</a></h2>
+Every DMR contains exactly one Dataset declaration. It is the outermost
+XML element of the DMR.
+<p>
+A dataset is specified using this XML form:
+<blockquote>
+<hr>
+<pre>
+&lt;Dataset name="..." dapVersion="..." dmrVersion="..." base="..."&gt;
+...
+&lt;/Dataset&gt;
+</pre>
+</blockquote>
+<p>
+The <i>name</i>, <i>dapVersion</i>, <i>dmrVersion</i>, and <i>base</i>
+attributes are required. Optionally, a namespace attribute (<i>ns="..."</i>)
+may be specified.
+The attributes have the following semantics:
+<ul>
+<li> <i>name</i> &ndash; an identifier specifying  the name of the dataset.
+Its content is determined solely by the Server and is completely uninterpreted
+with respect to DAP4.
+<li> <i>dapVersion</i> &ndash; the string &quot;4.0&quot; currently.
+<li> <i>dmrVersion</i> &ndash; the string &quot;1.0&quot; currently.
+<li> <i>base</i> &ndash; currently uninterpreted.
+<li> <i>ns</i> &ndash an XML namespace URl.
+</ul>
+<p>
+The body of the Dataset is the same
+as the body of a <a href="#groups">Group declaration</a>,
+and semantically the Dataset acts like the outermost, root, group.
 
+<h2 class="section"><a name="groups">Groups</a></h2>
 A group is specified using this XML form:
 
 <blockquote>
@@ -294,25 +330,14 @@ A group is specified using this XML form:
 <p>
 A group defines a name space and contains other DAP elements. Specifically, it can contain groups, variables, dimensions, and enumerations. The fact that groups can be nested means that the set of groups in a DMR form a tree structure. For any given DMR, there exists a root group that is the root of this tree.
 <p>
-A nested set of groups defines a variety of name spaces and access to the contents of a group is specified using a notation of the form "/g1/g2/.../gn". This is called a "path". By convention "/" refers to the root group. Thus the path "/g1/g2/g3" indicates that one should start in the root group, move to group g1 within that root group, then to group g2 within group g1, and finally to group g3. This is more fully described in the section on Fully Qualified names
+A nested set of groups defines a variety of name spaces and access to the contents of a group is specified using a notation of the form "/g1/g2/.../gn". This is called a "path". By convention "/" refers to the root group (the Dataset declaration). Thus the path "/g1/g2/g3" indicates that one should start in the root group, move to group g1 within that root group, then to group g2 within group g1, and finally to group g3. This is more fully described in the section on Fully Qualified names
 (Section <a href="#fqn">fqn</a>).
 <p>
 For comparison purposes, DAP groups correspond to netCDF-4 groups and not to the more complex HDF5 Group type: i.e. the set of groups must form a tree.
-<p>
-The top-level group, called the root group, serves the role that the "Dataset" construct did in DAP2. As mentioned in Section <a href="#fqn">fqn</a> on FQNs, the name of the root group is treated as the empty string for purposes of forming an FQN. In addition, the root group (and only the root group) can have the following special attributes.
-<p>
-<blockquote>
-<table border=1 width="50%">
-<tr><th>Attribute Name<th>Type<th>Description
-<tr><td>dapversion<td>String<td>The version number of the DAP protocol. Should be "4.0"
-<tr><td>dmrversion<td>String<td>Should be "1.0"
-<tr><td>ns<td>URI<td>base URI
-</table>
-</blockquote>
 
 <h3>Semantic Notes</h3>
 <ol>
-<li>If declared, Groups must be named. This includes the root group, but for that group the name is ignored for the purposes of forming fully qualified names.
+<li>If declared, Groups must be named.
 <p>
 <li>A Group can contain any number of objects, including other Groups.
 <p>
@@ -694,7 +719,7 @@ This differs slightly from DAP2 Attributes because the namespace feature has bee
 <p>
 Attributes are typically used to associate semantic metadata with the variables in a data source. Attributes are similar to variables in their range of types and values, except that they are somewhat limited when compared to those for variables: they cannot use structure types
 <p>
-Attributes defined at the top-level within a group are also referred to as "group attributes". Attributes defined at the top-level of the default or root group are "global attributes," which many file formats such as HDF4 or netCDF formally recognize. 
+Attributes defined at the top-level within a group are also referred to as "group attributes". Attributes defined at the root group (i.e. Dataset) are "global attributes," which many file formats such as HDF4 or netCDF formally recognize. 
 <p>
 While the DAP does not require any particular Attributes, some may be required by various metadata conventions. The semantic metadata for a data source comprises the Attributes associated with that data source and its variables. Thus, Attributes provide a mechanism by which semantic metadata may be represented without prescribing that a data source use a particular semantic metadata convention or standard.
 
@@ -734,11 +759,11 @@ The text content of the otherXML element must be valid XML and must be distinct 
 
 <h3 class="section"><a name="placement">Attribute and OtherXML Specification and Placement</a></h3>
 
-Attribute and OtherXML declarations MAY occur within the body of the following XML elements: Group, Dimension, Variable, Structure, and Attribute.
+Attribute and OtherXML declarations MAY occur within the body of the following XML elements: Group, Dataset, Dimension, Variable, Structure, and Attribute.
 
 <h2 class="section"><a name="namespaces">Namespaces</a></h2>
 
-All elements of the DMR &ndash; Groups, Dimensions, Variables, and Attributes &ndash; can contain an associated Namespace element. The namespace's value is defined in the form of an XML style URI string defining the context for interpreting the element containing the namespace. Suppose, hypothetically, that we wanted to specify that an Attribute is to be interpreted as a CF convention [cite:15]. One might specify this as follows.
+All elements of the DMR &ndash; Dataset, Groups, Dimensions, Variables, and Attributes &ndash; can contain an associated Namespace element. The namespace's value is defined in the form of an XML style URI string defining the context for interpreting the element containing the namespace. Suppose, hypothetically, that we wanted to specify that an Attribute is to be interpreted as a CF convention [cite:15]. One might specify this as follows.
 
 <blockquote>
 <hr>
@@ -993,9 +1018,9 @@ NB: Some poetic license used in the following and the checksums for single integ
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
 {DMR-length-integer}
-&lt;Group name="foo"&gt;
+&lt;Dataset name="foo"&gt;
 &lt;Int32 name="x"/&gt;
-&lt;/Group&gt;
+&lt;/Dataset&gt;
 CRLF
 {count+tag}
 x
@@ -1013,12 +1038,12 @@ x
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
 {DMR-length-integer}
-&lt;Group name="foo"&gt;
+&lt;Dataset name="foo"&gt;
 &lt;Int32 name="x"&gt;
 &lt;Dim size="2"&gt;
 &lt;Dim size="4"&gt;
 &lt;/Int32&gt;
-&lt;/Group&gt;
+&lt;/Dataset&gt;
 CRLF
 {count+tag}
 x00 x01 x02 x03 x10 x11 x12 x13
@@ -1036,7 +1061,7 @@ x00 x01 x02 x03 x10 x11 x12 x13
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
 {DMR-length-integer}
-&lt;Group name="foo"&gt;
+&lt;Dataset name="foo"&gt;
   &lt;Structure name="S"&gt;
     &lt;Int32 name="x"&gt;
       &lt;Dim size="2"&gt;
@@ -1044,7 +1069,7 @@ CRLF
     &lt;/Int32&gt;
     &lt;Float64 name="y"/&gt;
   &lt;/Structure&gt;
-&lt;/Group&gt;
+&lt;/Dataset&gt;
 CRLF
 {chunk count+tag}
 x00 x01 x02 x03 x10 x11 x12 x13
@@ -1054,7 +1079,7 @@ y
 <hr>
 </blockquote>
 <p>
-Note that in this example, there is a single variable at the top-level of the root Group "/" and that is S, so it is S for which we compute the checksum.
+Note that in this example, there is a single variable at the top-level of the root Group, and that is S; so it is S for which we compute the checksum.
 
 <h3 class="section"><a name="example4">An array of structures</a></h3>
 
@@ -1065,7 +1090,7 @@ Note that in this example, there is a single variable at the top-level of the ro
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
 {DMR-length-integer}
-&lt;Group name="foo"&gt;
+&lt;Dataset name="foo"&gt;
   &lt;Structure name="s"&gt;
     &lt;Int32 name="x"&gt;
       &lt;Dim size="2"/&gt;
@@ -1074,7 +1099,7 @@ CRLF
     &lt;Float64 name="y"/&gt;
     &lt;Dim size="3"/&gt;
   &lt;/Structure&gt;
-&lt;/Group&gt;
+&lt;/Dataset&gt;
 CRLF
 {chunk count+tag}
 x00 x01 x02 x03 x10 x11 x12 x13 y x00 x01 x02 x03 x10 x11 x12 x13 y x00 x01 x02 x03 x10 x11 x12 x13 y
@@ -1092,7 +1117,7 @@ x00 x01 x02 x03 x10 x11 x12 x13 y x00 x01 x02 x03 x10 x11 x12 x13 y x00 x01 x02 
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
 {DMR-length-integer}
-&lt;Group name="foo"&gt;
+&lt;Dataset name="foo"&gt;
   &lt;String name="s"/&gt;
   &lt;Int32 name="a"&gt;
     &lt;Dim size="*"/&gt;
@@ -1101,7 +1126,7 @@ CRLF
     &lt;Dim size="2"/&gt;
     &lt;Dim size="*"/&gt;
   &lt;/Int32&gt;
-&lt;/Group>
+&lt;/Dataset>
 CRLF
 {chunk count+tag}
 16 This is a string
@@ -1133,12 +1158,12 @@ The array 'x' has two dimensions, both of which vary in size. In the example, at
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
 {DMR-length-integer}
-&lt;Group name="foo"&gt;
+&lt;Dataset name="foo"&gt;
   &lt;Int32 name="x"&gt;
     &lt;Dim size="*"/&gt;
     &lt;Dim size="*"/&gt;
   &lt;/Int32&gt;
-&lt;/Group&gt;
+&lt;/Dataset&gt;
 CRLF
 {chunk count+tag}
 33 x00 x01 x02 6 x10 x11 x12 x3 x14 x15 1 x20
@@ -1155,7 +1180,7 @@ CRLF
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
 {DMR-length-integer}
-&lt;Group name="foo"&gt;
+&lt;Dataset name="foo"&gt;
   &lt;Structure name="s"&gt;
     &lt;Int32 name="x"&gt;
       &lt;Dim size="4"/&gt;
@@ -1164,7 +1189,7 @@ CRLF
     &lt;Float64 name="y"/&gt;
     &lt;Dim size="*"/&gt;
   &lt;/Structure&gt;
-&lt;/Group&gt;
+&lt;/Dataset&gt;
 CRLF
 {chunk count+tag}
 2x00 x01 x02 x03 x10 x11 x12 x13y x00 x01 x02 x03 x10 x11 x12 x13 y
@@ -1184,7 +1209,7 @@ Note that two rows are assumed.
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
 {DMR-length-integer}
-&lt;Group name="foo"&gt;
+&lt;Dataset name="foo"&gt;
   &lt;Structure name="s"&gt;
     &lt;Int32 name="x"&gt;
       &lt;Dim size="2"/&gt;
@@ -1193,7 +1218,7 @@ CRLF
     &lt;Float64 name="y"/&gt;
     &lt;Dim size="*"/&gt;
   &lt;/Structure&gt;
-&lt;/Group&gt;
+&lt;/Dataset&gt;
 CRLF
 {chunk count+tag}
 31 x00 4 x10 x11 x12 x13 y 3 x00 x01 x02 2 x10 x11y 2 x00 x01 2 x10 x11 y
@@ -1575,7 +1600,8 @@ To write a path for an object O, follow these steps.
 <li><!--0-->
 Locate the closest enclosing group G for O.  If O is a group, then O and G will be the same.
 <p>
-<li> Create the scope prefix for O by traversing a path through the Group tree to and including G. Concatenate the group names on that path and separating them with '/'. The name for root group is ignored, hence the FQN will begin with "/".
+<li> Create the scope prefix for O by traversing a path through the Group tree,
+starting with the Dataset and continuing down to and including G. Concatenate the group names on that path and separating them with '/'. The name for Dataset is ignored, hence the FQN will begin with "/".
 </ol>
 <p>
 If O is not a Structure typed variable, then we are done and the FQN for O is just the path. Otherwise, the suffix must be computed as follows.
