@@ -8,7 +8,11 @@ To build, use 'ant jar'.
 To install the library, configure your editor to use the library
 build/dap4-datatypes.jar. 
 
-Here's how to do that for the OxygenXML plugin running with Eclipse:
+For direct use, specify the library by adding the xml attribute
+  datatypeLibrary="http://xml.opendap.org/datatypes/dap4"
+to the rng <grammar> element.
+
+For the OxygenXML plugin running with Eclipse:
 
 First we need to find the OxygenXML directory for plugins/libraries. When
 it is running under Eclipse, this will be a directory named something like

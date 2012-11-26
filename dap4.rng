@@ -34,7 +34,7 @@
 
 <define name="groupdef">
   <element name="Group">
-    <ref name="groupbody">
+    <ref name="groupbody"/>
   </element>
 </define>
 
@@ -279,7 +279,7 @@
     <zeroOrMore>
 	<ref name="attribute"/>
     </zeroOrMore>
-  </element
+  </element>
 </define>
 
 <define name="otherxml">
