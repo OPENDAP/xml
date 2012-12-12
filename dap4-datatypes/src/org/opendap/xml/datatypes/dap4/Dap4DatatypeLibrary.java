@@ -13,6 +13,10 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
 
 	static final String uri = "http://xml.opendap.org/datatypes/dap4";
 
+	// Set of all ascii printable non-alphanumeric characters
+        static final String nonAlphaNumeric
+	    = " !\"#$%&'()*+,-./:;<=>?@[]\\^_`|{}~" ;
+
 	// Define helper validation patterns
 	// Assume all XML escapes (&xxx;) have been translated out
 
@@ -37,6 +41,10 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
 	static final Pattern xml_escape = Pattern
 			.compile("[&](amp|lt|gt|quot)|[#](\\d+)[;]");
 
+	// Restricted set of legal econst identifier characters
+	static final Pattern econst_pattern = Pattern
+			.compile("[^ ]+");
+
 	// Define an enumeration of possible type names
 	static enum DAP4type {
                 dap4_integer,
@@ -51,6 +59,8 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
                 // Added dmh 7/10/12
                 dap4_dim, // for dimension defs and refs
 		dap4_text,
+                // Added dmh 12/6/12
+		dap4_econst,
 		dap4_unknown;
 
 		static DAP4type fromString(String name) {
@@ -263,6 +273,10 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
 				break;
 			case dap4_text:
 				valid = true;
+				break;
+			case dap4_econst:
+				matcher = econst_pattern.matcher(literal);
+				valid = matcher.matches();
 				break;
 			}
 			report(datatype, literal, valid);

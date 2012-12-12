@@ -807,9 +807,10 @@ The Data Response, when DAP is using HTTP as a transport protocol, is the payloa
 (ASCII value 13) followed by a line feed (ASCII value 10). This combination
 can be abbreviated as CRLF.
 <p>
-The DMR Data Response itself uses this as a separator between the DMR preface and the binary data.
+The DMR Data Response itself uses this as a separator between the
+DMR count and the DMR and between the DMR preface and the binary data.
 <p>
-Additionally, the DMR is preceded by a count indicating the length
+The DMR is preceded by a count indicating the length
 of the DMR section (excluding the final CRLF). The count is of the number of bytes, not characters.
 because UTF-8 encoding is assumed, which might have multi-byte
 characters. The count is of the following form.
@@ -826,18 +827,16 @@ or a upper or lowercase letter A, B, C, D, E, or F.
 Note that this is effectively always big-endian
 and given the value '0xABCD' it is converted to the integer value
 <blockquote>
-<pre>
 (A*2<sup>24</sup> + B*2<sup>16</sup> + C*2<sup>8</sup> + D).
-</pre>
 </blockquote>
 <p>
 The logical organization of the Data Response is shown below.
-
 <blockquote>
 <hr>
 <pre>
 CRLF
 {DMR Length}
+CRLF
 {DMR}
 CRLF
 {Binary information}
@@ -1273,7 +1272,7 @@ chunk: CHUNKTYPE SIZE CHUNKDATA ;
 </pre>
 </blockquote>
 <p>
-Note that there is seemantic limitation in the definition of 'chunk':
+Note that there is semantic limitation in the definition of 'chunk':
 the number of bytes in the CHUNKDATA must be equal to SIZE.
 
 <h2 class="section"><a name="lexicalstructure">Lexical Structure</a></h2>
@@ -1287,46 +1286,6 @@ CHUNKTYPE = '\x01'|'\x02'|'\0x03'
   interpreted as an integer on network byte order */
 SIZE = [\0x00-\0xFF][\0x00-\0xFF][\0x00-\0xFF]
 CHUNKDATA = [\0x00-\0xFF]*
-</pre>
-</blockquote>
-
-<h3 class="section"><a name="errorchunkschema">Error Chunk Schema</a></h3>
-
-The error chunk is defined to be an XML document as defined by the following RELAX-NG schema.
-<p>
-<blockquote>
-<pre>
-&lt;grammar xmlns="http://relaxng.org/ns/structure/1.0"
-         xmlns:doc="http://www.example.com/annotation"
-         datatypeLibrary="http://xml.opendap.org/datatypes/dap4"
-         ns="http://xml.opendap.org/ns/DAP/4.0#"&gt;
-&lt;start&gt;
-  &lt;ref name="error"/&gt;
-&lt;/start&gt;
-
-&lt;define name="error"&gt;
-  &lt;element name="Error"&gt;
-    &lt;attribute name="errorcode"&gt;
-      &lt;data type="dap4_integer"/&gt;
-    &lt;/attribute&gt;
-    &lt;element name = "Message"&gt;
-      &lt;text/&gt;
-    &lt;/element&gt;
-    &lt;optional&gt;
-      &lt;interleave&gt;
-        &lt;element name = "Position"&gt;
-          &lt;text/&gt;
-        &lt;/element&gt;
-        &lt;element name = "Context"&gt;
-          &lt;text/&gt;
-        &lt;/element&gt;
-        &lt;element name = "OtherInformation"&gt;
-          &lt;text/&gt;
-        &lt;/element&gt;
-      &lt;/interleave&gt;
-    &lt;/optional&gt;
-  &lt;/element&gt;
-&lt;/define&gt;
 </pre>
 </blockquote>
 
@@ -1845,9 +1804,31 @@ UTF8 = ([\xC0-\xD6]...)|([\xE0-\xEF)...)|([\xF0 \xF7]...)
 </blockquote>
 Any conforming DAP4 implementation MUST use at least the most-relaxed expression for validating UTF-8 character strings, but MAY use either the partially-relaxed or the full validation expression. 
 
+<h1 class="appendix"><a name="errorchunkschema">DAP4 Error Response Format</a></h1>
+The Error Response  is defined to be an XML document
+with media type <i>application/vnd.org.opendap.dap4.error.xml</i>.
+The specific format of the error response is defined in this
+document:
+<a href="http://docs.opendap.org/index.php/DAP4_Web_Services_v3#DAP4_Error_Response">http://docs.opendap.org/index.php/DAP4_Web_Services_v3#DAP4_Error_Response</a>
+
 <h1 class="appendix"><a name="relaxng">DAP4 DMR Syntax as a RELAX NG Schema</a></h1>
 The RELAX NG grammar for the DMR currently resides at this URL.
-https://scm.opendap.org/svn/trunk/dap4/dap4.rng
+<a href="https://scm.opendap.org/svn/trunk/dap4/dap4.rng">https://scm.opendap.org/svn/trunk/dap4/dap4.rng</a>
 
 </body>
 </html>
+
+&lt;define name="errorresponse"&gt;
+  &lt;element name="Error"&gt;
+    &lt;optional&gt;
+      &lt;attribute name="httpcode"&gt;&lt;data type="dap4_integer"/&gt;&lt;/attribute&gt;
+    &lt;/optional&gt;
+    &lt;optional&gt;
+      &lt;interleave&gt;
+        &lt;element name = "Message"&gt;&lt;text/&gt;&lt;/Message&gt;
+        &lt;element name = "Context"&gt;&lt;text/&gt;&lt;/Message&gt;
+        &lt;element name = "OtherInformation"&gt;&lt;text/&gt;&lt;/Message&gt;
+      &lt;/interleave&gt;
+    &lt;/optional&gt;
+  &lt;/element&gt;
+&lt;/define&gt;
