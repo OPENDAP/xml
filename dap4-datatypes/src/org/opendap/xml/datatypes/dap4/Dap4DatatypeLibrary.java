@@ -45,6 +45,10 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
 	static final Pattern econst_pattern = Pattern
 			.compile("[^ ]+");
 
+	// Restricted set of legal boolean values
+	static final Pattern boolean_pattern = Pattern
+			.compile("true|false|TRUE|FALSE|0|1");
+
 	// Define an enumeration of possible type names
 	static enum DAP4type {
                 dap4_integer,
@@ -61,6 +65,9 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
 		dap4_text,
                 // Added dmh 12/6/12
 		dap4_econst,
+                // Added dmh 3/8/13
+		dap4_boolean,
+
 		dap4_unknown;
 
 		static DAP4type fromString(String name) {
@@ -276,6 +283,10 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
 				break;
 			case dap4_econst:
 				matcher = econst_pattern.matcher(literal);
+				valid = matcher.matches();
+				break;
+			case dap4_boolean:
+				matcher = boolean_pattern.matcher(literal);
 				valid = matcher.matches();
 				break;
 			}

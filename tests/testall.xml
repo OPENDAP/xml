@@ -12,6 +12,8 @@
 <Dimension name="d1" size="10"/>
 <Dimension name="lat" size="20"/>
 <Dimension name="lon" size="20"/>
+<Dimension name="ulim1" size="0" unlimited="true"/>
+<Dimension name="ulim2" size="0" unlimited="0"/>
 
 <Int32 name="x"/>
 <Float32 name="lat">

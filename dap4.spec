@@ -116,6 +116,8 @@ official DAP4 Specification Document.
     <td>Rebuild the .docx because of repeated Word crashes; minor formatting info changed/lost.
 <tr><td width="25%">2012.11.23
     <td>Add a Dataset construct to make the root group concept clear syntactically.
+<tr><td width="25%">2013.3.8
+    <td>Made unlimited into a boolean attribute because it does have a size.
 </table>
 <p>
 <p>
@@ -353,12 +355,13 @@ A dimension declaration is specified using this XML form.
 <blockquote>
 <hr>
 <pre>
-&lt;Dimension name="name" size="size"/&gt;
+&lt;Dimension name="name" size="size" unlimited="true|false"/&gt;
 </pre>
 <hr>
 </blockquote>
 <p>
 The size is a positive integer with a maximum value of 2<sup>63-1</sup>. A dimension declaration will be referenced elsewhere in the DMR by specifying its name. It should also be noted that anonymous dimensions also exist. They have a size but no name. Anonymous dimensions SHOULD NOT be declared.
+Optionally, a dimension may be tagged as being unlimited (in the netcdf-4 sense).
 
 <h3>Semantic Notes</h3>
 <ol>
@@ -461,6 +464,23 @@ The Opaque type is use to hold objects like JPEG images and other Binary Large O
 <h3>Semantic Notes</h3>
 <ol>
 <li> The content of an opaque object is completely un-interpreted by the DAP4 implementation. The Opaque type is an Atomic Type, which might seem odd because instances of Opaque can be of different sizes. However, by thinking of Opaque as equivalent to a byte-string type, the analogy with strings makes it clear that it should be an Atomic type.
+</ol>
+
+<h3 class="section"><a name="enum">The Enum Type</a></h3>
+
+The XML scheme for declaring an Enum type is as follows.
+<blockquote>
+<hr>
+<pre>
+&lt;Enum enum="FQN"&gt;
+</pre>
+<hr>
+</blockquote>
+<p>
+
+<h3>Semantic Notes</h3>
+<ol>
+<li> The Enum typed requires the an attribute that references a previously defined &lt;Enumeration&gt; declaration.
 </ol>
 
 <h3 class="section"><a name="implementation">A Note Regarding Implementation of the Atomic Types</a></h3>
@@ -728,13 +748,12 @@ While the DAP does not require any particular Attributes, some may be required b
 <li> DAP4 explicitly treats an attribute with one value as an attribute whose value is a one-element vector. 
 <p>
 <li> All of the Atomic types as well as containers are allowed as the type for an attribute
+<li> If the attribute has type Enum, it must also have an attribute that references a previously defined &lt;Enumeration&gt; declaration.
 <p>
 <li> Attribute value constants MUST conform to the appropriate constant format for the given attribute type and as defined in
 Section <a href="#lexical">lexical</a>.
 <p>
-<li> Attributes may themselves have attributes: effectively leading to
-nested attributes. However Attributes containing attributes may not
-have values; only lowest level (leaf) attributes may have values.
+<li> Attributes may themselves have attributes: effectively leading to nested attributes. Such attributes are called container attributes. However container attributes may not have values; only lowest level (leaf) attributes may have values.
 </ol>
 
 <h3 class="section"><a name="xmlcontent ">Arbitrary XML content </a></h3>

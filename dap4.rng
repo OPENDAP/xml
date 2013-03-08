@@ -92,6 +92,9 @@
     <attribute name="size">
         <data type="dap4_dim"/>
     </attribute>
+    <optional>
+      <attribute name="unlimited"><data type="dap4_boolean"/></attribute>
+    </optional>
     <ref name="metadatalist"/>
   </element>
 </define>
