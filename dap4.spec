@@ -118,6 +118,8 @@ official DAP4 Specification Document.
     <td>Add a Dataset construct to make the root group concept clear syntactically.
 <tr><td width="25%">2013.3.8
     <td>Made unlimited into a boolean attribute because it does have a size.
+<tr><td width="25%">2013.4.7
+    <td>Inserted the new checksum description.
 </table>
 <p>
 <p>
@@ -935,8 +937,7 @@ In narrative form: all numeric quantities are used as a raw, unsigned vector of 
 
 <h4 class="section"><a name="byteswap">Byte Swapping Rules</a></h4>
 
-If the server chooses to byte swap transmitted values, then the following swapping rules are used. Not that a size of 16 bytes is also included. This is used solely to represent checksums as 128-bit unsigned integers
-(See Section <a href="#checksums">checksums</a>).
+If the server chooses to byte swap transmitted values, then the following swapping rules are used.
 <p>
 <table border=1 width="50%">
 <tr><th width="20%">Size (bytes)<th>Byte Swapping Rules<th>
@@ -955,22 +956,6 @@ Byte 3 ->Byte 4
 Byte 5 ->Byte 2<br>
 Byte 6 -> Byte 1<br>
 Byte 7 ->Byte 0
-<tr><th>16<td>Byte 0 -> Byte 15<br>
-Byte 1 ->Byte 14<br>
-Byte 2 -> Byte 13<br>
-Byte 3 ->Byte 12<br>
-Byte 4 -> Byte 11<br>
-Byte 5 ->Byte 10<br>
-Byte 6 -> Byte 9<br>
-Byte 7 ->Byte 8
-<td>Byte 8 -> Byte 7<br>
-Byte 9 ->Byte 6<br>
-Byte 10 -> Byte 5<br>
-Byte 11 ->Byte 4<br>
-Byte 12 -> Byte 3<br>
-Byte 13 ->Byte 2<br>
-Byte 14 -> Byte 1<br>
-Byte 15 ->Byte 0
 </table>
 
 <h4 class="section"><a name="variablelengthscalar">Variable-Length Scalar Atomic Types</a></h4>
@@ -1001,9 +986,51 @@ Each variable length vector consists of a length, L say, in UInt64 form and givi
 
 <h3 class="section"><a name="checksums">Checksums</a></h3>
 
-Checksums will be computed for the values of all the variables at the top-level of each Group in the response. The checksum value will follow the value of the variable. The checksum algorithm defaults to MD5 (chosen primarily for performance reasons).
+As an option, checksums will be computed for the values of
+all the "top-level" variables present in the DMR of a returned
+response from a server. The term "top-level" means that the variable
+is not a field of a Structure typed variable.
 <p>
-Checksum values will be written as 128-bit values using the endian representation specified for the serialized form.
+The purpose of the checksum is to detect changes in data
+over time. That is, if a client requests the same variable
+and the returned checksums are the same, then the client may
+infer that the data has not changed. The checksum is not
+intended for transmission error detection, although the
+client MAY use it for that purpose if it chooses.
+<p>
+The checksum is made visible to the client by adding an
+attribute to each top-level variable in the DMR.
+This attribute is named "DAP4_Checksum_CRC32".
+<p>
+In all cases, the checksum is computed over the serialized
+representation of each top-level variable. The checksum is
+computed before any chunking
+Section <a href="#chunkedrepresentation>chunkedrepresentation</a>)
+is applied.
+<p>
+If the request to the server is a dmr-only request, then the
+server will compute the checksum for each variable mentioned
+in the DMR and will insert the "DAP4_Checksum_CRC32"
+attribute in the DMR.
+Note that this can have significant performance consequences
+since the server is required to read and serialize
+all of the data for all of the variables mentioned in the DMR
+even though that data is not transmitted to the client.
+<p>
+If the request to the server is a data
+request, then the checksum value will follow the value of
+the variable in the data part of the response.
+The computed checksum is appended to the
+serialized representation for transmission to the
+client. Note that in this case, the client is expected to
+add the "DAP4_Checksum_CRC32" attribute to the DMR.
+<p>
+The default checksum algorithm is CRC32.  So the size of
+each checksum inserted in the serialization will be a 32 bit
+integer. The checksum integer will use the same endian
+representation as for the all other data.
+Note that CRC32 is not a cryptographically strong checksum, so it
+is not suitable for detecting man-in-the-middle attacks.
 
 <h3 class="section"><a name="historicalnote">Historical Note</a></h3>
 
@@ -1836,18 +1863,3 @@ The RELAX NG grammar for the DMR currently resides at this URL.
 
 </body>
 </html>
-
-&lt;define name="errorresponse"&gt;
-  &lt;element name="Error"&gt;
-    &lt;optional&gt;
-      &lt;attribute name="httpcode"&gt;&lt;data type="dap4_integer"/&gt;&lt;/attribute&gt;
-    &lt;/optional&gt;
-    &lt;optional&gt;
-      &lt;interleave&gt;
-        &lt;element name = "Message"&gt;&lt;text/&gt;&lt;/Message&gt;
-        &lt;element name = "Context"&gt;&lt;text/&gt;&lt;/Message&gt;
-        &lt;element name = "OtherInformation"&gt;&lt;text/&gt;&lt;/Message&gt;
-      &lt;/interleave&gt;
-    &lt;/optional&gt;
-  &lt;/element&gt;
-&lt;/define&gt;
