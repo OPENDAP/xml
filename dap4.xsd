@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- RELAX NG Grammar -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" 
+  targetNamespace="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#">
   <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
   <xs:element name="Group">
     <xs:annotation>
@@ -15,7 +16,6 @@
         <xs:extension base="dap:groupdef">
           <xs:attribute name="dapVersion" type="xs:string"/>
           <xs:attribute name="dmrVersion" type="xs:string"/>
-          <xs:attribute name="xmlns" type="xs:string"/>
           <xs:attribute ref="xml:base"/>
         </xs:extension>
       </xs:complexContent>
