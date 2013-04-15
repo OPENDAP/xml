@@ -17,9 +17,12 @@
 <define name="dataset">
   <element name="Dataset">
     <a:documentation>
-        Semantic restriction: both dapVersion and dmrVersion and base are 
-        required and ns is optional.
+        Semantic restriction: dapVersion, dmrVersion and xml:base are required.
+        Note that because the 'grammar' element specifies the ns attribute,
+        valid 'Dataset' elements must include the 'xmlns' attribute with the
+        given value.
     </a:documentation>
+    
     <attribute name="dapVersion"><data type="dap4_string"/></attribute>
     <attribute name="dmrVersion"><data type="dap4_string"/></attribute>
     
