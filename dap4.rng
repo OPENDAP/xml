@@ -107,13 +107,25 @@
 
 <define name="dimdef">
   <element name="Dimension">
+    <a:documentation>
+      A Dimension is a binding of a name to a size; when two or more variables
+      use the same 'name' it can be inferred that they 'share' that dimension.
+      The 'size' attribute can be either a positive integer or "*", where the
+      latter indicates a varying dimension.
+    </a:documentation>
     <attribute name="name"><data type="dap4_id"/></attribute>
-    <attribute name="size">
-        <data type="dap4_dim"/>
-    </attribute>
+    <attribute name="size"><data type="dap4_dim"/></attribute>
+    
+    <!--
+      We discussed this attribute on 4/9/13 and decided it should be removed.
+      If a dimension corresponds to a netCDF unlimited dimension, the best 
+      place to make a note of that is in the DAP4 Attributes bound to this
+      dimension. jhrg 4/15/13
     <optional>
       <attribute name="unlimited"><data type="dap4_boolean"/></attribute>
     </optional>
+    -->
+    
     <ref name="metadatalist"/>
   </element>
 </define>
