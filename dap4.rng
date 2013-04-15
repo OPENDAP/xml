@@ -23,9 +23,15 @@
     <attribute name="dapVersion"><data type="dap4_string"/></attribute>
     <attribute name="dmrVersion"><data type="dap4_string"/></attribute>
     
+    <attribute name="xml:base"><data type="dap4_uri"/></attribute>
+    
+    <!-- 
+      I am not sure if this attribute is specified correctly. jhrg 4/15/13
+      ref: http://www.w3.org/TR/xmlbase/
     <attribute name="base" ns="http://www.w3.org/XML/1998/namespace">
         <data type="dap4_uri"/>
     </attribute>
+    -->
     
     <!-- 
       I think this should be removed from the grammar. The use of 
