@@ -22,12 +22,22 @@
     </a:documentation>
     <attribute name="dapVersion"><data type="dap4_string"/></attribute>
     <attribute name="dmrVersion"><data type="dap4_string"/></attribute>
+    
     <attribute name="base" ns="http://www.w3.org/XML/1998/namespace">
         <data type="dap4_uri"/>
     </attribute>
+    
+    <!-- 
+      I think this should be removed from the grammar. The use of 
+      'ns' above in the grammar element efftively says that all of the 
+      elements are in the DAP4 namespace and that the XML attribute
+      'xmlns' must be used for a document to be valid. jhrg 4/15/13
+      ref: http://relaxng.org/tutorial-20030326.html#id2816290
     <optional>
       <attribute name="ns"><data type="dap4_uri"/></attribute>
     </optional>
+    -->
+    
     <ref name="groupbody"/>
   </element>
 </define>
