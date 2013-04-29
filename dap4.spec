@@ -120,6 +120,9 @@ official DAP4 Specification Document.
     <td>Made unlimited into a boolean attribute because it does have a size.
 <tr><td width="25%">2013.4.7
     <td>Inserted the new checksum description.
+<tr><td width="25%">2013.4.15
+    <td>Removed all mention of unlimited wrt Dimensions
+    <td>Remove the base and ns attributes from &lt;Dataset&gt;
 </table>
 <p>
 <p>
@@ -295,15 +298,14 @@ A dataset is specified using this XML form:
 <blockquote>
 <hr>
 <pre>
-&lt;Dataset name="..." dapVersion="..." dmrVersion="..." base="..."&gt;
+&lt;Dataset name="..." dapVersion="..." dmrVersion="...";
 ...
 &lt;/Dataset&gt;
 </pre>
 </blockquote>
 <p>
-The <i>name</i>, <i>dapVersion</i>, <i>dmrVersion</i>, and <i>base</i>
-attributes are required. Optionally, a namespace attribute (<i>ns="..."</i>)
-may be specified.
+The <i>name</i>, <i>dapVersion</i>, and <i>dmrVersion</i>,
+attributes are required.
 The attributes have the following semantics:
 <ul>
 <li> <i>name</i> &ndash; an identifier specifying  the name of the dataset.
@@ -311,8 +313,6 @@ Its content is determined solely by the Server and is completely uninterpreted
 with respect to DAP4.
 <li> <i>dapVersion</i> &ndash; the string &quot;4.0&quot; currently.
 <li> <i>dmrVersion</i> &ndash; the string &quot;1.0&quot; currently.
-<li> <i>base</i> &ndash; currently uninterpreted.
-<li> <i>ns</i> &ndash an XML namespace URl.
 </ul>
 <p>
 The body of the Dataset is the same
@@ -357,13 +357,12 @@ A dimension declaration is specified using this XML form.
 <blockquote>
 <hr>
 <pre>
-&lt;Dimension name="name" size="size" unlimited="true|false"/&gt;
+&lt;Dimension name="name" size="size"/&gt;
 </pre>
 <hr>
 </blockquote>
 <p>
 The size is a positive integer with a maximum value of 2<sup>63-1</sup>. A dimension declaration will be referenced elsewhere in the DMR by specifying its name. It should also be noted that anonymous dimensions also exist. They have a size but no name. Anonymous dimensions SHOULD NOT be declared.
-Optionally, a dimension may be tagged as being unlimited (in the netcdf-4 sense).
 
 <h3>Semantic Notes</h3>
 <ol>
