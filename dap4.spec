@@ -561,7 +561,7 @@ Each variable in a data source MUST have a name, a type and one or more values. 
 The DAP variables come in several different types. There are several atomic types, the basic indivisible types representing integers, floating point numbers and the like, and a container type &ndash; the Structure or Sequence type &ndash; that supports aggregation of other variables into a single unit. A container type may contain both atomic typed variable as well as other container typed variables, thus allowing nested type definitions.
 <p>
 The DAP variables describe the data when it is being transferred from the server to the client.  It does not necessarily describe the format of the data inside the server or client. The DAP defines, for each data type described in this document, a serialized representation, which is the information actually communicated between DAP servers and DAP clients.  The serialized representation consists of two parts:  the declaration of the type and the serialized encoding of its value(s). The data representation is presented in
-Section <a href="#binarydata">binarydata</a>".
+Section <a href="#response">response</a>".
 
 <h3 class="section"><a name="arrays">Arrays</a></h3>
 
@@ -732,7 +732,6 @@ An example might look like this.
 <hr>
 </blockquote>
 Where the map variables are defined elsewhere like this.
-
 <blockquote>
 <hr>
 <pre>
@@ -891,7 +890,7 @@ The DAP specifies a particular representation of data, to be used in transmittin
 
 <h2 class="section"><a name="response">Response Format</a></h2>
 
-There are at least two response formats that a server MUST provide to the client.
+There are two response formats that a server MUST provide to the client.
 <ol>
 <li> DMR-only response
 <li> (DMR +) Data response
@@ -1076,14 +1075,10 @@ infer that the data has not changed. The checksum is not
 intended for transmission error detection, although the
 client MAY use it for that purpose if it chooses.
 <p>
-The checksum is made visible to the client by adding an
-attribute to each top-level variable in the DMR.
-This attribute is named "DAP4_Checksum_CRC32".
+The checksum is made visible to the client by adding an attribute to each top-level variable in the DMR. This attribute is named "DAP4_Checksum_CRC32".
 <p>
-In all cases, the checksum is computed over the serialized
-representation of each top-level variable. The checksum is
-computed before any chunking
-Section <a href="#chunkedrepresentation>chunkedrepresentation</a>)
+In all cases, the checksum is computed over the serialized representation of each top-level variable. The checksum is computed before any chunking
+Section <a href="#chunkedrepresentation">chunkedrepresentation</a>)
 is applied.
 <p>
 If the request to the server is a dmr-only request, then the
@@ -1112,7 +1107,7 @@ is not suitable for detecting man-in-the-middle attacks.
 
 <h3 class="section"><a name="historicalnote">Historical Note</a></h3>
 
-The encoding described in Section <a href="#binarydata">binarydata</a>
+The encoding described in Section <a href="#response">response</a>
 is similar to the serialization form of the DAP2 protocol [cite:3], but has been extended to support arrays with a varying dimension and stripped of redundant information added by various XDR implementations.
 <p>
 The DAP4 Serialization rules are derived from, but not the same as, XDR [cite:10]. The differences are as follows.
@@ -1298,7 +1293,7 @@ CRLF
 <h1 class="section"><a name="chunkedrepresentation">DAP4 Chunked Data Representation</a></h1>
 
 An important capability for DAP4 is supporting client in determining when a data transmission fails. This is especially difficult when sending binary data
-(Section <a href="#binarydata">binarydata</a>).
+(Section <a href="#response">response</a>).
 In order to support such a capability, the DAP4 protocol uses a simplified variation on the HTTP/1.1 chunked transmission format [cite:9] to serialize the data part of the response document so that errors are simple to detect. Furthermore, this format is independent of the form or content of that part of the response, so the same format can be used with different response forms or dropped when/if DAP is used with protocols that support out-of-band error signaling, simplifying our ongoing refinement of the protocol.
 <p>
 The data part of a response document is "chunked" in a fashion similar to that outlined in HTTP/1.1. However, in addition to a prefix indicating the size of the chunk, DAP4 includes a chunk-type code. This provides a way for the receiver to know if the next chunk is part of the data response or if it contains an error response

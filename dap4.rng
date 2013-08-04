@@ -137,10 +137,7 @@
     </optional>
     <optional>
       <attribute name="size">
-        <choice>
-            <data type="dap4_dim"/>
-            <data type="dap4_vdim"/>
-        </choice>
+          <data type="dap4_dim"/>
       </attribute>
     </optional>
   </element>
@@ -176,6 +173,7 @@
   <choice>
     <ref name="simplevariable"/>
     <ref name="structurevariable"/>
+    <ref name="sequencevariable"/>
   </choice>
 </define>
 
@@ -225,6 +223,19 @@
 
 <define name="structurevariable">
   <element name="Structure">
+    <attribute name="name"><data type="dap4_id"/></attribute>
+    <zeroOrMore>
+      <choice>
+        <ref name="dimref"/>
+        <ref name="variable"/>
+        <ref name="metadata"/>
+      </choice>
+    </zeroOrMore>
+  </element>
+</define>
+
+<define name="sequencevariable">
+  <element name="Sequence">
     <attribute name="name"><data type="dap4_id"/></attribute>
     <zeroOrMore>
       <choice>

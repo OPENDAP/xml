@@ -16,7 +16,13 @@ Notes:
    1. generate dap4.word using ant all
    2. open Word and read dap4.word into it.
    3. apply the template.docx file
+      a. Developer->Document Template
+      b. Hit attach and specify the document file (template.docx)
+      c. Flag the automatic update box
+      d. Hit ok
    4. insert the table of contents where indicated
+      a. References->Table of Contents
+      b. Choose e.g Automatic 1
    5. insert page breaks where appropriate and otherwise
       pretty up the Word document.
    6. save as dap4.docx

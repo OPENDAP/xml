@@ -56,7 +56,6 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
                 dap4_char,
                 dap4_string,
                 dap4_opaque,
-                dap4_vdim,
                 dap4_id,
                 dap4_fqn,
                 dap4_uri,
@@ -251,9 +250,6 @@ public class Dap4DatatypeLibrary implements DatatypeLibrary,
 			case dap4_string:
 				matcher = string_pattern.matcher(literal);
 				valid = matcher.matches();
-				break;
-			case dap4_vdim:
-				valid = "*".equals(literal);
 				break;
 			case dap4_char:
 				valid = (literal.length() == 1);
