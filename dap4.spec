@@ -35,7 +35,7 @@ p.italic {font-style:italic}
 <center>
 <table border=1 width="85%">
 <tr><td width="20%">Date:<td>May 31, 2012
-<tr><td width="20%">Last Revised:<td>November 23, 2012
+<tr><td width="20%">Last Revised:<td>4 August 2013
 <tr><td width="20%">Status:<td>Draft
 <tr><td width="20%">Authors:<td>John Caron (Unidata)
 <tr><td width="20%"><td>Ethan Davis (Unidata)
@@ -43,7 +43,7 @@ p.italic {font-style:italic}
 <tr><td width="20%"><td>James Gallagher (OPeNDAP)
 <tr><td width="20%"><td>Dennis Heimbigner (Unidata)
 <tr><td width="20%"><td>Nathan Potter (OPeNDAP)
-<tr><td width="20%">Copyright:<td>2012 University Corporation for Atmospheric Research and Opendap.org
+<tr><td width="20%">Copyright:<td>2013 University Corporation for Atmospheric Research and Opendap.org
 </table>
 </center>
 <p>
@@ -122,7 +122,10 @@ official DAP4 Specification Document.
     <td>Inserted the new checksum description.
 <tr><td width="25%">2013.4.15
     <td>Removed all mention of unlimited wrt Dimensions
+<tr><td width="25%">2013.4.15
     <td>Remove the base and ns attributes from &lt;Dataset&gt;
+<tr><td width="25%">2013.4.15
+    <td>Introduce &lt;Sequence&gt; as a replacement for variable length dimensions; The term ''Sequence'' is subject to future change. 
 </table>
 <p>
 <p>
@@ -200,7 +203,7 @@ A name (aka identifier) in DAP4 consists of a sequence of any legal non-control 
 
 Every object in a DAP4 Dataset has a Fully Qualified Name (FQN), which provides a way to unambiguously reference declarations in a dataset and which can be used in several contexts such as in the DMR in a constraint expression
 (see Section <a href="#constraints">constraints</a>).
-These FQNs follow the common conventions of names for lexically scoped identifiers.  In DAP4 three kinds of lexical items provide lexical scoping: Dataset, Groups and Structures . Just as with hierarchical file systems or variables in many programming languages, a simple grammar formally defines how the names are built using the names of the FQN's components (see Section <a href="#fqnsemantics">fqnsemantics</a>). Consider the following simple dataset, which contains a structure name "inner" within a Structure named "outer" all contained in the Dataset "D".
+These FQNs follow the common conventions of names for lexically scoped identifiers.  In DAP4 three kinds of lexical items provide lexical scoping: Dataset, Groups, Structures, and Sequences . Just as with hierarchical file systems or variables in many programming languages, a simple grammar formally defines how the names are built using the names of the FQN's components (see Section <a href="#fqnsemantics">fqnsemantics</a>). Consider the following simple dataset, which contains a Structure named "inner" within a Structure named "outer" all contained in the Dataset "D".
 
 <blockquote>
 <hr>
@@ -222,8 +225,9 @@ The FQN for the field 'temperature' is
 <blockquote>
 '/places.weather.temperature'.
 </blockquote>
-As is the case with Structure variables, Groups can be nested to form hierarchies, too, and this example shows that case. 
+Substituting the keyword ''Sequence'' for one or more occurrences of ''Structure'' in the above example will leave the FQNs unchanged.
 
+As is the case with Structure or Sequence variables, Groups can be nested to form hierarchies, too, and this example shows that case.
 <blockquote>
 <hr>
 <pre>
@@ -231,10 +235,10 @@ As is the case with Structure variables, Groups can be nested to form hierarchie
     &lt;Group name="environmental_data"&gt;
         &lt;Structure name="places"&gt;
             &lt;String name="name"/&gt;
-            &lt;Structure name="weather"&gt;
+            &lt;Sequence name="weather"&gt;
                 &lt;Float64 name="temperature"/&gt;
                 &lt;Float64 name="dew_point"/&gt;
-            &lt;/Structure&gt;
+            &lt;/Sequence&gt;
         &lt;/Structure&gt;
      &lt;/Group&gt;
      &lt;Group name="demographic_data"&gt;
@@ -247,7 +251,7 @@ As is the case with Structure variables, Groups can be nested to form hierarchie
 <p>
 The FQN to the field 'temperature' in the dataset shown is
 <blockquote>
-'/environmental _data/places.weather.temperature'.
+'/environmental_data/places.weather.temperature'.
 </blockquote>
 <p>
 Notes:
@@ -255,7 +259,7 @@ Notes:
 <li>Every dataset has a single outermost &lt;Dataset&gt; declaration,
 which semantically, acts like the root group.
 Whatever name that dataset has is ignored for the purposes of forming the FQN and instead is treated as if it has the empty name ("").
-<li>There is no limit to the nesting of groups or the nesting of Structures.
+<li>There is no limit to the nesting of groups or the nesting of Structures or the nesting of Sequences.
 </ol>
 <p>
 The characters "/" and "." have special meaning in the context of a fully qualified name. This means that if a name is added to the FQN and that name contains either of those two characters, then those characters must be specially escaped so that they will not be misinterpreted. The defined escapes are as follows.
@@ -302,6 +306,7 @@ A dataset is specified using this XML form:
 ...
 &lt;/Dataset&gt;
 </pre>
+<hr>
 </blockquote>
 <p>
 The <i>name</i>, <i>dapVersion</i>, and <i>dmrVersion</i>,
@@ -332,7 +337,7 @@ A group is specified using this XML form:
 <hr>
 </blockquote>
 <p>
-A group defines a name space and contains other DAP elements. Specifically, it can contain groups, variables, dimensions, and enumerations. The fact that groups can be nested means that the set of groups in a DMR form a tree structure. For any given DMR, there exists a root group that is the root of this tree.
+A group defines a name space and contains other DAP elements. Specifically, it can contain groups, variables, dimensions, and enumerations. The fact that groups can be nested means that the set of groups in a DMR form a tree data structure. For any given DMR, there exists a root group that is the root of this tree.
 <p>
 A nested set of groups defines a variety of name spaces and access to the contents of a group is specified using a notation of the form "/g1/g2/.../gn". This is called a "path". By convention "/" refers to the root group (the Dataset declaration). Thus the path "/g1/g2/g3" indicates that one should start in the root group, move to group g1 within that root group, then to group g2 within group g1, and finally to group g3. This is more fully described in the section on Fully Qualified names
 (Section <a href="#fqn">fqn</a>).
@@ -347,7 +352,7 @@ For comparison purposes, DAP groups correspond to netCDF-4 groups and not to the
 <p>
 <li>Each Group declares a new lexical scope for the objects it contains. 
 <p>
-<li>A Group cannot have dimensions and a Group cannot be defined within a Structure.
+<li>A Group cannot have dimensions and a Group cannot be defined within a Structure or Sequence.
 </ol>
 
 <h2 class="section"><a name="dimensions">Dimensions</a></h2>
@@ -404,7 +409,7 @@ The DAP4 specification assumes the existence of certain pre-defined, declared ty
 <h3 class="section"><a name="integer">Integer Types</a></h3>
 
 The integer types are summarized in the following table.
-The lexical structure for integer constants is defined in
+The syntax for integer constants is defined in
 Section <a href="#numericconst">numericconst</a>.
 <p>
 <center><b>Table 1. The DAP Integer Data types.</b></center>
@@ -426,7 +431,7 @@ Note that for historical reasons, the Char type is defined to be a synonym of UI
 
 <h3 class="section"><a name="floating">Floating Point Types</a></h3>
 
-The floating-point data types are summarized in Table 2. The two floating-point data types use IEEE 754 [cite:6] to represent values. The two types correspond to ANSI C's float and double data types. The lexical structure for floating point constants is defined in Section <a href="#numericconst">numericconst</a>.
+The floating-point data types are summarized in Table 2. The two floating-point data types use IEEE 754 [cite:6] to represent values. The two types correspond to ANSI C's float and double data types. The syntax for floating point constants is defined in Section <a href="#numericconst">numericconst</a>.
 <p>
 <center><b>Table 2. The DAP Floating Point Data types.</b></center>
 <table border=1 width="85%">
@@ -437,7 +442,7 @@ The floating-point data types are summarized in Table 2. The two floating-point 
 
 <h3 class="section"><a name="string">String Types</a></h3>
 
-The string data types are summarized in Table 3.  Again, the lexical structure for these is defined in Section <a href="#stringconst">stringconst</a>
+The string data types are summarized in Table 3.  Again, the syntax for these is defined in Section <a href="#stringconst">stringconst</a>
 <p>
 Strings are individually sized. This means that in an array of strings, for example, each instance of that string MAY be of a different size.
 <p>
@@ -490,30 +495,83 @@ When implementing the DAP, it is important to match information in a data source
 
 <h2 class="section"><a name="containertype">Container Types</a></h2>
 
-There is currently one container type, namely the Structure type.
+There are currently two container types: &lt;Structure&gt; and &lt;Sequence&gt;.
 
 <h3 class="section"><a name="structuretype">The Structure Type</a></h3>
 
-A Structure groups a list of variables so that the collection can be manipulated as a single item. The variables in a Structure may also be referred to as "fields" to conform to conventional use of that term, but there is otherwise no distinction between fields and variables.  The Structure's fields MAY be of any type, including the Structure type.  The order of items in the Structure is significant only in relation to the serialized representation of that Structure.
+A Structure groups a list of variables so that the collection can be manipulated as a single item. The variables in a Structure may also be referred to as "fields" to conform to conventional use of that term, but there is otherwise no distinction between fields and variables.  The Structure's fields MAY be of any type, including ''Structure'' or ''Sequence''.  The order of items in the Structure is significant only in relation to the serialized representation of that Structure.
+
+<h3 class="section"><a name="sequencetype">The Sequence Type</a></h3>
+
+A Sequence is intended to represent a ''sequence'' of instances of objects.
+Suppose that we have a sequence of this form.
+<blockquote>
+<hr>
+<pre>
+&lt;Sequence name="s"&gt;
+    &lt;Float64 name="field1"/&gt;
+    &lt;Float64 name="field2"/&gt;
+&lt;/Sequence&gt;
+</pre>
+<hr>
+</blockquote>
+
+The ''corresponding'' Structure object
+is obtained by substuting the ''Sequence''
+keyword with ''Structure. Our above example
+then has this associated Structure.
+<blockquote>
+<hr>
+<pre>
+&lt;Structure name="s"&gt;
+    &lt;Float64 name="field1"/&gt;
+    &lt;Float64 name="field2"/&gt;
+&lt;/Structure&gt;
+</pre>
+<hr>
+</blockquote>
+<p>
+
+The semantics of a sequence are that it represents a sequence
+of instances of the corresponding Structure. The length of the Sequence MAY be different for every instance of a Sequence. Consider this array of Sequence.
+<blockquote>
+<hr>
+<pre>
+&lt;Sequence name="s"&gt;
+    ...
+    &lt;Dim size="3"&gt;
+    &lt;Dim size="2"&gt;
+&lt;/Sequence&gt;
+</pre>
+<hr>
+</blockquote>
+This represents an array of six (3 times 2) sequence instances. However, the length MAY be different for each of those six instances.
+<p>
+Note that the &lt;Sequence&gt; construct was introduced to replace the concept of variable length dimensions. It turns out that trying to treat variable length dimensions as dimensions causes significant conceptual and implementation difficulties. It is hoped thatisolating such variable length objects syntactically is a better representation.
+
+<h3>Semantic Notes</h3>
+<ol>
+<li> Structures and Sequences MAY freely nested.
+</ol>
 
 <h2 class="section"><a name="variables">Variables</a></h2>
 
 Each variable in a data source MUST have a name, a type and one or more values. Using just this information and armed with an understanding of the definition of the DAP data types, a program can read any or all of the information from a data source.
 <p>
-The DAP variables come in several different types. There are several atomic types, the basic indivisible types representing integers, floating point numbers and the like, and a container type &ndash; the Structure type &ndash; that supports aggregation of other variables into a single unit. A container type may contain both atomic typed variable as well as other container typed variables, thus allowing nested type definitions.
+The DAP variables come in several different types. There are several atomic types, the basic indivisible types representing integers, floating point numbers and the like, and a container type &ndash; the Structure or Sequence type &ndash; that supports aggregation of other variables into a single unit. A container type may contain both atomic typed variable as well as other container typed variables, thus allowing nested type definitions.
 <p>
 The DAP variables describe the data when it is being transferred from the server to the client.  It does not necessarily describe the format of the data inside the server or client. The DAP defines, for each data type described in this document, a serialized representation, which is the information actually communicated between DAP servers and DAP clients.  The serialized representation consists of two parts:  the declaration of the type and the serialized encoding of its value(s). The data representation is presented in
 Section <a href="#binarydata">binarydata</a>".
 
 <h3 class="section"><a name="arrays">Arrays</a></h3>
 
-Most (but not all) types may be arrays. An Array is a multi-dimensional indexed data structure. An Array's member variable MUST be of some DAP data type. Array indexes MUST start at zero. Arrays MUST be stored in row-magjor order (as is the case with ANSI C), which means that the order of declaration of dimensions is significant. The size of each Array's dimensions MUST be given, except for variable length dimensions. The total number of elements in an Array MUST NOT exceed 2<sup>64</sup>-1. There is no prescribed limit on the number of dimensions an Array may have except that the foregoing limit on the total number of elements MUST NOT be exceeded. The number of elements in an Array is fixed as that given by the size(s) of its dimension(s), except when the array has a variable length dimension.
+Most (but not all) types may be arrays. An Array is a multi-dimensional indexed data structure. An Array's member variable MUST be of some DAP data type. Array indexes MUST start at zero. Arrays MUST be stored in row-magjor order (as is the case with ANSI C), which means that the order of declaration of dimensions is significant. The size of each Array's dimensions MUST be given. The total number of elements in an Array MUST NOT exceed 2<sup>64</sup>-1. There is no prescribed limit on the number of dimensions an Array may have except that the foregoing limit on the total number of elements MUST NOT be exceeded. The number of elements in an Array is fixed as that given by the size(s) of its dimension(s).
 
 <h3>Semantic Notes</h3>
 <ol>
 <li> Simple variables (see below) MAY be arrays.
 <p>
-<li> Structures MAY be arrays.
+<li> Structures and Sequences MAY be arrays.
 </ol>
 
 <h3 class="section"><a name="simple">Simple Variables</a></h3>
@@ -527,24 +585,20 @@ A simple, dimensioned variable is declared using this XML form.
   &lt;Dim name="{fqn};"/&gt;
   ...
   &lt;Dim size="{integer}"/&gt;
-  ...
-  &lt;Dim size="*"/&gt;
 &lt;/Int32&gt;
 </pre>
 <hr>
 </blockquote>
 <p>
-Note the use of three types of dimensions.
+Note the use of two types of dimensions.
 <ol>
 <li> name="{fqn}" &ndash; specify the fully qualified name of a dimensions
 declared previously,
 <li> size="{integer}" &ndash; specify an anonymous dimension of a given size, 
-<li> size="*" &ndash; specify a variable length dimension.
 </ol>
 <p>
 A simple variable is one whose type is one of the Atomic Types
-(see Section <a href="#atomic">atomic</a>). The name of the Atomic Type (Int32 in this example) is used as the XML element name. Within the body of that element, it is possible to specify zero or more dimension references. A dimension reference (&lt;Dim.../&gt;) MAY refer to a previously defined dimension declaration. It MAY also define an anonymous dimension with no name, but with a size. It MAY also define a single variable length dimension using a size of "*". This variable length dimension, if present,
-must be the last declared dimension.
+(see Section <a href="#atomic">atomic</a>). The name of the Atomic Type (Int32 in this example) is used as the XML element name. Within the body of that element, it is possible to specify zero or more dimension references. A dimension reference (&lt;Dim.../&gt;) MAY refer to a previously defined dimension declaration. It MAY also define an anonymous dimension with no name, but with a size specified as an integer constant.
 
 <h3>Semantic Notes</h3>
 <ol>
@@ -569,9 +623,6 @@ Consider this example.
 </blockquote>
 <p>
 The dimensions are considered ordered from top to bottom. From this, a corresponding left-to-right order [d1][d2]...[dn] can be inferred where the top dimension is the left-most and the bottom dimension is the right-most. The assumption of row-major order means that in enumerating all possible combinations of these dimensions, the right-most is considered to vary the fastest. The terms "right(most)" or "left(most") refer to this left-to-right ordering of dimensions.
-<p>
-Additionally, a list of dimensions MAY contain at most one variable length
-dimension and that dimension MUST occur as the right-most dimension.
 
 <h3 class="section"><a name="structurevariables">Structure Variables</a></h3>
 
@@ -604,6 +655,39 @@ For discussion convenience, each such variable may be referred to as a "field" o
 <h3>Semantic Notes</h3>
 <ol>
 <li> Structures MAY be dimensioned.
+</ol>
+
+<h3 class="section"><a name="sequencevariables">Sequence Variables</a></h3>
+
+As with simple variables, a sequence variable specifies a type as well as any dimension for that variable. The type, however, is a Sequence.
+
+<h4 class="section"><a name="sequences">Sequences</a></h4>
+
+The XML scheme for a Sequence typed variable is as follows.
+
+<blockquote>
+<hr>
+<pre>
+&lt;Sequence name="name"&gt;
+  {variable definition}
+  {variable definition}
+  ...
+  {variable definition}
+  &lt;Dim ... /&gt;
+  ...
+  &lt;Dim ... /&gt;
+&lt;/Sequence&gt;
+</pre>
+<hr>
+</blockquote>
+<p>
+The Sequence contains within it a list of variable definitions
+(Section <a href="#variables">variables</a>).
+For discussion convenience, each such variable may be referred to as a "field" of the Sequence. The list of fields may optionally be followed with a list of dimension references indicating the dimensions of the Sequence typed variable.
+
+<h3>Semantic Notes</h3>
+<ol>
+<li> Sequences MAY be dimensioned.
 </ol>
 
 <h3 class="section"><a name="coverage">Coverage Variables and Maps</a></h3>
@@ -675,7 +759,6 @@ The containing variable, A in the example, will be referred to as the "array var
 <p>
 <li> Any map duplicates are ignored and the order of declaration of the maps is irrelevant.
 <p>
-<li> A Map variable may not have a variable length dimension.
 <p>
 <li> The fully qualified name of a map must either be in the same lexical scope as the array variable, or the map must be in some enclosing scope.
 <p>
@@ -689,7 +772,7 @@ The term "associated dimensions" is computed as follows.
 <li> For each element mentioned in the fully qualified name (FQN) of the map or the array variable, add any named dimensions associated with FQN element to the set of associated dimensions (removing duplicates, of course).
 </ol>
 <p>
-In practice, the means that an array variable or map variable must take into account any dimensions associated with any enclosing dimensioned Structure.
+In practice, the means that an array variable or map variable must take into account any dimensions associated with any enclosing dimensioned Structure or Sequence.
 
 <h2 class="section"><a name="attributesandxml">Attributes and Arbitrary XML</a></h2>
 
@@ -738,7 +821,7 @@ In DAP4, Attributes (not to be confused with XML attributes) are tuples with fou
 <p>
 This differs slightly from DAP2 Attributes because the namespace feature has been added, although clients can choose to ignore it. For more about namespaces, refer to Section <a href="#namespaces">namespaces</a>. The intent of including the namespace information is to simplify interactions with semantic web applications where certain schemas or standards have formal definitions of attributes. 
 <p>
-Attributes are typically used to associate semantic metadata with the variables in a data source. Attributes are similar to variables in their range of types and values, except that they are somewhat limited when compared to those for variables: they cannot use structure types
+Attributes are typically used to associate semantic metadata with the variables in a data source. Attributes are similar to variables in their range of types and values, except that they are somewhat limited when compared to those for variables: they cannot use Structure or Sequence types
 <p>
 Attributes defined at the top-level within a group are also referred to as "group attributes". Attributes defined at the root group (i.e. Dataset) are "global attributes," which many file formats such as HDF4 or netCDF formally recognize. 
 <p>
@@ -779,7 +862,7 @@ The text content of the otherXML element must be valid XML and must be distinct 
 
 <h3 class="section"><a name="placement">Attribute and OtherXML Specification and Placement</a></h3>
 
-Attribute and OtherXML declarations MAY occur within the body of the following XML elements: Group, Dataset, Dimension, Variable, Structure, and Attribute.
+Attribute and OtherXML declarations MAY occur within the body of the following XML elements: Group, Dataset, Dimension, Variable, Structure, Sequence, and Attribute.
 
 <h2 class="section"><a name="namespaces">Namespaces</a></h2>
 
@@ -806,70 +889,65 @@ The abstract existence of data is in contrast to its concrete representation, wh
 <p>
 The DAP specifies a particular representation of data, to be used in transmitting that data from one computer to another. This representation of some data is sometimes referred to as the serialized representation of that data, as distinguished from the representations used in some computer's memory. The DAP standard outlined in this document has nothing at all to say about how data is stored or represented on either the sending or the receiving computer. The DAP transmission format is completely independent of these details.
 
-<h2 class="section"><a name="response">Response Structure</a></h2>
+<h2 class="section"><a name="response">Response Format</a></h2>
 
-The DAP4 Data Response uses a format very similar to that used for DAP2; the data payload is broken into two logical parts. The first part holds metadata describing the names and types of the variables in the response while the second part holds the values of those variables. DAP4 provides several improvements over the DAP2 response, however.
+There are at least two response formats that a server MUST provide to the client.
+<ol>
+<li> DMR-only response
+<li> (DMR +) Data response
+</ol>
+
+<h3 class="section"><a name="dmronly">DMR-Only Response</a></h3>
+If the client requests only the DMR, then it is returned as a standard XML encoded document. If constraints were specified, then the returned DMR may differ from the full DMR in that, for example, meta-data about only variables specified in the constraint will be returned.
+
+<h3 class="section"><a name="dataresponse">Data Response</a></h3>
+The DAP4 data response uses a format very similar to that used for DAP2;
+the data payload is broken into two pieces.
+The first part holds metadata describing the names and types of the variables in the response while the second part holds the values of those variables.
 <p>
-The metadata information, sent as a preface to the Data Response, is the DMR limited to just those variables included in the response. DAP attributes may be included, but MAY be ignored by the receiving client.
+The metadata information, sent as part 1 of the Data Response, is the DMR limited to just those variables included in the response. DAP attributes may be included, but MAY be ignored by the receiving client.
 <p>
-Data values in the binary part of the Data Response consist of a byte order indicator followed by the binary data for each variable in the order they are listed in the DMR given as the response preface. DAP4 uses a receiver makes it right encoding, so the servers simply write out binary data as they store it with the exceptions that floating-point data must be encoded according to IEEE 754[cite:6] and Integer data must use twos-compliment notation for signed types. Clients are responsible for performing byte-swapping operations needed to compute using the values retrieved.
+Part 2 of the response consists of the binary data for each variable in the order they are listed in the DMR given as the response preface. DAP4 uses a receiver makes it right encoding, so the servers MAY simply write out binary data as they store it with the exceptions that floating-point data must be encoded according to IEEE 754[cite:6] and Integer data must use twos-complement notation for signed types. Clients are responsible for performing byte-swapping operations needed to compute using the values retrieved.
 <p>
-The Data Response is encoded using chunking scheme that breaks it into N parts where each part is prefixed with a chunk type and chunk byte count header. Chunk types include data and error types, making it simple for servers to indicate to clients that an error occurred during the transmission of the Data Response and (relatively) simple for clients to detect that error.
+The Data Response is encoded using chunking scheme 
+(see Section <a href="#chunkedencoding">chunkedencoding</a>).
+that breaks it into N parts where each part is prefixed with a chunk type and chunk byte count header. Chunk types include data and error types, making it simple for servers to indicate to clients that an error occurred during the transmission of the Data Response and (relatively) simple for clients to detect that error.
 <p>
 As with DAP2, the response describe here is a document that can be stored on disk or sent as the payload using a number of network transport protocols, HTTP being the primary transport in practice. However, any protocol that can transmit a document can be used to transmit these responses. As such, all critical information needed to decode the response is completely self-contained.
 <p>
 In the rest of this section we will describe the Data Response in the context of DAP4 using HTTP as its transport protocol.
 
-<h3 class="section"><a name="preface">Structure of the DMR Preface</a></h3>
+<h4 class="section"><a name="dmrpar">Format of the DMR Part</a></h4>
 
-The first part of the Data Response always contains the DMR.
-The Data Response, when DAP is using HTTP as a transport protocol, is the payload for an HTTP response, is separated from the last of the HTTP response's MIME headers by a single blank line, which MIME defines as a carriage return
+The first part (''part'' is not to be confused with ''chunk'') of the Data Response always contains the DMR. The Data Response, when DAP is using HTTP as a transport protocol, is the payload for an HTTP response, is separated from the last of the HTTP response's MIME headers by a single blank line, which MIME defines as a carriage return
 (ASCII value 13) followed by a line feed (ASCII value 10). This combination
 can be abbreviated as CRLF.
-<p>
-The DMR Data Response itself uses this as a separator between the
-DMR count and the DMR and between the DMR preface and the binary data.
-<p>
-The DMR is preceded by a count indicating the length
-of the DMR section (excluding the final CRLF). The count is of the number of bytes, not characters.
-because UTF-8 encoding is assumed, which might have multi-byte
-characters. The count is of the following form.
-<p>
-<blockquote>
-<pre>
-0xXXXX
-</pre>
-</blockquote>
-<p>
-which is the ASCII representation of a 32 bit count
-where each of the 'X' is a hex digit (i.e. a decimal digit
-or a upper or lowercase letter A, B, C, D, E, or F.
-Note that this is effectively always big-endian
-and given the value '0xABCD' it is converted to the integer value
-<blockquote>
-(A*2<sup>24</sup> + B*2<sup>16</sup> + C*2<sup>8</sup> + D).
-</blockquote>
-<p>
-The logical organization of the Data Response is shown below.
+
+<h4 class="section"><a name="datapart">Format of the Data Part</a></h4>
+The second part of the Data response consists of the serialized variables as specified by the data DMR. The variable serializations are concatenated to form a single binary dataset. If requested, each variable's serialization is followed by a CRC32 checksum.
+
+<h4 class="section"><a name="datachunking">Relationship to the Chunking format</a></h4>
+The data response format is technically independent of the chunking format
+(see <a href="#chunkedencoding">Chunked Encoding</a></h3>).
+The assumption is that the DMR will be in a chunk of its own, the first chunk,
+and the serialized binary data will be in one or more additional chunks.
+This produces a format like this
 <blockquote>
 <hr>
 <pre>
 CRLF
-{DMR Length}
-CRLF
+{DMR Length in binary form}
 {DMR}
 CRLF
-{Binary information}
+{Chunk 1 containing some portion of the serialized data}
+...
+{Chunk n containing the last portion of the serialized data}
 </pre>
 <hr>
 </blockquote>
 <p>
 In the above and in the following, the form '{xxx}'
 is intended to represent any instance of the xxx.
-
-<h3 class="section"><a name="binarydata">Structure of the Binary Data Part</a></h3>
-
-The binary data part of the Data Response starts with a four-byte byte-order header. This encodes the byte order of the data as sent by the server. The client uses this information to transform the binary data according so it can use those values in computation (i.e., receiver-makes-it-right). Following the byte-order header, the values for each atomic or array variable appear according to their position in the DMR.
 
 <h3 class="section"><a name="chunkedencoding">How the Chunked Encoding Affects the Data Response Format</a></h3>
 
@@ -904,11 +982,17 @@ The data appearing in a serialized representation is the concatenation of the va
 <p>
 If a variable is a Structure variable, then its data representation will be the concatenation of the variables it contains, which will appear in top-to-bottom order.
 <p>
+If a variable is a Sequence variable, then its data representation will have two parts.
+<ol>
+<li> A 64-bit signed ''count'' of the number of elements in the sequence
+<li> ''Count'' instances of the <a href="#sequencetype">corresponding Structure</a> for the Sequence.
+</ol>
+<p>
 If a variable has dimensions, then the contents of each dimensioned data item will appear concatenated and taken in row-major order.
 
-<h3 class="section"><a name="varrepresentation">Variable Representation in the Absence of Variable Length Dimensions</a></h3>
+<h3 class="section"><a name="varrepresentation">Variable Representation</a></h3>
 
-Given a dimensioned variable, with no dimension being variable length, it is represented as the N scalar values concatenated in row-major order.
+Given a dimensioned variable, it is represented as the N scalar values concatenated in row-major order.
 <p>
 If the variable is scalar, then it is represented as a single scalar value.
 
@@ -961,27 +1045,22 @@ Byte 7 ->Byte 0
 
 <table border=1 width="85%">
 <tr><th>Type Name<th>Description<th>Representation
-<tr><td>String<td>Vector of 8-bit bytes representing a UTF-8 String<td>The number of bytes in the string (in UInt64 format) followed by the bytes.
+<tr><td>String<td>Vector of 8-bit bytes representing a UTF-8 String<td>The number of bytes in the string (in Int64 format) followed by the bytes.
 <tr><td>URL<td>Vector of 8-bit bytes representing a URL<td>Same as String
-<tr><td>Opaque<td>Vector of un-interpreted 8-bit bytes<td>The number of bytes in the vector (in UInt64 format) followed by the bytes.
+<tr><td>Opaque<td>Vector of un-interpreted 8-bit bytes<td>The number of bytes in the vector (in Int64 format) followed by the bytes.
 </table>
 <p>
-In narrative form, instances of String, Opaque, and URL types are represented as a 64 bit length (treated as UInt64) of the instance followed by the vector of bytes comprising the value.
+In narrative form, instances of String, Opaque, and URL types are represented as a 64 bit length (treated as Int64) of the instance followed by the vector of bytes comprising the value.
 
 <h4 class="section"><a name="structurerepresentation">Structure Variable Representation</a></h4>
 
 A Structure typed variable is represented as the concatenation of the representations of the variables contained in the Structure taken in textual top-to-bottom order. This representation may be nested if one of the variables itself is a Structure variable. Dimensioned structures are represented in a form analogous to dimensioned variables of atomic type. The Structure array is represented by the concatenation of the instances of the dimensioned Structure, where the instances are listed in row-major order. 
 
-<h3 class="section"><a name="vardimrepresentation">Variable Representation in the Presence of a Variable-Length Dimension</a></h3>
+<h4 class="section"><a name="sequencerepresentation">Sequence Variable Representation</a></h4>
 
-Given a dimensioned variable, with the last dimension being variable length, it is represented as follows.
+A Sequence typed variable is represented as a count specifying the number of objects (not bytes) of the sequence followed by count instances of the corresponding Structure using the Structure representation rules. This representation may be nested if one of the variables itself is a Sequence variable. Dimensioned sequences are represented in a form analogous to dimensioned variables of atomic type. The Sequence array is represented by the concatenation of the instances of the dimensioned Sequence, where the instances are listed in row-major order. 
 <p>
-The variable is represented as the concatenation of N "variable length vectors". N is determined by taking the cross product of the dimensions sizes, left to right, up to, but not including, the variable length dimension. For example, an array of the form Int32 A[2][3][*] has an element count (N) of 2x3 = 6.
-<p>
-In our example, there will be 6 (2*3) variable-length vectors concatenated together. Note that the length, L, of each of the variable length vectors may be different for each vector. Section <a href="#exampleresponses">exampleresponses</a>
-provides some examples in detail.
-<p>
-Each variable length vector consists of a length, L say, in UInt64 form and giving the number of elements for a specific occurrence of the variable-length dimension. The count, L, is then followed by L instances of the type of the variable (Int32 in this case because the type of the array A is Int32). 
+Each Sequence variable, then, consists of a length, L say, in Int64 form and giving the number of elements for a specific occurrence of the variable-length dimension. The count, L, is then followed by L instances of the serialized form of the sequence's corresponding structure.
 
 <h3 class="section"><a name="checksums">Checksums</a></h3>
 
@@ -1061,12 +1140,12 @@ NB: Some poetic license used in the following and the checksums for single integ
 ...
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
-{DMR-length-integer}
+{chunk count+tag}
 &lt;Dataset name="foo"&gt;
 &lt;Int32 name="x"/&gt;
 &lt;/Dataset&gt;
 CRLF
-{count+tag}
+{chunk count+tag}
 x
 {checksum}
 </pre>
@@ -1081,7 +1160,7 @@ x
 ...
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
-{DMR-length-integer}
+{chunk count+tag}
 &lt;Dataset name="foo"&gt;
 &lt;Int32 name="x"&gt;
 &lt;Dim size="2"&gt;
@@ -1089,7 +1168,7 @@ CRLF
 &lt;/Int32&gt;
 &lt;/Dataset&gt;
 CRLF
-{count+tag}
+{chunk count+tag}
 x00 x01 x02 x03 x10 x11 x12 x13
 {checksum}
 </pre>
@@ -1104,7 +1183,7 @@ x00 x01 x02 x03 x10 x11 x12 x13
 ...
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
-{DMR-length-integer}
+{chunk count+tag}
 &lt;Dataset name="foo"&gt;
   &lt;Structure name="S"&gt;
     &lt;Int32 name="x"&gt;
@@ -1133,7 +1212,7 @@ Note that in this example, there is a single variable at the top-level of the ro
 ...
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
-{DMR-length-integer}
+{chunk count+tag}
 &lt;Dataset name="foo"&gt;
   &lt;Structure name="s"&gt;
     &lt;Int32 name="x"&gt;
@@ -1152,7 +1231,7 @@ x00 x01 x02 x03 x10 x11 x12 x13 y x00 x01 x02 x03 x10 x11 x12 x13 y x00 x01 x02 
 <hr>
 </blockquote>
 
-<h3 class="section"><a name="example5">single varying array (one varying dimension)</a></h3>
+<h3 class="section"><a name="example5">Single array with sequence</a></h3>
 
 <blockquote>
 <hr>
@@ -1160,16 +1239,16 @@ x00 x01 x02 x03 x10 x11 x12 x13 y x00 x01 x02 x03 x10 x11 x12 x13 y x00 x01 x02 
 ...
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
-{DMR-length-integer}
+{chunk count+tag}
 &lt;Dataset name="foo"&gt;
   &lt;String name="s"/&gt;
-  &lt;Int32 name="a"&gt;
-    &lt;Dim size="*"/&gt;
-  &lt;/Int32&gt;
-  &lt;Int32 name="x"&gt;
-    &lt;Dim size="2"/&gt;
-    &lt;Dim size="*"/&gt;
-  &lt;/Int32&gt;
+  &lt;Sequence name="a-star"&gt;
+      &lt;Int32 name="a"/&gt;
+  &lt;/Sequence&gt;
+  &lt;Sequence name="x-star"&gt;
+      &lt;Int32 name="x"/&gt;
+      &lt;Dim size="2"/&gt;
+  &lt;/Sequence&gt;
 &lt;/Dataset>
 CRLF
 {chunk count+tag}
@@ -1185,87 +1264,32 @@ CRLF
 <p>
 Notes:
 <ol>
-<li> The checksum calculation includes only the values of the variable, not the prefix length bytes.
+<li> The checksum calculation includes only the values of the variable, not the prefix chunk length bytes.
 <p>
-<li> The varying dimensions are treated 'like strings' and prefixed with a length count. In the last of the three variables, the array x is a
-2 X 'varying' array with the example's first 'row' containing 3 elements and the second 6.
+<li> The Sequence objects are treated 'like strings' and prefixed with a length count. In the last of the three variables, the dimensioned sequence ''x-star'' has two sequence instances
+where the first sequence has 3 elements and the second has 6.
 </ol>
 
-<h3 class="section"><a name="example6">A single varying array (two varying dimensions)</a></h3>
+<h3 class="section"><a name="example6">Nested Sequences</a></h3>
 
-The array 'x' has two dimensions, both of which vary in size. In the example, at the time of serialization 'x' has three elements in its outer dimension and those have three, six and one element, respectively. Because these are 'varying' dimentions, the size of each much prefix the actual values.
-
+The sequence 'x-start' has a field that is itself a sequence. In the example, at the time of serialization 'x-star' has three elements the inner sequence (of which there are three instances) have three, six and one element, respectively.
 <blockquote>
 <hr>
 <pre>
 ...
 Content-Type: application/vnd.opendap.org.dap4.data
 CRLF
-{DMR-length-integer}
+{chunk count+tag}
 &lt;Dataset name="foo"&gt;
-  &lt;Int32 name="x"&gt;
-    &lt;Dim size="*"/&gt;
-    &lt;Dim size="*"/&gt;
-  &lt;/Int32&gt;
+  &lt;Sequence name="x-star"&gt;
+      &lt;Sequence name="y-star"&gt;
+          &lt;Int32 name="z"/&gt;
+      &lt;/Sequence"&gt;
+  &lt;/Sequence"&gt;
 &lt;/Dataset&gt;
 CRLF
 {chunk count+tag}
-33 x00 x01 x02 6 x10 x11 x12 x3 x14 x15 1 x20
-{checksum}
-</pre>
-<hr>
-</blockquote>
-
-<h3 class="section"><a name="example7">A varying array of structures</a></h3>
-<blockquote>
-<hr>
-<pre>
-...
-Content-Type: application/vnd.opendap.org.dap4.data
-CRLF
-{DMR-length-integer}
-&lt;Dataset name="foo"&gt;
-  &lt;Structure name="s"&gt;
-    &lt;Int32 name="x"&gt;
-      &lt;Dim size="4"/&gt;
-      &lt;Dim size="4"/&gt;
-    &lt;/Int32&gt;
-    &lt;Float64 name="y"/&gt;
-    &lt;Dim size="*"/&gt;
-  &lt;/Structure&gt;
-&lt;/Dataset&gt;
-CRLF
-{chunk count+tag}
-2x00 x01 x02 x03 x10 x11 x12 x13y x00 x01 x02 x03 x10 x11 x12 x13 y
-{checksum}
-</pre>
-<hr>
-</blockquote>
-<p>
-Note that two rows are assumed.
-
-<h3 class="section"><a name="example8">A varying array of structures with fields that have varying dimensions</a></h3>
-
-<blockquote>
-<hr>
-<pre>
-...
-Content-Type: application/vnd.opendap.org.dap4.data
-CRLF
-{DMR-length-integer}
-&lt;Dataset name="foo"&gt;
-  &lt;Structure name="s"&gt;
-    &lt;Int32 name="x"&gt;
-      &lt;Dim size="2"/&gt;
-      &lt;Dim size="*"/&gt;
-    &lt;/Int32&gt;
-    &lt;Float64 name="y"/&gt;
-    &lt;Dim size="*"/&gt;
-  &lt;/Structure&gt;
-&lt;/Dataset&gt;
-CRLF
-{chunk count+tag}
-31 x00 4 x10 x11 x12 x13 y 3 x00 x01 x02 2 x10 x11y 2 x00 x01 2 x10 x11 y
+3 3 x00 x01 x02 6 x10 x11 x12 x3 x14 x15 1 x20
 {checksum}
 </pre>
 <hr>
@@ -1281,11 +1305,11 @@ The data part of a response document is "chunked" in a fashion similar to that o
 (Section <a href="#errorchunkschema">errorchunkschema</a>).
 In the latter case, the client should assume that the data response has ended, even though the correct closing information was not provided.
 <p>
-Each chunk is prefixed by a chunk header consisting of a chunk type and byte count, all contained in a single four-byte word and encoded using network byte order. The chunk type will be encoded in the high-order byte of the four-byte word and chunk size will be given by the three remaining bytes of that word. The maximum chunk size possible is 2<sup>24</sup> bytes. Immediately following the four-byte chunk header will be chunk-count bytes followed by another chunk header. More precisely the initial four bytes of the chunk are decoded using the following steps.
+Each chunk is prefixed by a chunk header consisting of a chunk type and byte count, all contained in a single four-byte word and encoded whatever byte order was chosen by the server. The chunk type will be encoded in the high-order byte of the four-byte word and chunk size will be given by the three remaining bytes of that word. The maximum chunk size possible is 2<sup>24</sup> bytes. Immediately following the four-byte chunk header will be chunk-count bytes followed by another chunk header. More precisely the initial four bytes of the chunk are decoded using the following steps.
 <ol>
 <li> Treat the 32 bit header a single unsigned integer.
 <p>
-<li> Convert the integer from network byte order to the local machine byte order by swapping bytes as necessary
+<li> Convert the integer to the local machine byte order by swapping bytes as necessary
 (Section <a href="#byteswap">byteswap</a>).
 Let the resulting integer be called H.
 <p>
@@ -1297,15 +1321,15 @@ Let the resulting integer be called H.
 Three chunk-type types are defined in this proposal:
 <p>
 <ul>
-<li> Data &ndash; This chunk header prefixes the next chunk in the current data response
+<li> Data (= 0) &ndash; This chunk header prefixes the next chunk in the current data response
 <p>
-<li> Error &ndash; This chunk header prefixes an error message; the current data response has ended 
+<li> End (= 1) &ndash; This chunk header is the last one for the current data response 
 <p>
-<li> End &ndash; This chunk header is the last one for the current data response 
+<li> Error (= 2) &ndash; This chunk header prefixes an error message; the current data response has ended 
 </ul>
 It is possible for a chunk to have more than one of the type. So, for example,
 if the data fits into a single chunk, then its chunk type
-would be Data+End. Error implies End.
+would be Data+End. Error implies End. Note that in order for this to work, the chunk type values must be powers of two.
 
 <h2 class="section"><a name="chunkedgrammar">Chunked Format Grammar</a></h2>
 
@@ -1325,8 +1349,8 @@ the number of bytes in the CHUNKDATA must be equal to SIZE.
 <blockquote>
 <pre>
 /* A single 8-bit byte,
-   with the encoding 0 = data, 1 = error, 2 = end */
-CHUNKTYPE = '\x01'|'\x02'|'\0x03'
+   with the encoding 0 = data, 1 = end, 2 = error */
+CHUNKTYPE = '\x00'|'\x01'|'\0x02'
 /* A sequence of three 8-bit bytes,
   interpreted as an integer on network byte order */
 SIZE = [\0x00-\0xFF][\0x00-\0xFF][\0x00-\0xFF]
@@ -1366,14 +1390,19 @@ dimset: /*empty*/ | slicelist ;
 
 slicelist: slice | slicelist slice ;
 
-slice:    '[' INTEGER ']'
-        | '[' INTEGER ':' INTEGER ']'
-        | '[' INTEGER ':' INTEGER ':' INTEGER ']'
+slice:    '[' start ']'
+        | '[' start ':' last ']'
+        | '[' start ':' stride ':' last ']'
         | '[' slicename ']' ;
 
 namedslice: slicename '=' slice ;
 
 slicename: ID ;
+
+start: INTEGER ;
+last: INTEGER ;
+stride: INTEGER ;
+
 </pre>
 </blockquote>
 
