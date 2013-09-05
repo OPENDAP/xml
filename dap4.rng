@@ -78,20 +78,6 @@
 
 </define>
 
-
-<define name="groupbody">
-    <attribute name="name"><data type="dap4_id"/></attribute>
-    <zeroOrMore>
-      <choice>
-        <ref name="enumdef"/>
-        <ref name="dimdef"/>
-        <ref name="variable"/>
-        <ref name="groupdef"/>
-        <ref name="metadata"/>
-      </choice>
-    </zeroOrMore>
-</define>
-
 <define name="enumdef">
   <element name="Enumeration">
     <attribute name="name"><data type="dap4_id"/></attribute>
