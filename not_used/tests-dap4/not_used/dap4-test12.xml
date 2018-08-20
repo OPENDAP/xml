@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<Dataset name="test1" dapVersion="4.0" xml:base="file:/Users/jimg/src/shrew/xml/dap/tests-dap4/dap-4-test1.xml"
+    xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
+    xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd">
+        
+    <Group>
+        
+        <Grid name="SST">
+            <SharedDimension name="x" size="1024"/>
+            <SharedDimension name="y" size="1024"/>
+
+            <Map name="latitude" type="Float32">
+                <Attribute name="maybe" type="UByte"><value>255</value></Attribute>
+                
+                <dimension ref="x"/>
+                <dimension ref="y"/>              
+            </Map>
+            
+            <Map name="longitude" type="Float32">                
+                <dimension ref="x"/>
+                <dimension ref="y"/>                
+            </Map>
+
+            <Byte name="MSST">
+                <Attribute name="long_name" type="String">
+                    <value>Modeled Sea Surface Temperature</value>
+                </Attribute>
+      
+                <dimension name="run_number" size="7"/>
+                <dimension ref="latitude"/>
+                <dimension ref="longitude"/>
+               
+                <map ref="latitude"/>
+                <map ref="longitude"/>
+            </Byte>
+            
+        </Grid>
+    </Group>
+</Dataset>

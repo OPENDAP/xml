@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<Dataset name="test1" dapVersion="4.0" xml:base="file:/Users/jimg/src/shrew/xml/dap/tests-dap4/dap-4-test1.xml"
+    xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
+    xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xml.opendap.org/ns/DAP/4.0#  file:/Users/jimg/src/shrew/xml/dap/dap4.xsd">
+        
+    <Group>
+        <Grid name="foo">
+            <SharedDimension name="x" size="1024"/>
+            <SharedDimension name="y" size="1024"/>
+            <SharedDimension name="z" size="12"/>
+            
+            <!-- The dimensions of a Map MUST be SharedDimensions -->
+            <Map name="longitude" type="Float32">
+                <dimension ref="x"/>
+                <dimension ref="y"/>
+            </Map>
+            
+            <Map name="latitude" type="Float32">
+                <dimension ref="x"/>
+                <dimension ref="y"/>
+            </Map>
+            
+            <Map name="altitude" type="Int32">
+                <Attribute name="unit" type="String"><value>ft</value></Attribute>
+                <dimension ref="x"/>
+                <dimension ref="y"/>
+                <dimension ref="z"/>
+            </Map>
+            
+            <!-- The array SST has two dimensions (x by y) and is bound to the maps latitude and longitude.
+        The maps provide values for the independent variables latitude, ...
+        To find the value of an independent variable for SST at position x=a,y=b, use the indicial values
+        a,b for the same (shared) dimensions in the corresponding map. -->
+            
+            <Byte name="SST">
+                <dimension ref="x"/>
+                <dimension ref="y"/>
+                
+                <map ref="latitude"/>
+                <map ref="longitude"/>
+            </Byte>
+            
+            <Int16 name="AirT">
+                <dimension ref="x"/>
+                <dimension ref="y"/>
+                <dimension ref="z"/>
+                
+                <map ref="longitude"/>
+                <map ref="latitude"/>
+                <map ref="altitude"/>
+            </Int16>
+        </Grid>
+        
+    </Group>
+</Dataset>
