@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rdf:RDF 
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#" 
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+    xmlns:owl="http://www.w3.org/2002/07/owl#" 
+    xmlns:xsd2owl="http://iridl.ldeo.columbia.edu/ontologies/xsd2owl.owl#" 
+    xml:base="http://xml.opendap.org/semantics/Dap_To_Wcs-1.1.owl">
+    
+    <owl:Ontology rdf:about="">
+        <owl:imports rdf:resource="http://iridl.ldeo.columbia.edu/ontologies/DAPstruct.owl"/>
+        <owl:imports rdf:resource="http://iridl.ldeo.columbia.edu/ontologies/cf2wcs.owl"/>
+        <owl:imports rdf:resource="http://iridl.ldeo.columbia.edu/ontologies/udd2wcs.owl"/>
+        <owl:imports rdf:resource="http://iridl.ldeo.columbia.edu/ontologies/dap2netcdf-obj.owl"/>
+        <owl:imports rdf:resource="http://iridl.ldeo.columbia.edu/ontologies/wcsAll.owl"/>
+        <owl:imports rdf:resource="http://iridl.ldeo.columbia.edu/ontologies/NetcdfConventionCrosswalk.owl"/>
+        <owl:imports rdf:resource="http://xml.opendap.org/ontologies/NetcdfConventionRegistry.owl"/>
+        <xsd2owl:imports rdf:resource="http://xml.opendap.org/dap/dap3.2.xsd"/>
+        <xsd2owl:imports rdf:resource="http://schemas.opengis.net/wcs/1.1/wcsAll.xsd"/>
+        <rdfs:seeAlsoSkip rdf:resource="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/dataQuality.xsd"/>
+    </owl:Ontology>
+    
+</rdf:RDF>

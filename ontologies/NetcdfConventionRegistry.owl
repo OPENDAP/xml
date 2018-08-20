@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns="http://iridl.ldeo.columbia.edu/ontologies/NetcdfConventionRegistry.owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:nc3="http://iridl.ldeo.columbia.edu/ontologies/netcdf-3.owl#"
+    xmlns:p1="http://iridl.ldeo.columbia.edu/ontologies/"
+    xmlns:xsp="http://www.owl-ontologies.com/2005/08/07/xsp.owl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:protege="http://protege.stanford.edu/plugins/owl/protege#"
+    xmlns:rdfcache="http://iridl.ldeo.columbia.edu/ontologies/rdfcache.owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:p2="http://purl.org/dc/elements/1.1/#"
+    xmlns:p3="http://iridl.ldeo.columbia.edu/ontologies/ismemberof.owl#"
+    xmlns:crosswalk="http://iridl.ldeo.columbia.edu/ontologies/iricrosswalk.owl#"
+  xml:base="http://xml.opendap.org/ontologies/NetcdfConventionRegistry.owl">
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://iridl.ldeo.columbia.edu/ontologies/NetcdfConvention.owl"/>
+    <owl:imports rdf:resource="http://iridl.ldeo.columbia.edu/ontologies/NetcdfConventionCrosswalk.owl"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Registry to map between netcdf Conventions identified in the Conventions attribute and ontologies which describe those conventions.</rdfs:comment>
+  </owl:Ontology>
+  <nc3:Metadata_Convention rdf:about="http://iridl.ldeo.columbia.edu/ontologies/cf-att.owl">
+    <nc3:convention_name rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >CF-1.3</nc3:convention_name>
+    <nc3:convention_name rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >CF-1.2</nc3:convention_name>
+    <nc3:convention_name rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >CF-1.1</nc3:convention_name>
+    <nc3:convention_name rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >CF-1.0</nc3:convention_name>
+  </nc3:Metadata_Convention>
+  <nc3:Metadata_Convention rdf:about="http://iridl.ldeo.columbia.edu/ontologies/UDDv1.owl">
+    <nc3:convention_name rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Unidata Dataset Discovery v1.0</nc3:convention_name>
+  </nc3:Metadata_Convention>
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 3.4.1, Build 536)  http://protege.stanford.edu -->

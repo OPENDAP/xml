@@ -1,0 +1,329 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:temporal="http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl#"
+    xmlns:swrla="http://swrl.stanford.edu/ontologies/3.3/swrla.owl#"
+    xmlns:query="http://swrl.stanford.edu/ontologies/built-ins/3.3/query.owl#"
+    xmlns:swrlx="http://swrl.stanford.edu/ontologies/built-ins/3.3/swrlx.owl#"
+    xmlns="http://xml.opendap.org/ontologies/opendap-dap-3.2.owl#"
+    xmlns:swrlm="http://swrl.stanford.edu/ontologies/built-ins/3.4/swrlm.owl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:dap="http://xml.opendap.org/ns/DAP/3.2#"
+    xmlns:abox="http://swrl.stanford.edu/ontologies/built-ins/3.3/abox.owl#"
+    xmlns:rdfcache="http://iridl.ldeo.columbia.edu/ontologies/rdfcache.owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsp="http://www.owl-ontologies.com/2005/08/07/xsp.owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:protege="http://protege.stanford.edu/plugins/owl/protege#"
+    xmlns:p1="http://purl.org/dc/elements/1.1/#"
+    xmlns:sqwrl="http://sqwrl.stanford.edu/ontologies/built-ins/3.4/sqwrl.owl#"
+    xmlns:p3="http://iridl.ldeo.columbia.edu/ontologies/ismemberof.owl#"
+    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:cross="http://iridl.ldeo.columbia.edu/ontologies/iricrosswalk.owl#"
+    xmlns:p2="http://iridl.ldeo.columbia.edu/ontologies/datatypesasclasses.owl#"
+    xmlns:tbox="http://swrl.stanford.edu/ontologies/built-ins/3.3/tbox.owl#"
+  xml:base="http://xml.opendap.org/ontologies/opendap-dap-3.2.owl">
+  <owl:Ontology rdf:about="">
+    <owl:imports rdf:resource="http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl"/>
+    <owl:imports rdf:resource="http://swrl.stanford.edu/ontologies/3.3/swrla.owl"/>
+    <owl:imports rdf:resource="http://iridl.ldeo.columbia.edu/ontologies/iricrosswalk.owl"/>
+    <owl:imports rdf:resource="http://iridl.ldeo.columbia.edu/ontologies/datatypesasclasses.owl"/>
+    <owl:imports rdf:resource="http://www.w3.org/2003/11/swrl"/>
+    <owl:imports rdf:resource="http://swrl.stanford.edu/ontologies/built-ins/3.3/abox.owl"/>
+    <owl:imports rdf:resource="http://sqwrl.stanford.edu/ontologies/built-ins/3.4/sqwrl.owl"/>
+    <owl:imports rdf:resource="http://swrl.stanford.edu/ontologies/built-ins/3.3/tbox.owl"/>
+    <owl:imports rdf:resource="http://swrl.stanford.edu/ontologies/built-ins/3.4/swrlm.owl"/>
+    <owl:imports rdf:resource="http://swrl.stanford.edu/ontologies/built-ins/3.3/query.owl"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >opendap.owl describes the DAP 3.2 data model.</rdfs:comment>
+    <owl:imports rdf:resource="http://swrl.stanford.edu/ontologies/built-ins/3.3/swrlx.owl"/>
+    <owl:imports rdf:resource="http://www.w3.org/2003/11/swrlb"/>
+  </owl:Ontology>
+  <owl:Class rdf:ID="Container">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="OpenDAP"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#URL">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Atom"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Float32">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Atom"/>
+    </rdfs:subClassOf>
+    <rdfs:isDefinedBy rdf:resource=""/>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Float64">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Atom"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Int16">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Atom"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#OpenDAP">
+    <rdfs:isDefinedBy rdf:resource=""/>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Sequence">
+    <rdfs:subClassOf rdf:resource="#Container"/>
+    <rdfs:isDefinedBy rdf:resource=""/>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#UInt16">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Atom"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#UInt32">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Atom"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Byte">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Atom"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Structure">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:subClassOf rdf:resource="#Container"/>
+  </owl:Class>
+  <owl:Class rdf:ID="MapVariable">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Atom"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Dataset">
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <owl:equivalentClass>
+      <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Dataset"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Dataset">
+    <owl:equivalentClass rdf:resource="#Dataset"/>
+    <rdfs:subClassOf rdf:resource="#Container"/>
+    <rdfs:isDefinedBy rdf:resource=""/>
+  </owl:Class>
+  <owl:Class rdf:ID="DimensionSet">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:subClassOf rdf:resource="#OpenDAP"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#first"/>
+        <owl:someValuesFrom>
+          <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#dimension"/>
+        </owl:someValuesFrom>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Array">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="hasDimension"/>
+        </owl:onProperty>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+        >1</owl:minCardinality>
+      </owl:Restriction>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#OpenDAP"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="hasTemplate"/>
+        </owl:onProperty>
+        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >1</owl:cardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#String">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Atom"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Int32">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Atom"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Grid">
+    <rdfs:subClassOf rdf:resource="#Container"/>
+    <rdfs:isDefinedBy rdf:resource=""/>
+  </owl:Class>
+  <owl:Class rdf:about="#Atom">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:subClassOf rdf:resource="#OpenDAP"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Datatype">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+    <rdfs:subClassOf rdf:resource="#OpenDAP"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#dimension">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >1</owl:maxCardinality>
+        <owl:onProperty>
+          <owl:DatatypeProperty rdf:ID="name"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#OpenDAP"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:DatatypeProperty rdf:ID="size"/>
+        </owl:onProperty>
+        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+        >1</owl:cardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:isDefinedBy rdf:resource=""/>
+  </owl:Class>
+  <owl:ObjectProperty rdf:about="#hasDimension">
+    <cross:isMemberPropertyOf>
+      <owl:ObjectProperty rdf:ID="hasDimensions"/>
+    </cross:isMemberPropertyOf>
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:range rdf:resource="http://xml.opendap.org/ns/DAP/3.2#dimension"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Atom"/>
+          <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Sequence"/>
+          <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Grid"/>
+          <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Structure"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="hasDependentVariable">
+    <rdfs:subPropertyOf>
+      <owl:ObjectProperty rdf:ID="isContainerOf"/>
+    </rdfs:subPropertyOf>
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:domain rdf:resource="http://xml.opendap.org/ns/DAP/3.2#Grid"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#hasTemplate">
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Atom"/>
+          <owl:Class rdf:about="#Container"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:domain rdf:resource="http://xml.opendap.org/ns/DAP/3.2#Array"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#hasDimensions">
+    <rdfs:range rdf:resource="#DimensionSet"/>
+    <cross:isListPropertyOf rdf:resource="#hasDimension"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Atom"/>
+          <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Sequence"/>
+          <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Structure"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#isContainerOf">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Atom"/>
+          <owl:Class rdf:about="#Container"/>
+          <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Array"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:domain rdf:resource="#Container"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="hasMapVector">
+    <rdfs:domain rdf:resource="http://xml.opendap.org/ns/DAP/3.2#Grid"/>
+    <rdfs:subPropertyOf rdf:resource="#isContainerOf"/>
+    <rdfs:isDefinedBy rdf:resource=""/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="hasMap">
+    <rdfs:range rdf:resource="#MapVariable"/>
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:domain rdf:resource="#Atom"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://www.w3.org/2003/11/swrl#argument2">
+    <rdfs:isDefinedBy rdf:resource=""/>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:about="#size">
+    <rdfs:domain rdf:resource="http://xml.opendap.org/ns/DAP/3.2#dimension"/>
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:ID="dataset_id"/>
+  <owl:DatatypeProperty rdf:ID="last_modified">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="#name">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://xml.opendap.org/ns/DAP/3.2#dimension"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:ID="localId">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >name used in constraints</rdfs:comment>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Array"/>
+          <owl:Class rdf:about="#Atom"/>
+          <owl:Class rdf:about="#Container"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:ID="hasNumberOfDimensions">
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Atom"/>
+          <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Sequence"/>
+          <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Structure"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
+    <cross:isCountingPropertyOf rdf:resource="#hasDimensions"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:ID="dodsBLOB">
+    <rdfs:isDefinedBy rdf:resource=""/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Atom"/>
+          <owl:Class rdf:about="http://xml.opendap.org/ns/DAP/3.2#Dataset"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+  </owl:DatatypeProperty>
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 3.4.2, Build 562)  http://protege.stanford.edu -->

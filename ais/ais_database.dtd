@@ -1,0 +1,64 @@
+
+<!-- ais_database.dtd 
+
+     This DTD describes how information about AIS resources is stored. The
+     simple XML file described here is meant to be used for both client-side
+     AIS implementations as well as by the AIS server. Each entry in the
+     database has either one primary data source URL or a regular expression
+     that describes a group of URLs and one or more ancillary resource URLs.
+     An acillary resource may also have a rule associated with it; by default
+     the overwrite rule will be assumed.
+
+     In this DTD I used attributes liberally because they make for text that
+     is both easier to read and write. Using an attribute for the ancillary
+     resource rule also provides a way to make sure that only one of three
+     choices will be used. -->
+
+<!-- Use "http://xml.opendap.org/ais" to validate Databases encoded in XML -->
+<!ELEMENT ais (entry*)>
+<!ATTLIST ais version CDATA #FIXED "1.2"
+		      xmlns CDATA #IMPLIED>
+
+<!ELEMENT entry (primary, ancillary+)>
+
+<!ELEMENT primary EMPTY>
+<!ATTLIST primary url CDATA #IMPLIED
+                  regexp CDATA #IMPLIED>
+
+<!-- Note that the 'url' attribute can be either an http, https, file, et c.
+     URL *or* it may be a plain filename. A relative filename will be 
+     interpreted relative to current working directory of the program reading
+     the AIS database. -->
+<!ELEMENT ancillary EMPTY>
+<!ATTLIST ancillary url CDATA #REQUIRED
+                    rule (overwrite | replace | fallback) "overwrite">
+
+<!--
+
+$Log: ais_database.dtd,v $
+Revision 1.3  2005/05/23 16:44:36  jimg
+Added xmlns attribute to element AIS. Bumped up the version to 1.2.
+
+Revision 1.2  2005/05/20 21:39:59  jimg
+Changed from the bogus #OPTIONAL TO THE CORRECT #IMPLIED
+attribute default.
+
+Revision 1.1  2005/05/20 21:24:04  jimg
+Moved from libdap module.
+
+Revision 1.4  2003/12/08 18:02:30  edavis
+Merge release-3-4 into trunk
+
+Revision 1.3  2003/03/12 01:07:34  jimg
+Added regular expressions to the AIS subsystem. In an AIS database (XML)
+it is now possible to list a regular expression in place of an explicit
+URL. The AIS will try to match this Regexp against candidate URLs and
+return the ancillary resources for all those that succeed.
+
+Revision 1.2  2003/02/25 05:37:42  jimg
+Added version attribute to ais element. Fixed rule attribute of ancillary
+element. Added a note about the somewhat bogus meaning of ancillary's url
+attribute.
+
+
+-->
