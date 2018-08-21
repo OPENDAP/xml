@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- RELAX NG Grammar -->
+
+<!-- Date: June 15, 2012 -->
+<!-- Last Revised: November 23, 2012 -->
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+         datatypeLibrary="http://xml.opendap.org/datatypes/dap4"
+         ns="http://xml.opendap.org/ns/DAP/4.0#"
+         >
+<start>
+  <ref name="dataset"/>
+</start>
+
+<define name="dataset">
+  <element name="Dataset">
+    <a:documentation>
+        Semantic restriction: dapVersion, dmrVersion and xml:base are required.
+        Note that because the 'grammar' element specifies the ns attribute,
+        valid 'Dataset' elements must include the 'xmlns' attribute with the
+        given value.
+    </a:documentation>
+    
+    <attribute name="dapVersion"><data type="dap4_string"/></attribute>
+    <attribute name="dmrVersion"><data type="dap4_string"/></attribute>
+    
+    <attribute name="xml:base"><data type="dap4_uri"/></attribute>
+    
+    <!-- 
+      I am not sure if this attribute is specified correctly. jhrg 4/15/13
+      ref: http://www.w3.org/TR/xmlbase/
+    <attribute name="base" ns="http://www.w3.org/XML/1998/namespace">
+        <data type="dap4_uri"/>
+    </attribute>
+    -->
+    
+    <!-- 
+      I think this should be removed from the grammar. The use of 
+      'ns' above in the grammar element efftively says that all of the 
+      elements are in the DAP4 namespace and that the XML attribute
+      'xmlns' must be used for a document to be valid. jhrg 4/15/13
+      ref: http://relaxng.org/tutorial-20030326.html#id2816290
+    <optional>
+      <attribute name="ns"><data type="dap4_uri"/></attribute>
+    </optional>
+    -->
+    
+    <ref name="groupbody"/>
+  </element>
+</define>
+
+<define name="groupdef">
+  <element name="Group">
+    <ref name="groupbody"/>
+  </element>
+</define>
+
+<define name="groupbody">
+  <attribute name="name"><data type="dap4_id"/></attribute>
+  
+  <zeroOrMore>
+    <ref name="enumdef"/>
+  </zeroOrMore>
+  <zeroOrMore>
+    <ref name="dimdef"/>
+  </zeroOrMore>
+  <zeroOrMore>
+    <ref name="groupdef"/>
+  </zeroOrMore>
+  <zeroOrMore>
+    <ref name="variable"/>
+  </zeroOrMore>
+  <zeroOrMore>
+    <ref name="metadata"/>
+  </zeroOrMore>
+
+</define>
+
+<define name="enumdef">
+  <element name="Enumeration">
+    <attribute name="name"><data type="dap4_id"/></attribute>
+    <attribute name="basetype">
+        <choice> <!-- Must be consistent with atomictype and variable -->
+            <value>Byte</value> <!-- equivalent to UInt8 -->
+            <value>Int8</value>
+            <value>UInt8</value>
+            <value>Int16</value>
+            <value>UInt16</value>
+            <value>Int32</value>
+            <value>UInt32</value>
+            <value>Int64</value>
+            <value>UInt64</value>
+        </choice>
+    </attribute>
+    <oneOrMore><ref name="enumconst"/></oneOrMore>
+  </element>
+</define>
+
+<define name="enumconst">
+  <element name="EnumConst">
+    <attribute name="name"><data type="dap4_id"/></attribute>
+    <attribute name="value"><data type="dap4_integer"/></attribute>
+  </element>
+</define>
+
+<define name="namespace">
+  <zeroOrMore>
+    <element name="Namespace">
+      <attribute name="href"><data type="dap4_uri"/></attribute>
+    </element>
+  </zeroOrMore>
+</define>
+
+<define name="dimdef">
+  <element name="Dimension">
+    <a:documentation>
+      A Dimension is a binding of a name to a size; when two or more variables
+      use the same 'name' it can be inferred that they 'share' that dimension.
+      The 'size' attribute can be either a positive integer or "*", where the
+      latter indicates a varying dimension.
+    </a:documentation>
+    <attribute name="name"><data type="dap4_id"/></attribute>
+    <attribute name="size"><data type="dap4_dim"/></attribute>
+    
+    <!--
+      We discussed this attribute on 4/9/13 and decided it should be removed.
+      If a dimension corresponds to a netCDF unlimited dimension, the best 
+      place to make a note of that is in the DAP4 Attributes bound to this
+      dimension. jhrg 4/15/13
+    <optional>
+      <attribute name="unlimited"><data type="dap4_boolean"/></attribute>
+    </optional>
+    -->
+    
+    <ref name="metadatalist"/>
+  </element>
+</define>
+
+<define name="dimref">
+  <element name="Dim">
+    <optional>
+        <attribute name="name"><data type="dap4_fqn"/></attribute>
+    </optional>
+    <optional>
+      <attribute name="size">
+          <data type="dap4_dim"/>
+      </attribute>
+    </optional>
+  </element>
+</define>
+
+<!-- Atomictype define is only a way
+     to list the set of atomictypes;
+     it is never used in the grammar
+-->
+<define name="atomictype">
+  <!-- This must be consistent with "variable" below -->
+  <choice>
+    <value>Char</value>
+    <value>Byte</value>
+    <value>Int8</value>
+    <value>UInt8</value>
+    <value>Int16</value>
+    <value>UInt16</value>
+    <value>Int32</value>
+    <value>UInt32</value>
+    <value>Int64</value>
+    <value>UInt64</value>
+    <value>Float32</value>
+    <value>Float64</value>
+    <value>String</value>
+    <value>URL</value>
+    <value>Enum</value>
+    <value>Opaque</value>
+  </choice>
+</define>
+
+<define name="variable">
+  <choice>
+    <ref name="simplevariable"/>
+    <ref name="structurevariable"/>
+    <ref name="sequencevariable"/>
+  </choice>
+</define>
+
+<define name="simplevariable">
+  <choice>
+    <!-- Following  must be consistent with "atomictype" -->
+    <element name="Char"   ><ref name="variabledef"/></element>
+    <element name="Byte"   ><ref name="variabledef"/></element>
+    <element name="Int8"   ><ref name="variabledef"/></element>
+    <element name="UInt8"  ><ref name="variabledef"/></element>
+    <element name="Int16"  ><ref name="variabledef"/></element>
+    <element name="UInt16" ><ref name="variabledef"/></element>
+    <element name="Int32"  ><ref name="variabledef"/></element>
+    <element name="UInt32" ><ref name="variabledef"/></element>
+    <element name="Int64"  ><ref name="variabledef"/></element>
+    <element name="UInt64" ><ref name="variabledef"/></element>
+    <element name="Float32"><ref name="variabledef"/></element>
+    <element name="Float64"><ref name="variabledef"/></element>
+    <!-- Made 'string' capitalized. jhrg -->
+    <element name="String" ><ref name="variabledef"/></element>
+    <!-- Added URL type. jhrg -->
+    <element name="URL" ><ref name="variabledef"/></element>
+    <element name="Opaque"><ref name="variabledef"/></element>
+    <element name="Enum">
+      <attribute name="enum"><data type="dap4_fqn"/></attribute>
+      <ref name="variabledef"/>
+    </element>
+  </choice>
+</define>
+
+<define name="variabledef">
+  <attribute name="name"><data type="dap4_id"/></attribute>
+  <zeroOrMore>
+    <choice>
+      <ref name="dimref"/>
+      <ref name="mapref"/>
+      <ref name="metadata"/>
+    </choice>
+  </zeroOrMore>
+</define>
+
+<define name="mapref">
+  <element name="Map">
+    <attribute name="name"><data type="dap4_fqn"/></attribute>
+  </element>
+</define>
+
+<define name="structurevariable">
+  <element name="Structure">
+    <attribute name="name"><data type="dap4_id"/></attribute>
+    <zeroOrMore>
+      <choice>
+        <ref name="dimref"/>
+        <ref name="variable"/>
+        <ref name="metadata"/>
+      </choice>
+    </zeroOrMore>
+  </element>
+</define>
+
+<define name="sequencevariable">
+  <element name="Sequence">
+    <attribute name="name"><data type="dap4_id"/></attribute>
+    <zeroOrMore>
+      <choice>
+        <ref name="dimref"/>
+        <ref name="variable"/>
+        <ref name="metadata"/>
+      </choice>
+    </zeroOrMore>
+  </element>
+</define>
+
+<define name="metadatalist">
+  <zeroOrMore>
+    <ref name="metadata"/>
+  </zeroOrMore>
+</define>
+
+<define name="metadata">
+    <choice>
+<!--    <ref name="otherxml"/> -->
+    <ref name="attribute"/>
+    </choice>
+</define>
+
+<define name="attribute">
+  <choice>
+    <ref name="atomicattribute"/>
+    <ref name="containerattribute"/>
+  </choice>
+</define>
+
+<define name="atomicattribute">
+  <element name="Attribute">
+      <attribute name="name"><data type="dap4_id"/></attribute>
+      <a:documentation>
+        Semantic constraint: type must be compatible
+        with the set of attribute value types
+      </a:documentation>
+      <attribute name="type">
+        <choice>
+          <value>Char</value>
+          <value>Byte</value>
+          <value>Int8</value>
+          <value>UInt8</value>
+          <value>Int16</value>
+          <value>UInt16</value>
+          <value>Int32</value>
+          <value>UInt32</value>
+          <value>Int64</value>
+          <value>UInt64</value>
+          <value>Float32</value>
+          <value>Float64</value>
+          <value>String</value>
+          <!-- Added URL -->
+          <value>URL</value>
+          <value>Enumeration</value>
+          <value>Opaque</value>
+        </choice>
+      </attribute>
+      <optional>
+          <ref name="namespace"/>
+      </optional>
+      <zeroOrMore>
+	<choice>
+          <element name="Value">
+              <attribute name="value">
+                <choice> <!-- is order important? -->
+                    <data type="dap4_integer"/>
+                    <data type="dap4_float"/>
+                    <data type="dap4_opaque"/>
+                    <data type="dap4_fqn"/> <!-- for enum consts -->
+                    <data type="dap4_char"/>
+                    <data type="dap4_string"/>
+                </choice>
+              </attribute>
+         </element>
+	 <element name="Value"><data type="dap4_text"/></element>
+	</choice>
+      </zeroOrMore>
+  </element>
+</define>
+
+<define name="containerattribute">
+  <element name="Attribute">
+    <attribute name="name"><data type="dap4_id"/></attribute>
+    <zeroOrMore>
+	<ref name="attribute"/>
+    </zeroOrMore>
+  </element>
+</define>
+
+<define name="otherxml">
+  <element name="OtherXML">
+    <ref name="arbitraryxml"/>
+  </element>
+</define>
+
+<define name="arbitraryxml">
+    <element>
+      <anyName/>
+      <zeroOrMore>
+        <choice>
+          <attribute>
+            <anyName/>
+          </attribute>
+          <text/>
+          <ref name="arbitraryxml"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+</define>
+
+</grammar>

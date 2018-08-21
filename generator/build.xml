@@ -1,0 +1,69 @@
+<project name="TOC Build" default="all" basedir=".">
+
+<property name="level" value="2"/>
+<property name="template" value="../dap4.spec"/>
+
+<property name="project.dir" value="${basedir}"/> <!--NOTE-->
+<property name="build.dir" value="${project.dir}/build"/>
+<property name="src.dir" value="${project.dir}/src"/>
+<property name="generator.jar" value="${basedir}/generator.jar"/>
+<property name="main.class" value="Generator"/>
+
+<property name="cp" value="${build.dir}"/>
+
+<target name="all" depends="clean,generator"/>
+
+<target name="compile">
+  <mkdir dir="${build.dir}"/>
+  <javac srcdir="${src.dir}"
+ 	 destdir="${build.dir}"
+	 includeantruntime="false"
+         includes="**/*.java"
+  />
+</target>
+
+<target name="jar" depends="compile">
+  <jar jarfile="${generator.jar}">
+    <fileset dir="${build.dir}"/>
+    <manifest>
+      <attribute name="Manifest-Version" value="1.0"/>
+      <attribute name="Main-class" value="${main.class}"/>
+    </manifest>
+  </jar>
+</target>
+
+<target name="clean">
+    <delete dir="${build.dir}"/>
+    <delete file="${generator.jar}"/>
+    <delete file="dap4.html"/>
+    <delete file="dap4.word"/>
+    <delete file="dap4.wiki"/>
+</target>
+
+<target name="generator" depends="jar,word,wiki,html">
+    <antcall target="cvt"><param name="KIND" value="word"/></antcall>
+    <antcall target="cvt"><param name="KIND" value="wiki"/></antcall>
+    <antcall target="cvt"><param name="KIND" value="html"/></antcall>
+</target>
+
+<target name="html">
+    <antcall target="cvt"><param name="KIND" value="html"/></antcall>
+</target>
+<target name="wiki">
+    <antcall target="cvt"><param name="KIND" value="wiki"/></antcall>
+</target>
+<target name="word">
+    <antcall target="cvt"><param name="KIND" value="word"/></antcall>
+</target>
+
+
+<target name="cvt">
+    <java jar="${generator.jar}" fork="true"
+        output="dap4.${KIND}">
+      <jvmarg value="-Dlevel=${level}"/>
+      <jvmarg value="-Dformat=${KIND}"/>
+      <arg value="${template}"/>
+    </java>
+</target>
+
+</project>
