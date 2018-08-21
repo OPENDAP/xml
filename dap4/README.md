@@ -1,6 +1,6 @@
-# DAP4-schema
-DAP4 XML Schema
+# The DAP4 schema
+This holds the schema files for DAP4. Other files are here as well, including a 
+RNG schema, specs, a word document describing DAP4. 
 
-This project holds an XML Schema for DAP4. Note that the schema was generated from
-the RelaxNG schema using OxygenXML. See also the respoitory for the [DAP2 schema]
-(https://github.com/jgallagher59701/DAP2-schema).
+* [DAP4 schema](dap4.xsd)
+* [DAP4 specifcation](http://docs.opendap.org/index.php?title=DAP4_Specification)
