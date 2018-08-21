@@ -1,6 +1,8 @@
-# DAP2-schema
+# The DAP2 and transitional schemas
 
-This project holds an XML Schema for DAP2, including the schema for various versions of 'DAP3,' the
-'development' version of DAP that lead to the (very different) _DAP4_. Yu can find the schema for
-[DAP4 also on GitHub](https://github.com/jgallagher59701/DAP4-schema).
+This holds the schema files for DAP2 and various versions of DAP3. The links below 
+reference the DAP2 schema and the most complete DAP3 schema. DAP3 was the transitional
+version of DAP before DAP4 was developed.
 
+* [DAP2 schema](https::/github.com/opendap/xml/dap/dap2.xsd)
+* [DAP 3.3.2 schema](https::/github.com/opendap/xml/dap/dap3.3.2.xsd)
