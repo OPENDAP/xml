@@ -4,7 +4,6 @@
     xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
     xmlns:xml="http://www.w3.org/XML/1998/namespace"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:dc="http://purl.org/dc/elements/1.1/" 
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd"
@@ -21,8 +20,6 @@
     <!-- http://www.w3.org/2001/xml.xsd -->
     <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlink.xsd"/>
     <!-- Copied from the appendix of http://www.w3.org/1999/xlink -->
-    <xs:import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="dc.xsd"/>
-    <!-- http://dublincore.org/schemas/xmls/qdc/2008/02/11/dc.xsd -->
 
     <xs:element name="Dataset" type="DatasetType">
         <xs:annotation>
