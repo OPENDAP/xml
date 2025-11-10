@@ -95,7 +95,6 @@
             <xs:group ref="MetadataGroup"/>
             
             <xs:element name="Group" type="GroupType" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="blob" type="BlobType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
 
         <xs:attribute name="name" type="xs:string" use="required"/>
@@ -475,61 +474,6 @@
                 <xs:group ref="AllVariableGroup" minOccurs="1" maxOccurs="unbounded"/>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="BlobType">
-        <xs:annotation>
-            <xs:documentation>
-                <div class="bodytext">
-                    <p>The \'Blob\' element is used to point to an associated data document. When DAP
-                        is used to access metadata only for a data source, no \'blob\' element will be
-                        present. However, when a request for data is made, the Dataset element holds
-                        a description of the data values and the blob points to a place where those
-                        values will be found. In DAP4 the Blob element refers to binary
-                        (application/octet-stream) part within a multi-part MIME document or it
-                        refers to a separate document, possibly not imediately available. The latter
-                        case is included to support asynchronous responses (i.e., responses that
-                        cannot be returned quickly). See http://www.w3.org/TR/xlink11/.</p>
-                    <h4>The dc:date child element</h4>
-                    <p>If present, the <dc:date/> element indicates the time or time range when the
-                        information will be available. This is only sensible (i.e., valid) when the
-                        response is asynchronous (i.e.,
-                        xlink:role="http://xml.opendap.org/dap/DAP4#asynchronous"). Dublin core
-                        defines both a date and a date range. In the case of a date, this element
-                        indicates when the information will likely be available; when its value is a
-                        range, it denotes the when it will likely be present and when it wil go
-                        away.</p>
-                    <p>Examples of the <dc:date/> element: <ul>
-                            <li><code>&lt;dc:date&gt;1994-11-05T13:15:30Z&lt;/dc:date&gt;</code></li>
-                            <li><code>&lt;dc:date&gt;1994-11-05T13:15:30Z/1994-11-06T00:00:00Z&lt;/dc:date&gt;</code></li>
-                        </ul>
-                    </p>
-                    <p>Element attributes:</p>
-                    <dl>
-                        <dt>xlink:href:</dt>
-                        <dd>Refers to the multi-part MIME document part that holds the data values,
-                            encoded using XDR or to a separate document. In the first case, the IRI
-                            must begin with \'cid:\' (see the owsManifest schema for an example of
-                            this use; http://schemas.opengis.net/ows/2.0/owsManifest.xsd). In the
-                            latter case, the IRI must refer to a remote resourse, and will likely
-                            start \'http:\'.</dd>
-                        <dt>xlink:type:</dt>
-                        <dd>Always \'simple\'.</dd>
-                        <dt>xlink:role:</dt>
-                        <dd>If present the only values DAP4 supports are \'asynchronousResponse\' and
-                            \'synchronousResponse\'.</dd>
-                        <!-- TODO: Better names than async... and sync... ? -->
-                    </dl>
-                </div>
-            </xs:documentation>
-        </xs:annotation>
-        <xs:all>
-            <xs:element ref="dc:date" minOccurs="0"/>
-        </xs:all>
-
-        <xs:attribute ref="xlink:type" use="optional" default="simple"/>
-        <xs:attribute ref="xlink:href" use="required"/>
-        <xs:attribute ref="xlink:role" use="optional"/>
     </xs:complexType>
 
 </xs:schema>
