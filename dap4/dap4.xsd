@@ -16,7 +16,7 @@
 	xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
     xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
 	xmlns:xml="http://www.w3.org/XML/1998/namespace"
-     xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd"
@@ -28,7 +28,7 @@
 		xlink a 'non-normative' one is provided in the appendix of
 		http://www.w3.org/TR/xlink11/. jhrg 2/7/12 -->
 
-    <xs:element name="Dataset" type="DAP_Dataset"/>
+    <xs:element name="Dataset" type="DatasetType"/>
     <xs:element name="Attribute" type="DAP_Attribute"/>
     <xs:element name="Alias" type="AttributeAlias"/>
 
@@ -92,9 +92,9 @@
     </xs:group>
 
 
-    <xs:complexType name="DAP_Dataset">
+    <xs:complexType name="DatasetType">
         <xs:annotation>
-            <xs:documentation>This is the XML representation of a DAP DDS object.</xs:documentation>
+            <xs:documentation>This is the XML representation of a DAP DMR object.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
             <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
