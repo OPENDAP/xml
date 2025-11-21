@@ -236,6 +236,7 @@
             <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="AnyXML" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Map" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="name" type="xs:string"/>
     </xs:complexType>
