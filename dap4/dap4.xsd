@@ -22,7 +22,12 @@
 	xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd"
 	elementFormDefault="qualified"
     attributeFormDefault="unqualified" 
+    targetNamespace="http://xml.opendap.org/ns/DAP/4.0#"
     xml:lang="en">
+
+    <!-- Required import for xml:base -->
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
+
 	<!-- Note that these schemas are local; the XML one can be found at 
 		http://www.w3.org/2001/xml.xsd. While there is no official schema for 
 		xlink a 'non-normative' one is provided in the appendix of
@@ -63,10 +68,13 @@
     <xs:element name="Opaque" type="BaseType"/>
 
     <xs:element name="SharedDimension" type="SharedDimension"/>
+    <xs:element name="Dimension" type="DimensionType"/>
+    <xs:element name="Dim" type="DimRefType"/>
     <xs:element name="Group" type="Group"/>
 
     <xs:element name="AnyXML" type="AnyXMLType"/>
 
+    
     <xs:group name="VariableTypes">
         <xs:annotation>
             <xs:documentation>DAP Variable Types</xs:documentation>
@@ -97,6 +105,8 @@
             <xs:documentation>This is the XML representation of a DAP DMR object.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
+            <xs:element ref="Dimension" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:group ref="VariableTypes" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="AnyXML" minOccurs="0" maxOccurs="unbounded"/>
@@ -104,6 +114,10 @@
         </xs:sequence>
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="dapVersion" type="xs:string" use="required"/>
+        <xs:attribute name="dmrVersion" type="xs:string" use="required"/>
+        <!-- Allow xml:base -->
+        <xs:anyAttribute namespace="http://www.w3.org/XML/1998/namespace"
+                 processContents="lax"/>
     </xs:complexType>
 
 
@@ -115,6 +129,7 @@
                 attribute should be \'anonymous\'.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
+            <xs:element ref="Dimension" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="AnyXML" minOccurs="0" maxOccurs="unbounded"/>
@@ -133,6 +148,19 @@
         <xs:attribute name="size" type="xs:integer" use="required"/>
     </xs:complexType>
 
+    <xs:complexType name="DimensionType">
+        <xs:annotation>
+            <xs:documentation>This holds a dimension, a name and size, that may be shared between
+                and Array. SharedDimensions are lexically scoped.</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="size" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="DimRefType">
+        <!-- fully-qualified dimension name -->
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
 
     <xs:complexType name="DAP_Attribute">
         <xs:annotation>
@@ -140,7 +168,7 @@
         </xs:annotation>
         <xs:choice>
             <xs:sequence>
-                <xs:element name="value" type="xs:string" maxOccurs="unbounded"/>
+                <xs:element name="Value" type="ValueType" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:sequence>
                 <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
@@ -150,6 +178,12 @@
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="type" type="AttributeType" use="required"/>
         <xs:attribute name="namespace" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="ValueType" mixed="true">
+        <!-- Supports text content AND optional @value -->
+        <xs:attribute name="value" type="xs:string" use="optional"/>
     </xs:complexType>
 
 
@@ -193,12 +227,12 @@
         <xs:anyAttribute processContents="lax" namespace="##any"/>
     </xs:complexType>
 
-
     <xs:complexType name="BaseType">
         <xs:annotation>
             <xs:documentation>DAP Base Type</xs:documentation>
         </xs:annotation>
         <xs:sequence>
+            <xs:element ref="Dim" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="AnyXML" minOccurs="0" maxOccurs="unbounded"/>
