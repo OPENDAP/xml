@@ -1,7 +1,6 @@
 from lxml import etree
 import pytest
 from pathlib import Path
-import glob
 
 # Path to this test file
 TEST_DIR = Path(__file__).resolve().parent
@@ -21,6 +20,7 @@ def dap4_schema():
     with open(SCHEMA_PATH, "rb") as f:
         schema_doc = etree.parse(f)
     return etree.XMLSchema(schema_doc)
+
 
 @pytest.mark.parametrize("dmr_file", DMR_PATHS)
 def test_validate_dmr_files(dap4_schema, dmr_file):
