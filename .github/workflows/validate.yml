@@ -2,9 +2,9 @@ name: Validate DAP4 XML
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   validate-dmr:
