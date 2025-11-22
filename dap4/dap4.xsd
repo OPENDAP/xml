@@ -108,7 +108,6 @@
             <xs:element ref="Dimension" minOccurs="0" maxOccurs="unbounded"/>
             <xs:group ref="VariableTypes" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="AnyXML" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Group" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
@@ -130,11 +129,10 @@
         </xs:annotation>
         <xs:sequence>
             <xs:element ref="Dimension" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element ref="AnyXML" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element ref="SharedDimension" minOccurs="0" maxOccurs="unbounded"/>
             <xs:group ref="VariableTypes" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="AnyXML" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Group" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="name" type="xs:string" default="anonymous"/>
     </xs:complexType>

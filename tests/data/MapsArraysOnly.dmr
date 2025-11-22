@@ -18,6 +18,8 @@
     </Int16>
     <Float32 name="Pressure">
         <Dim name="/Z"/>
+        <Dim name="/Y"/>
+        <Dim name="/X"/>
         <Map name="/Z"/>
         <Map name="/Y"/>
         <Map name="/X"/>
