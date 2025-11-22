@@ -8,6 +8,9 @@
     <Float32 name="Z">
         <Dim name="/Z"/>
     </Float32>
+    <Attribute name="description" type="String">
+        <Value>DMR for testing Maps, Dims at root level (no Groups, Sequences or Structures).</Value>
+    </Attribute>
     <Group name="Group1">
         <Dimension name="Y" size="40"/>
         <Dimension name="X" size="40"/>
