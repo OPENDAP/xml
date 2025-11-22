@@ -96,6 +96,11 @@
             <xs:element ref="Structure" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Sequence" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Opaque" minOccurs="0" maxOccurs="unbounded"/>
+            <!--- Enable sequences and Structures to occur alongside other
+            BaseTypes. There is no order imposed.
+            <xs:element ref="Sequence" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Structure" minOccurs="0" maxOccurs="unbounded"/>
+            -->
         </xs:choice>
     </xs:group>
 
