@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dataset xmlns="http://xml.opendap.org/ns/DAP/4.0#" dapVersion="4.0" dmrVersion="1.0" name="Test2.nc">
+    <Structure name="s">
+        <Int32 name="x">
+            <Dim size="2"/>
+            <Dim size="4"/>
+        </Int32>
+        <Float64 name="y"/> <!-- note the end of element declaration -->
+            <Dim size="3"/>
+  </Structure>
+</Dataset>
