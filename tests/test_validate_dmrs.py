@@ -25,20 +25,9 @@ def dap4_schema():
 @pytest.mark.parametrize("dmr_file", DMR_PATHS)
 def test_validate_dmr_files(dap4_schema, dmr_file):
     """Validate all DMR/XML files in the dmr/ directory."""
-    if not dmr_file.name.startswith("Structure"):
-        with open(dmr_file, "rb") as f:
-            doc = etree.parse(f)
-        try:
-            dap4_schema.assertValid(doc)
-        except etree.DocumentInvalid as e:
-            pytest.fail(f"DMR validation failed for {dmr_file}:\n{str(e)}")
-
-
-@pytest.mark.parametrize("dmr_file", DMR_PATHS)
-def test_Structure_fails_validate_dmr_files(dap4_schema, dmr_file):
-    """Validate all DMR/XML files in the dmr/ directory."""
-    if dmr_file.name.startswith("Structure"):
-        with open(dmr_file, "rb") as f:
-            doc = etree.parse(f)
-            with pytest.raises(etree.DocumentInvalid):
-                dap4_schema.assertValid(doc)
+    with open(dmr_file, "rb") as f:
+        doc = etree.parse(f)
+    try:
+        dap4_schema.assertValid(doc)
+    except etree.DocumentInvalid as e:
+        pytest.fail(f"DMR validation failed for {dmr_file}:\n{str(e)}")

@@ -5,7 +5,8 @@
             <Dim size="2"/>
             <Dim size="4"/>
         </Int32>
-        <Float64 name="y"/> <!-- note the end of element declaration -->
+        <Float64 name="y"> <!-- note the end of element declaration -->
             <Dim size="3"/>
+        </Float64>
   </Structure>
 </Dataset>

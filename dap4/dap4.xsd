@@ -162,7 +162,9 @@
 
     <xs:complexType name="DimRefType">
         <!-- fully-qualified dimension name -->
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="optional"/>
+        <!-- size attribute -->
+        <xs:attribute name="size" type="xs:nonNegativeInteger" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="DAP_Attribute">
