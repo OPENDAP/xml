@@ -1,6 +1,7 @@
 from lxml import etree
 import pytest
 from pathlib import Path
+from validate_dmr_semantics import validate_dim_semantics
 
 # Path to this test file
 TEST_DIR = Path(__file__).resolve().parent
@@ -23,11 +24,22 @@ def dap4_schema():
 
 
 @pytest.mark.parametrize("dmr_file", DMR_PATHS)
-def test_validate_dmr_files(dap4_schema, dmr_file):
-    """Validate all DMR/XML files in the dmr/ directory."""
-    with open(dmr_file, "rb") as f:
-        doc = etree.parse(f)
-    try:
+def test_valid_dmrs(dap4_schema, dmr_file):
+    if not dmr_file.name.startswith("Invalid"):
+        doc = etree.parse(str(dmr_file))
+        # XSD validation
         dap4_schema.assertValid(doc)
-    except etree.DocumentInvalid as e:
-        pytest.fail(f"DMR validation failed for {dmr_file}:\n{str(e)}")
+        # Semantic validation
+        validate_dim_semantics(doc)
+
+
+@pytest.mark.parametrize("dmr_file", DMR_PATHS)
+def test_fail_validate_dim_BaseType(dap4_schema, dmr_file):
+    dmr_file = DATA_DIR / "Invalid_BaseType_Dim.dmr"
+
+    if dmr_file.name.startswith("Invalid"):
+        doc = etree.parse(str(dmr_file))
+        # XSD validation
+        dap4_schema.assertValid(doc)
+        with pytest.raises(ValueError):
+            validate_dim_semantics(doc)
