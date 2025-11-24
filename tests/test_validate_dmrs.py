@@ -33,8 +33,7 @@ def test_valid_dmrs(dap4_schema, dmr_file):
         validate_dim_semantics(doc)
 
 
-@pytest.mark.parametrize("dmr_file", DMR_PATHS)
-def test_fail_validate_dim_BaseType(dap4_schema, dmr_file):
+def test_fail_validate_dim_BaseType(dap4_schema):
     dmr_file = DATA_DIR / "Invalid_BaseType_Dim.dmr"
 
     if dmr_file.name.startswith("Invalid"):
