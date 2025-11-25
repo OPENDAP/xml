@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dataset xmlns="http://xml.opendap.org/ns/DAP/4.0#" dapVersion="4.0" dmrVersion="1.0" name="test_enum_2.nc.h5">
+    <Group name="h">
+        <Enumeration name="NoNameEnum0" basetype="Int8">
+            <EnumConst name="Clear" value="0"/>
+            <EnumConst name="Cumulonimbus" value="1"/>
+            <EnumConst name="Stratus" value="2"/>
+            <EnumConst name="Stratocumulus" value="3"/>
+            <EnumConst name="Cumulus" value="4"/>
+            <EnumConst name="Altostratus" value="5"/>
+            <EnumConst name="Nimbostratus" value="6"/>
+            <EnumConst name="Altocumulus" value="7"/>
+            <EnumConst name="Cirrostratus" value="8"/>
+            <EnumConst name="Cirrocumulus" value="9"/>
+            <EnumConst name="Cirrus" value="10"/>
+            <EnumConst name="Missing" value="127"/>
+        </Enumeration>
+        <Enum name="primary_cloud" enum="/h/NoNameEnum0"/>
+    </Group>
+</Dataset>

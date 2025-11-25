@@ -67,6 +67,10 @@
         String or URL. -->
     <xs:element name="Opaque" type="BaseType"/>
 
+    <xs:element name="Enumeration" type="EnumerationType"/>
+    <xs:element name="EnumConst" type="EnumConstType"/>
+    <xs:element name="Enum" type="EnumType"/>
+
     <xs:element name="SharedDimension" type="SharedDimension"/>
     <xs:element name="Dimension" type="DimensionType"/>
     <xs:element name="Dim" type="DimRefType"/>
@@ -101,6 +105,8 @@
             <xs:element ref="Sequence" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Structure" minOccurs="0" maxOccurs="unbounded"/>
             -->
+            <!-- REQUIRED BY SPEC -->
+            <xs:element ref="Enum"/>
         </xs:choice>
     </xs:group>
 
@@ -111,6 +117,7 @@
         </xs:annotation>
         <xs:sequence>
             <xs:element ref="Dimension" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Enumeration" minOccurs="0" maxOccurs="unbounded"/>
             <xs:group ref="VariableTypes" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="AnyXML" minOccurs="0" maxOccurs="unbounded"/>
@@ -134,6 +141,7 @@
         </xs:annotation>
         <xs:sequence>
             <xs:element ref="Dimension" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Enumeration" minOccurs="0" maxOccurs="unbounded"/>
             <xs:group ref="VariableTypes" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="AnyXML" minOccurs="0" maxOccurs="unbounded"/>
@@ -354,5 +362,51 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+
+    <xs:simpleType name="EnumBaseType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Byte"/>
+            <xs:enumeration value="SignedByte"/>
+            <xs:enumeration value="Int8"/>
+            <xs:enumeration value="UInt8"/>
+            <xs:enumeration value="Int16"/>
+            <xs:enumeration value="UInt16"/>
+            <xs:enumeration value="Int32"/>
+            <xs:enumeration value="UInt32"/>
+            <xs:enumeration value="Int64"/>
+            <xs:enumeration value="UInt64"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="EnumerationType">
+        <xs:sequence>
+            <xs:element ref="EnumConst" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <!-- name of enum -->
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <!-- basetype is optional; defaults to Int32 in semantic validation -->
+        <xs:attribute name="basetype" type="EnumBaseType" use="optional"/>
+        <!-- Assert basetype is one of allowed, or empty (default to Int32) -->
+    </xs:complexType>
+
+
+    <xs:complexType name="EnumConstType">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="EnumType">
+        <xs:sequence>
+            <xs:element ref="Dim" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Map" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="AnyXML" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="enum" type="xs:string" use="required"/>
+</xs:complexType>
+
 
 </xs:schema>
