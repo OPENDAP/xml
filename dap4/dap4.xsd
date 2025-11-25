@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- DAP 4 introduces SharedDimension, Group, Opaque, 64-bit integers and
-    UnsignedByte. In addition: The syntax for Array has been changed so that
+<!-- DAP 4 introduces (Shared) Dimensions, Group, Opaque, 64-bit integers. 
+
+    Makes the substitution byte=UInt8 and removes UByte and Grids completely. 
+    Char element is synonimous with UInt8.
+    maju 11/24/25
+
+    In addition: The syntax for Array has been changed so that
     it\'s easier for processing software to figure out the type of an array; 
     Grids have been generalized so that there can be any number of \'Array\'
     parts (and the Maps may be multi-dimensional; and OtherXML has been renamed
@@ -9,7 +14,12 @@
     The change to otherXML was made to simplify writing the schema since it
     appears schema 1.0 cannot reprsent a syntax where the type of an element 
     is a function of the value of one of its attributes.
-    jhrg 10/13/09 -->
+    jhrg 10/13/09 
+    
+    Schema expanded from template dap3.3.xsd
+    maju 11/24/2025    
+    -->
+
 <?xml-stylesheet href="http://www.w3.org/2008/09/xsd.xsl" type="text/xsl"?>
 
 <xs:schema
@@ -38,7 +48,10 @@
     <xs:element name="Alias" type="AttributeAlias"/>
 
     <xs:element name="Byte" type="BaseType"/>
-    <xs:element name="SignedByte" type="BaseType"/>
+    <xs:element name="Char" type="BaseType"/>
+
+    <xs:element name="Int8" type="BaseType"/>
+    <xs:element name="UInt8" type="BaseType"/>
 
     <xs:element name="Int16" type="BaseType"/>
     <xs:element name="UInt16" type="BaseType"/>
@@ -53,7 +66,7 @@
     <xs:element name="Float64" type="BaseType"/>
 
     <xs:element name="String" type="BaseType"/>
-    <xs:element name="Url" type="BaseType"/>
+    <xs:element name="URI" type="BaseType"/>
 
     <xs:element name="Array" type="Array"/>
 
@@ -85,7 +98,9 @@
         </xs:annotation>
         <xs:choice>
             <xs:element ref="Byte" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element ref="SignedByte" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Char" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Int8" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="UInt8" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Int16" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="UInt16" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Int32" minOccurs="0" maxOccurs="unbounded"/>
@@ -95,7 +110,7 @@
             <xs:element ref="Float32" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Float64" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="String" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element ref="Url" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="URI" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Array" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Structure" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Sequence" minOccurs="0" maxOccurs="unbounded"/>
@@ -208,8 +223,10 @@
 
     <xs:simpleType name="AttributeType">
         <xs:restriction base="xs:string">
+            <xs:enumeration value="Int8"/>
+            <xs:enumeration value="UInt8"/>            
             <xs:enumeration value="Byte"/>
-            <xs:enumeration value="SignedByte"/>
+            <xs:enumeration value="Char"/>
             <xs:enumeration value="Int16"/>
             <xs:enumeration value="UInt16"/>
             <xs:enumeration value="Int32"/>
@@ -219,8 +236,9 @@
             <xs:enumeration value="Float32"/>
             <xs:enumeration value="Float64"/>
             <xs:enumeration value="String"/>
-            <xs:enumeration value="URL"/>
+            <xs:enumeration value="URI"/>
             <xs:enumeration value="Container"/>
+            <xs:enumeration value="EnumType"/>
             <!--xs:enumeration value="OtherXML"/ Replaced by AnyXML. -->
         </xs:restriction>
     </xs:simpleType>
@@ -263,7 +281,6 @@
                         <xs:complexType>
                             <xs:choice minOccurs="1" maxOccurs="1">
                                 <xs:element ref="Byte"/>
-                                <xs:element ref="SignedByte"/>
                                 <xs:element ref="Int16"/>
                                 <xs:element ref="UInt16"/>
                                 <xs:element ref="Int32"/>
@@ -273,7 +290,7 @@
                                 <xs:element ref="Float32"/>
                                 <xs:element ref="Float64"/>
                                 <xs:element ref="String"/>
-                                <xs:element ref="Url"/>
+                                <xs:element ref="URI"/>
                                 <xs:element ref="Structure"/>
                                 <xs:element ref="Opaque"/>
 
@@ -311,7 +328,8 @@
     <xs:simpleType name="MapValueType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="Byte"/>
-            <xs:enumeration value="SignedByte"/>
+            <xs:enumeration value="Int8"/>
+            <xs:enumeration value="UInt8"/>
             <xs:enumeration value="Int16"/>
             <xs:enumeration value="UInt16"/>
             <xs:enumeration value="Int32"/>
@@ -321,7 +339,7 @@
             <xs:enumeration value="Float32"/>
             <xs:enumeration value="Float64"/>
             <xs:enumeration value="String"/>
-            <xs:enumeration value="URL"/>
+            <xs:enumeration value="URI"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -366,7 +384,6 @@
     <xs:simpleType name="EnumBaseType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="Byte"/>
-            <xs:enumeration value="SignedByte"/>
             <xs:enumeration value="Int8"/>
             <xs:enumeration value="UInt8"/>
             <xs:enumeration value="Int16"/>

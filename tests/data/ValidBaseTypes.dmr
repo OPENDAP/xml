@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dataset xmlns="http://xml.opendap.org/ns/DAP/4.0#" dapVersion="4.0" dmrVersion="1.0" name="ValidBaseTypes.nc4.h5">
+    <Int8 name="time">
+        <Dim name="/time"/>
+    </Int8>
+    <UInt8 name="var1">
+        <Dim name="/time"/>
+    </UInt8>
+    <Byte name="var2">
+        <Dim name="/time"/>
+    </Byte>
+    <Char name="var3">
+        <Dim name="/time"/>
+    </Char>
+    <Int16 name="var4">
+        <Dim name="/time"/>
+    </Int16>
+    <UInt16 name="var5">
+        <Dim name="/time"/>
+    </UInt16>
+    <Int32 name="var6">
+        <Dim name="/time"/>
+    </Int32>
+    <UInt32 name="var7">
+        <Dim name="/time"/>
+    </UInt32>
+    <Int64 name="var8">
+        <Dim name="/time"/>
+    </Int64>
+    <UInt64 name="var9">
+        <Dim name="/time"/>
+    </UInt64>
+    <Float32 name="var10">
+        <Dim name="/time"/>
+    </Float32>
+    <Float64 name="var11">
+        <Dim name="/time"/>
+    </Float64>
+    <String name="var12"/>
+    <URI name="var13"/>
+</Dataset>
