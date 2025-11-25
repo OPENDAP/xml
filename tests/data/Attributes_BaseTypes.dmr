@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dataset xmlns="http://xml.opendap.org/ns/DAP/4.0#" dapVersion="4.0" dmrVersion="1.0" name="ValidAttributeTypes.nc4.h5">
+    <Attribute name="attr1" type="Int8">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr2" type="UInt8">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr3" type="Byte">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr4" type="Char">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr5" type="Int16">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr6" type="UInt16">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr7" type="Int32">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr8" type="UInt32">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr9" type="Int64">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr10" type="UInt64">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr11" type="Float32">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr12" type="Float64">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="attr13" type="String">
+        <Value>Data</Value>
+    </Attribute>
+    <Attribute name="attr14" type="URI">
+        <Value>URL here</Value>
+    </Attribute>
+</Dataset>
