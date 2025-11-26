@@ -255,6 +255,7 @@
 
 
     <xs:complexType name="MapType">
+        <!-- The name must be FQN for some variable previously defined -->
         <xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
 
