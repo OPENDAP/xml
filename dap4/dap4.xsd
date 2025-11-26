@@ -107,14 +107,13 @@
             <xs:element ref="Float64" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="String" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="URI" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element ref="Structure" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element ref="Sequence" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Opaque" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Enum"/>
             <!--- Enable sequences and Structures to occur alongside other
             BaseTypes. There is no order imposed.
             -->
-            <!-- REQUIRED BY SPEC -->
-            <xs:element ref="Enum"/>
+            <xs:element ref="Structure" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Sequence" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:group>
 
@@ -304,7 +303,6 @@
             <xs:element ref="Dim" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Map" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
-            <!-- <xs:element ref="Alias" minOccurs="0" maxOccurs="unbounded"/> -->
             <xs:element ref="OtherXML" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
 
