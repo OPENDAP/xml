@@ -82,7 +82,7 @@
     <xs:element name="Enum" type="EnumType"/>
 
     <xs:element name="Dimension" type="DimensionType"/>
-    <xs:element name="Dim" type="DimRefType"/>
+    <xs:element name="Dim" type="DimType"/>
     <xs:element name="Group" type="GroupType"/>
 
     <xs:element name="OtherXML" type="OtherXMLType"/>
@@ -167,7 +167,7 @@
         <xs:attribute name="size" type="xs:integer" use="required"/>
     </xs:complexType>
 
-    <xs:complexType name="DimRefType">
+    <xs:complexType name="DimType">
         <!-- fully-qualified dimension name -->
         <xs:attribute name="name" type="xs:string" use="optional"/>
         <!-- size attribute -->
