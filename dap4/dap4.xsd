@@ -75,7 +75,7 @@
     <!-- An Opaque variable only declares its name. Size for an instance of
         Opaque will be sent as a prefix to that actual data, just as with a
         String or URL. -->
-    <xs:element name="Opaque" type="BaseType"/>
+    <xs:element name="Opaque" type="OpaqueType"/>
 
     <xs:element name="Enumeration" type="EnumerationType"/>
     <xs:element name="EnumConst" type="EnumConstType"/>
@@ -171,6 +171,10 @@
         <xs:attribute name="name" type="xs:string" use="optional"/>
         <!-- size attribute -->
         <xs:attribute name="size" type="xs:nonNegativeInteger" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="OpaqueType">
+        <xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="DAP_Attribute">
