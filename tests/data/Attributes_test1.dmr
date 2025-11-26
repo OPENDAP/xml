@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Dataset xmlns="http://xml.opendap.org/ns/DAP/4.0#" dapVersion="4.0" dmrVersion="1.0" name="AtributesFile.nc">
+    <Attribute name="description" type="String">
+        <Value>DMR for testing Maps, Dims at root level (no Groups, Sequences or Structures).</Value>
+    </Attribute>
+    <Attribute name="offset1" type="Int16">
+        <Value>1</Value>
+    </Attribute>
+    <Attribute name="offsets" type="Int64">
+        <Value>1</Value>
+        <Value>2</Value>
+        <Value>3</Value>
+    </Attribute>
+    <Attribute name="_ChunkSizes" type="UInt32">
+        <Value value="1"/>
+        <Value value="964"/>
+    </Attribute>
+</Dataset>

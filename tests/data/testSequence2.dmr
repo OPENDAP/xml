@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Dataset xmlns="http://xml.opendap.org/ns/DAP/4.0#" dapVersion="4.0" dmrVersion="1.0" name="Modifiedgosta.dat">
+    <Attribute name="description" type="String">
+        <Value>Test sequence.</Value>
+    </Attribute>
+    <Group name="GroupA">
+        <Sequence name="climatology">
+            <Int32 name="year"/>
+            <Int32 name="month"/>
+            <Int32 name="day"/>
+        </Sequence>
+        <Attribute name="description" type="String">
+            <Value>Test sequence.</Value>
+        </Attribute>
+    </Group>
+</Dataset>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Dataset xmlns="http://xml.opendap.org/ns/DAP/4.0#" dapVersion="4.0" dmrVersion="1.0" name="SimpleGroup.nc4.h5">
+    <Dimension name="time" size="1"/>
+    <Dimension name="Z" size="1000"/>
+    <Dimension name="Y" size="40"/>
+    <Dimension name="X" size="40"/>
+    <Float32 name="time">
+        <Dim name="/time"/>
+    </Float32>
+    <Float32 name="Z">
+        <Dim name="/Z"/>
+    </Float32>
+    <Int16 name="Y">
+        <Dim name="/Y"/>
+    </Int16>
+    <Int16 name="X">
+        <Dim name="/X"/>
+    </Int16>
+    <Float32 name="Pressure">
+        <Dim name="/Z"/>
+        <Dim name="/Y"/>
+        <Dim name="/X"/>
+        <Map name="/Z"/>
+        <Map name="/Y"/>
+        <Map name="/X"/>
+    </Float32>
+    <Attribute name="description" type="String">
+        <Value>DMR for testing Maps, Dims at root level (no Groups, Sequences or Structures).</Value>
+    </Attribute>
+</Dataset>

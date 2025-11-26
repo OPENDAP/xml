@@ -1,199 +1,210 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- RELAX NG Grammar -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" 
-  targetNamespace="http://xml.opendap.org/ns/DAP/4.0#" xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#">
-  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
-  <xs:element name="Group">
-    <xs:annotation>
-      <xs:documentation>
-        Semantic restriction: xml attributes are allowed
-        only on the root group, where both dapVersion and base are 
-        required and ns is optional.
-    </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="dap:groupdef">
-          <xs:attribute name="dapVersion" type="xs:string"/>
-          <xs:attribute name="dmrVersion" type="xs:string"/>
-          <xs:attribute ref="xml:base"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
-  <xs:complexType name="groupdef">
-    <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element ref="dap:Enumeration"/>
-      <xs:element ref="dap:Dimension"/>
-      <xs:element ref="dap:variable"/>
-      <xs:element ref="dap:metadata"/>
-      <xs:element ref="dap:Group"/>
-    </xs:choice>
-    <xs:attribute name="name" use="required" type="xs:string"/>
-  </xs:complexType>
-  <xs:element name="Enumeration">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="dap:EnumConst"/>
-      </xs:sequence>
-      <xs:attribute name="name" use="required" type="xs:string"/>
-      <xs:attribute name="basetype" use="required">
-        <xs:simpleType>
-          <xs:restriction base="xs:token">
-            <xs:enumeration value="Byte"/>
-            <xs:enumeration value="Int8"/>
-            <xs:enumeration value="UInt8"/>
-            <xs:enumeration value="Int16"/>
-            <xs:enumeration value="UInt16"/>
-            <xs:enumeration value="Int32"/>
-            <xs:enumeration value="UInt32"/>
-            <xs:enumeration value="Int64"/>
-            <xs:enumeration value="UInt64"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="EnumConst">
-    <xs:complexType>
-      <xs:attribute name="name" use="required" type="xs:string"/>
-      <xs:attribute name="value" use="required" type="xs:string"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:group name="namespace">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="dap:Namespace"/>
-    </xs:sequence>
-  </xs:group>
-  <xs:element name="Namespace">
-    <xs:complexType>
-      <xs:attribute name="href" use="required" type="xs:string"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="Dimension">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="dap:metadatalist">
-          <xs:attribute name="name" use="required" type="xs:string"/>
-          <xs:attribute name="size" use="required" type="xs:string"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="Dim">
-    <xs:complexType>
-      <xs:attribute name="name" type="xs:string"/>
-      <xs:attribute name="size">
-        <xs:simpleType>
-          <xs:union memberTypes="xs:string xs:string"/>
-        </xs:simpleType>
-      </xs:attribute>
-    </xs:complexType>
-  </xs:element>
-  <!--
-    Atomictype define is only a way
-    to list the set of atomictypes;
-    it is never used in the grammar
-  -->
-  <xs:simpleType name="atomictype">
-    <xs:restriction base="xs:token">
-      <xs:enumeration value="Char"/>
-      <xs:enumeration value="Byte"/>
-      <xs:enumeration value="Int8"/>
-      <xs:enumeration value="UInt8"/>
-      <xs:enumeration value="Int16"/>
-      <xs:enumeration value="UInt16"/>
-      <xs:enumeration value="Int32"/>
-      <xs:enumeration value="UInt32"/>
-      <xs:enumeration value="Int64"/>
-      <xs:enumeration value="UInt64"/>
-      <xs:enumeration value="Float32"/>
-      <xs:enumeration value="Float64"/>
-      <xs:enumeration value="String"/>
-      <xs:enumeration value="URL"/>
-      <xs:enumeration value="Enum"/>
-      <xs:enumeration value="Opaque"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:element name="variable" abstract="true"/>
-  <xs:element name="simplevariable" abstract="true" substitutionGroup="dap:variable" type="dap:variabledef"/>
-  <xs:element name="Char" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="Byte" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="Int8" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="UInt8" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="Int16" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="UInt16" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="Int32" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="UInt32" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="Int64" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="UInt64" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="Float32" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="Float64" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="String" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="URL" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="Opaque" substitutionGroup="dap:simplevariable"/>
-  <xs:element name="Enum" substitutionGroup="dap:simplevariable">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="dap:variabledef">
-          <xs:attribute name="enum" use="required" type="xs:string"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
-  <xs:complexType name="variabledef">
-    <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element ref="dap:Dim"/>
-      <xs:element ref="dap:Map"/>
-      <xs:element ref="dap:metadata"/>
-    </xs:choice>
-    <xs:attribute name="name" use="required" type="xs:string"/>
-  </xs:complexType>
-  <xs:element name="Map">
-    <xs:complexType>
-      <xs:attribute name="name" use="required" type="xs:string"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="Structure" substitutionGroup="dap:variable">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="dap:Dim"/>
-        <xs:element ref="dap:variable"/>
-        <xs:element ref="dap:metadata"/>
-      </xs:choice>
-      <xs:attribute name="name" use="required" type="xs:string"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:complexType name="metadatalist">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="dap:metadata"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="metadata" abstract="true">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:group minOccurs="0" ref="dap:namespace"/>
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-          <xs:element name="Value">
-            <xs:complexType>
-              <xs:attribute name="value" use="required">
-                <xs:simpleType>
-                  <xs:union memberTypes="xs:string xs:string xs:string xs:string xs:string xs:string"/>
-                </xs:simpleType>
-              </xs:attribute>
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="Value" type="xs:string"/>
+<!-- DAP 4 introduces (Shared) Dimensions, Group, Opaque, 64-bit integers. 
+
+    Makes the substitution byte=UInt8 and removes UByte and Grids completely. 
+    Char element is synonimous with UInt8.
+    maju 11/24/25
+
+    In addition: The syntax for Array has been changed so that
+    it\'s easier for processing software to figure out the type of an array; 
+    Grids have been generalized so that there can be any number of \'Array\'
+    parts (and the Maps may be multi-dimensional; and OtherXML has been renamed
+    OtherXML and made its own element (it\'s no longer a type of \'Attribute\'). 
+    
+    The change to otherXML was made to simplify writing the schema since it
+    appears schema 1.0 cannot reprsent a syntax where the type of an element 
+    is a function of the value of one of its attributes.
+    jhrg 10/13/09 
+    
+    Schema expanded from template dap3.3.xsd
+    maju 11/24/2025    
+    -->
+
+<?xml-stylesheet href="http://www.w3.org/2008/09/xsd.xsl" type="text/xsl"?>
+
+<xs:schema
+	xmlns="http://xml.opendap.org/ns/DAP/4.0#" 
+    xmlns:dap="http://xml.opendap.org/ns/DAP/4.0#"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd"
+	elementFormDefault="qualified"
+    attributeFormDefault="unqualified" 
+    targetNamespace="http://xml.opendap.org/ns/DAP/4.0#"
+    xml:lang="en">
+
+    <!-- Required import for xml:base -->
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
+
+	<!-- Note that these schemas are local; the XML one can be found at 
+		http://www.w3.org/2001/xml.xsd. While there is no official schema for 
+		xlink a 'non-normative' one is provided in the appendix of
+		http://www.w3.org/TR/xlink11/. jhrg 2/7/12 -->
+
+    <xs:element name="Dataset" type="DatasetType"/>
+    <xs:element name="Attribute" type="DAP_Attribute"/>
+
+    <xs:element name="Byte" type="BaseType"/>
+    <xs:element name="Char" type="BaseType"/>
+
+    <xs:element name="Int8" type="BaseType"/>
+    <xs:element name="UInt8" type="BaseType"/>
+
+    <xs:element name="Int16" type="BaseType"/>
+    <xs:element name="UInt16" type="BaseType"/>
+
+    <xs:element name="Int32" type="BaseType"/>
+    <xs:element name="UInt32" type="BaseType"/>
+
+    <xs:element name="Int64" type="BaseType"/>
+    <xs:element name="UInt64" type="BaseType"/>
+
+    <xs:element name="Float32" type="BaseType"/>
+    <xs:element name="Float64" type="BaseType"/>
+
+    <xs:element name="String" type="BaseType"/>
+    <xs:element name="URI" type="BaseType"/>
+
+    <xs:element name="Map" type="MapType"/>
+
+    <xs:element name="Structure" type="StructureType"/>
+    <xs:element name="Sequence" type="SequenceType"/>
+
+    <!-- An Opaque variable only declares its name. Size for an instance of
+        Opaque will be sent as a prefix to that actual data, just as with a
+        String or URL. -->
+    <xs:element name="Opaque" type="OpaqueType"/>
+
+    <xs:element name="Enumeration" type="EnumerationType"/>
+    <xs:element name="EnumConst" type="EnumConstType"/>
+    <xs:element name="Enum" type="EnumType"/>
+
+    <xs:element name="Dimension" type="DimensionType"/>
+    <xs:element name="Dim" type="DimType"/>
+    <xs:element name="Group" type="GroupType"/>
+
+    <xs:element name="OtherXML" type="OtherXMLType"/>
+
+    
+    <xs:group name="VariableTypes">
+        <xs:annotation>
+            <xs:documentation>DAP Variable Types</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element ref="Byte" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Char" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Int8" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="UInt8" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Int16" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="UInt16" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Int32" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="UInt32" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Int64" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="UInt64" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Float32" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Float64" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="String" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="URI" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Opaque" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Enum"/>
+            <!--- Enable sequences and Structures to occur alongside other
+            BaseTypes. There is no order imposed.
+            -->
+            <xs:element ref="Structure" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Sequence" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
-      </xs:sequence>
-      <xs:attribute name="name" use="required" type="xs:string"/>
-      <xs:attribute name="type" use="required">
-        <xs:simpleType>
-          <xs:restriction base="xs:token">
-            <xs:enumeration value="Char"/>
-            <xs:enumeration value="Byte"/>
+    </xs:group>
+
+
+    <xs:complexType name="DatasetType">
+        <xs:annotation>
+            <xs:documentation>This is the XML representation of a DAP DMR object.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="Dimension" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Enumeration" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:group ref="VariableTypes" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="OtherXML" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Group" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="dapVersion" type="xs:string" use="required"/>
+        <xs:attribute name="dmrVersion" type="xs:string" use="required"/>
+        <!-- Allow xml:base -->
+        <xs:anyAttribute namespace="http://www.w3.org/XML/1998/namespace"
+                 processContents="lax"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="GroupType">
+        <xs:annotation>
+            <xs:documentation>A Group is a lexical scoping tool used to replicate HDF5 and netCDF4
+                Groups. Each Group defines a lexical scope. Each dataset has at least one Group; if
+                only one is present, it may be anonymous. In this case, by convention, it\'s name
+                attribute should be \'anonymous\'.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="Dimension" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Enumeration" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:group ref="VariableTypes" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="OtherXML" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Group" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" default="anonymous"/>
+    </xs:complexType>
+
+    <xs:complexType name="DimensionType">
+        <xs:annotation>
+            <xs:documentation>This holds a dimension, a name and size, that may be shared between
+                and Array. SharedDimensions are lexically scoped.</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="size" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="DimType">
+        <!-- fully-qualified dimension name -->
+        <xs:attribute name="name" type="xs:string" use="optional"/>
+        <!-- size attribute -->
+        <xs:attribute name="size" type="xs:nonNegativeInteger" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="OpaqueType">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="DAP_Attribute">
+        <xs:annotation>
+            <xs:documentation>DAP Attribute Type</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:sequence>
+                <xs:element name="Value" type="ValueType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:choice>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="type" type="AttributeType" use="required"/>
+        <xs:attribute name="namespace" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="ValueType" mixed="true">
+        <!-- Supports text content AND optional @value -->
+        <xs:attribute name="value" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:simpleType name="AttributeType">
+        <xs:restriction base="xs:string">
             <xs:enumeration value="Int8"/>
-            <xs:enumeration value="UInt8"/>
+            <xs:enumeration value="UInt8"/>            
+            <xs:enumeration value="Byte"/>
+            <xs:enumeration value="Char"/>
             <xs:enumeration value="Int16"/>
             <xs:enumeration value="UInt16"/>
             <xs:enumeration value="Int32"/>
@@ -203,19 +214,104 @@
             <xs:enumeration value="Float32"/>
             <xs:enumeration value="Float64"/>
             <xs:enumeration value="String"/>
-            <xs:enumeration value="URL"/>
-            <xs:enumeration value="Enumeration"/>
-            <xs:enumeration value="Opaque"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
+            <xs:enumeration value="URI"/>
+            <xs:enumeration value="Container"/>
+            <xs:enumeration value="EnumType"/>
+            <xs:enumeration value="OtherXML"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="OtherXMLType">
+        <xs:annotation>
+            <xs:documentation>When we want to embed arbitrary XML in a DMR use this node. This
+                functions like an attribute and appear in the same general place as an attribute,
+                but its contents are ignored by DAP software. Other software might find the
+                information useful. </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:any namespace="##any" minOccurs="1" processContents="lax"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:anyAttribute processContents="lax" namespace="##any"/>
     </xs:complexType>
-  </xs:element>
-  <xs:element name="Attribute" substitutionGroup="dap:metadata"/>
-  <xs:element name="OtherXML" type="dap:arbitraryxml"/>
-  <xs:complexType name="arbitraryxml">
-    <xs:sequence>
-      <xs:any processContents="skip"/>
-    </xs:sequence>
-  </xs:complexType>
+
+    <xs:complexType name="BaseType">
+        <xs:annotation>
+            <xs:documentation>DAP Base Type</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="Dim" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="OtherXML" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Map" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="MapType">
+        <!-- The name must be FQN for some variable previously defined -->
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="StructureType">
+        <xs:complexContent>
+            <xs:extension base="BaseType">
+                <xs:group ref="VariableTypes" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+
+    <xs:complexType name="SequenceType">
+        <xs:complexContent>
+            <xs:extension base="BaseType">
+                <xs:group ref="VariableTypes" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:simpleType name="EnumBaseType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Byte"/>
+            <xs:enumeration value="Int8"/>
+            <xs:enumeration value="UInt8"/>
+            <xs:enumeration value="Int16"/>
+            <xs:enumeration value="UInt16"/>
+            <xs:enumeration value="Int32"/>
+            <xs:enumeration value="UInt32"/>
+            <xs:enumeration value="Int64"/>
+            <xs:enumeration value="UInt64"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="EnumerationType">
+        <xs:sequence>
+            <xs:element ref="EnumConst" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <!-- name of enum -->
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <!-- basetype is optional; defaults to Int32 in semantic validation -->
+        <xs:attribute name="basetype" type="EnumBaseType" use="optional"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="EnumConstType">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="EnumType">
+        <xs:sequence>
+            <xs:element ref="Dim" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Map" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="OtherXML" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="enum" type="xs:string" use="required"/>
+</xs:complexType>
+
+
 </xs:schema>

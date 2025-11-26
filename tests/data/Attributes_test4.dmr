@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Dataset xmlns="http://xml.opendap.org/ns/DAP/4.0#" dapVersion="4.0" dmrVersion="1.0" name="SimpleAttribFile.nc">
+    <Group name="TestGroup">
+        <Attribute name="description" type="String">
+            <Value>Passive soil moisture estimates onto a 36-km global Earth-fixed grid, based on radiometer measurements acquired when the SMAP spacecraft is travelling from North to South at approximately 6:00 AM local time.</Value>
+        </Attribute>
+        <Attribute name="fileName" type="String">
+            <Value>File_001.h5</Value>
+            <Value>File_002.h5</Value>
+            <Value>File_003.h5</Value>
+            <Value>File_004.h5</Value>
+            <Value>File_005.h5</Value>
+        </Attribute>
+        <Attribute name="identifier" type="String">
+            <Value>L2Data</Value>
+        </Attribute>
+        <Attribute name="creationDate" type="String">
+            <Value>2017-01-04</Value>
+            <Value>2017-01-04</Value>
+            <Value>2017-01-04</Value>
+            <Value>2017-01-04</Value>
+            <Value>2017-01-05</Value>
+        </Attribute>
+        <Attribute name="resolution" type="Float32">
+            <Value>36.</Value>
+        </Attribute>
+    </Group>
+</Dataset>
