@@ -289,7 +289,6 @@
         <xs:attribute name="name" type="xs:string" use="required"/>
         <!-- basetype is optional; defaults to Int32 in semantic validation -->
         <xs:attribute name="basetype" type="EnumBaseType" use="optional"/>
-        <!-- Assert basetype is one of allowed, or empty (default to Int32) -->
     </xs:complexType>
 
 
