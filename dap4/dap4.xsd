@@ -253,41 +253,9 @@
         <xs:attribute name="size" type="xs:integer"/>
     </xs:complexType>
 
-    <xs:simpleType name="MapValueType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="Byte"/>
-            <xs:enumeration value="Int8"/>
-            <xs:enumeration value="UInt8"/>
-            <xs:enumeration value="Int16"/>
-            <xs:enumeration value="UInt16"/>
-            <xs:enumeration value="Int32"/>
-            <xs:enumeration value="UInt32"/>
-            <xs:enumeration value="Int64"/>
-            <xs:enumeration value="UInt64"/>
-            <xs:enumeration value="Float32"/>
-            <xs:enumeration value="Float64"/>
-            <xs:enumeration value="String"/>
-            <xs:enumeration value="URI"/>
-        </xs:restriction>
-    </xs:simpleType>
-
 
     <xs:complexType name="MapType">
-        <xs:annotation>
-            <xs:documentation>What this does not capture is that a Map appears both at the start of
-                a DAP4 Grid and must bind a name for the Map to be used within the Grid to either a
-                SharedDimension or a size. However, the Map element also appears within the Array
-                and there only with the name attribute. </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element ref="Attribute" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element ref="OtherXML" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="dimension" type="ArrayDimension" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
         <xs:attribute name="name" type="xs:string" use="required"/>
-        <xs:attribute name="dim" type="xs:string"/>
-        <xs:attribute name="size" type="xs:integer"/>
-        <xs:attribute name="type" type="MapValueType"/>
     </xs:complexType>
 
     <xs:complexType name="StructureType">
