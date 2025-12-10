@@ -42,7 +42,13 @@ You can contribute by raising issues, with a short and clear description of the 
 
 The issue will help us improve the dap4 schema if needed, or add a test that highlights the improper behavior.
 
-If a change is needed, create branch of the project, make a change to the spec, and include a test dmr that highlights the new behavior. 
+If a change is needed, create branch of the project, make a change to the schema located in
+
+```
+$   dap4/dap4.xsd
+```
+
+and include a test `.dmr` that highlights the new behavior.
 
 Before creating a new pull request, always make sure tests pass locally and we recommend to run pre-commit locally for basic formatting. `pre-commit` can be installed as follows:
 
