@@ -273,9 +273,8 @@
    <xs:complexType name="SequenceType">
         <xs:annotation>
             <xs:documentation>A Sequence, introduced to replace the concept of variable 
-            length dimensions is a generalization of a Table, is intended to represent 
-            a sequence of instances of objects
-            .</xs:documentation>
+            length dimensions, is a generalization of a Table intended to represent 
+            a sequence of instances of objects.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
             <xs:group ref="VariableTypes" minOccurs="1" maxOccurs="unbounded"/>
