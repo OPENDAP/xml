@@ -272,8 +272,9 @@
 
    <xs:complexType name="SequenceType">
         <xs:annotation>
-            <xs:documentation>A Sequence is intended to represent a sequence of instances of objects.
-            A Sequence was introduced to replace the concept of variable length dimensions.
+            <xs:documentation>A Sequence, introduced to replace the concept of variable 
+            length dimensions is a generalization of a Table, is intended to represent 
+            a sequence of instances of objects
             .</xs:documentation>
         </xs:annotation>
         <xs:sequence>
